@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const User = require('../models/User')
+const Role = require('../models/Role')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
@@ -16,7 +17,6 @@ router.post(
     ],
     async (req, res) => {
         try {
-
             const errors = validationResult(req)
 
             if (!errors.isEmpty()) {
@@ -34,8 +34,9 @@ router.post(
                 return res.status(400).json({message: 'Такой пользователь уже существует'})
             }
 
+            const userRole = await Role.findOne({value: "USER"})
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email, password: hashedPassword})
+            const user = new User({email, password: hashedPassword, roles: [userRole.value]})
 
             await user.save()
 
@@ -78,12 +79,12 @@ router.post(
             }
 
             const token = jwt.sign(
-                { userId: user.id},
+                { userId: user.id, userRoles: user.roles},
                 config.get('jwtSecret'),
                 {expiresIn: '1h'}
             )
 
-            res.json({token, userId: user.id})
+            res.json({token, userId: user.id, userRoles: user.roles})
 
         } catch (e) {
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})

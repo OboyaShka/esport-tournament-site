@@ -7,7 +7,7 @@ import {AuthContext} from "./context/AuthContext";
 import {Navbar} from "./components/Navbar";
 
 function App() {
-    const {token, login, logout, userId} = useAuth()
+    const {token, login, logout, userId, userRoles} = useAuth()
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
     return (
@@ -16,6 +16,7 @@ function App() {
             login,
             logout,
             userId,
+            userRoles,
             isAuthenticated
         }}>
             <Router>

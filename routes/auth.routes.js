@@ -25,7 +25,6 @@ router.post(
                     message: 'Некорректные данные при регистрации'
                 })
             }
-
             const {email, password} = req.body
 
             const candidate = await User.findOne({email})
@@ -43,7 +42,7 @@ router.post(
             res.status(201).json({message: 'Ползователь создан'})
 
         } catch (e) {
-            res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+            res.status(500).json({message: e})
         }
     })
 

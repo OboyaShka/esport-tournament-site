@@ -2,38 +2,44 @@ import React from 'react'
 import {ProfilePage} from './pages/ProfilePage'
 import {MainPage} from './pages/MainPage'
 import {AuthPage} from './pages/AuthPage'
-import {Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
+import {Switch, Redirect, Route } from 'react-router-dom';
+import {TournamentsPage} from "./pages/TournamentsPage";
 
-export const useRoutes = isAuthenticated => {
+
+export const useRoutes = (isAuthenticated)=> {
+
     if (isAuthenticated){
         return(
             <Switch>
-                <Router path="/main" exact>
+                <Route path="/" exact>
                     <MainPage />
-                </Router>
-                <Router path="/profile" exact>
+                </Route>
+                <Route path="/tournaments" exact>
+                    <TournamentsPage />
+                </Route>
+                <Route path="/profile" exact>
                     <ProfilePage />
-                </Router>
-                <Router path="/" exact>
+                </Route>
+                <Route path="/authentication" exact>
                     <AuthPage />
-                </Router>
-                <Redirect to="/main" />
+                </Route>
+                <Redirect to="/" />
             </Switch>
         )
     }
 
     return (
         <Switch>
-            <Router path="/main" exact>
+            <Route path="/" exact>
                 <MainPage />
-            </Router>
-            <Router path="/profile" exact>
-                <ProfilePage />
-            </Router>
-            <Router path="/" exact>
+            </Route>
+            <Route path="/tournaments" exact>
+                <TournamentsPage />
+            </Route>
+            <Route path="/authentication" exact>
                 <AuthPage />
-            </Router>
-            <Redirect to="/main" />
+            </Route>
+            <Redirect to="/" />
         </Switch>
     )
 }

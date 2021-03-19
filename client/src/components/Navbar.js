@@ -9,23 +9,24 @@ export const Navbar = () => {
     const logoutHandler = event => {
         event.preventDefault()
         auth.logout()
-        history.push('/main')
+        history.push('/')
     }
     const loginHandler = event => {
         event.preventDefault()
         auth.login()
-        history.push('/')
+        history.push('/authentication')
     }
-    console.log(auth)
+
     return (
         <nav>
             <div className="nav-wrapper">
                 <a href="#" className="brand-logo">Название</a>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/main">Главная</NavLink></li>
-                    <li><NavLink to="/profile">Профиль</NavLink></li>
+                    <li><NavLink to="/main">Новости</NavLink></li>
+                    <li><NavLink to="/tournaments" >Турниры</NavLink></li>
+                    {auth.isAuthenticated &&<li><NavLink to="/profile">Профиль</NavLink></li>}
                     { auth.isAuthenticated ?
-                        <li><a href="/" onClick={logoutHandler}>Выйти</a></li>:<li><a href="/profile" onClick={loginHandler}>Войти</a></li>}
+                        <li><NavLink to="/" onClick={logoutHandler}>Выйти</NavLink></li>:<li><NavLink to="/authentication" onClick={loginHandler}>Войти</NavLink></li>}
 
                 </ul>
             </div>

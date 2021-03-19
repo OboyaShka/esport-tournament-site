@@ -4,6 +4,7 @@ import {MainPage} from './pages/MainPage'
 import {AuthPage} from './pages/AuthPage'
 import {Switch, Redirect, Route } from 'react-router-dom';
 import {TournamentsPage} from "./pages/TournamentsPage";
+import {TournamentsCreatePage} from "./pages/TournamentCreatePage";
 
 
 export const useRoutes = (isAuthenticated)=> {
@@ -16,6 +17,9 @@ export const useRoutes = (isAuthenticated)=> {
                 </Route>
                 <Route path="/tournaments" exact>
                     <TournamentsPage />
+                </Route>
+                <Route path="/tournaments/create" exact>
+                    <TournamentsCreatePage />
                 </Route>
                 <Route path="/profile" exact>
                     <ProfilePage />

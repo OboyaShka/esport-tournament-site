@@ -9,7 +9,7 @@ export const TournamentsPage = () => {
 
     return (
         <div>
-            <Link to='/profile'>Создать турнир</Link>
+            <Link to='/tournaments/create'>Создать турнир</Link>
         </div>
     )
 }

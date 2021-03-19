@@ -5,7 +5,7 @@ const Tournament = new Schema({
     game: {type: String, ref: 'Game'},
     description: {type: String, required:true},
     image: {type: String, required:true},
-    participants: [{type: String, ref: 'User'}],
+    participants: [{type: Types.ObjectId, ref: 'User'}],
     date: {type: Date, required:true},
 })
 

@@ -1,13 +1,18 @@
 const express = require('express')
 const config = require('config')
 const mongoose = require('mongoose')
-
+const fileUpload = require('express-fileupload')
 const app = express()
 
-app.use(express.json({extended: true}))
 
+app.use(express.json({extended: true}))
+app.use(fileUpload())
+
+app.use('/api/upload', require('./routes/upload.routes'))
+app.use('/api/user', require('./routes/user.routes'))
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/tournaments', require('./routes/tournaments.routes'))
+
 
 const PORT = config.get('port') || 5000
 

@@ -1,10 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {Link, useHistory} from 'react-router-dom';
 import {AuthContext} from '../context/AuthContext';
 import {useMessage} from '../hooks/message.hook';
 import {useHttp} from '../hooks/http.hook';
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
+import FileUpload from "../components/FileUpload";
 
 export const TournamentsCreatePage = () => {
     const [startDate, setStartDate] = useState(new Date());
@@ -13,7 +14,7 @@ export const TournamentsCreatePage = () => {
     const message = useMessage()
     const {loading, error, request, clearError} = useHttp()
     const [form, setForm] = useState({
-        token: auth.token, title: '', game: '', description: '', image: "1", participants: '',  date: ''
+        title: '', game: '', description: '', image: "1",  date: ''
     })
 
     useEffect(() => {
@@ -25,6 +26,17 @@ export const TournamentsCreatePage = () => {
         window.M.updateTextFields()
     }, [])
 
+
+
+
+    // const fileUp = useCallback( async () => {
+    //     try {
+    //         const data = await request('/api/fileuploads', 'POST', {...form}, {
+    //             Authorization: `Bearer ${auth.token}`
+    //         })
+    //
+    //     } catch (e) {}
+    // }, [])
 
     const changeHandler = event => {
         setForm({...form, [event.target.name]: event.target.value})
@@ -39,15 +51,15 @@ export const TournamentsCreatePage = () => {
         setForm({...form, date: event})
     }
 
-    const createHandler = async () => {
+    const createHandler = useCallback( async () => {
         try {
-            console.log({...form})
-            const data = await request('/api/tournaments/create', 'POST', {...form})
+            const data = await request('/api/tournaments/create', 'POST', {...form}, {
+                Authorization: `Bearer ${auth.token}`
+            })
             message(data.message)
-        } catch (e) {
-
-        }
-    }
+            history.push('/tournaments')
+        } catch (e) {}
+    }, [auth.token, request, {...form}])
 
     const cancelHandler = async (event) => {
         try {
@@ -104,6 +116,7 @@ export const TournamentsCreatePage = () => {
                         showTimeInput
                     />
                 </div>
+                <FileUpload/>
             </div>
             <div className="card-action">
                 <button

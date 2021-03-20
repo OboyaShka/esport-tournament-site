@@ -35,7 +35,10 @@ router.post(
 
             const userRole = await Role.findOne({value: "USER"})
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email, password: hashedPassword, roles: [userRole.value]})
+            const user = new User({email,
+                password: hashedPassword,
+                roles: [userRole.value],
+                tournaments: []})
 
             await user.save()
 

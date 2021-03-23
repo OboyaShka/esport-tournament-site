@@ -1,14 +1,17 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext";
 import {Loader} from "./Loader";
+import {useMessage} from "../hooks/message.hook";
 
 export const TournamentCard = ({tournamentId}) => {
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
     const [user, setUser] = useState( null)
     const [tournament, setTournament] = useState( null)
+    const history = useHistory()
+    const message = useMessage()
 
     //Добавляем/удаляем пользователя из списка участников турнира
 
@@ -18,7 +21,6 @@ export const TournamentCard = ({tournamentId}) => {
                 Authorization: `Bearer ${auth.token}`,
             })
             getTournament()
-            //userHandler()
         } catch (e) {}
     }, [auth.token, request])
 
@@ -28,7 +30,22 @@ export const TournamentCard = ({tournamentId}) => {
                 Authorization: `Bearer ${auth.token}`
             })
             getTournament()
-            //userHandler()
+        } catch (e) {}
+    }, [auth.token, request])
+
+    const editHandler = useCallback( async () => {
+        try {
+            history.push(`/tournament/create?id=${tournamentId}`)
+        } catch (e) {}
+    }, [auth.token, request])
+
+    const deleteHandler = useCallback( async () => {
+        try {
+            const data = await request('/api/tournaments/delete', 'DELETE', {tournamentId}, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            message(data.message)
+            history.push('/tournaments')
         } catch (e) {}
     }, [auth.token, request])
 
@@ -55,7 +72,14 @@ export const TournamentCard = ({tournamentId}) => {
             return (
 
                 <div>
+                    <button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>
+                    <button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>
                     <h1>{tournament.title}</h1>
+                    <p>Игра: {tournament.game}</p>
+                    <img style={{width: "80%"}} src={tournament.image}/>
+                    <p>Описание: {tournament.description}</p>
+                    <p>Участников: {tournament.participants.length}</p>
+                    <p>Дата проведения: {tournament.date}</p>
                     <h4>Участников зарегистрировалось: {tournament.participants.length}</h4>
                     {!tournament.participants.includes(auth.userId)?<button className="waves-effect waves-light btn-large"  onClick={addingHandler}>Записаться на турнир</button>:
                             <button className="waves-effect waves-light btn-large" onClick={cancelHandler}>Отменить участие</button>}

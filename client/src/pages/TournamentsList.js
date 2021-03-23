@@ -10,11 +10,15 @@ export const TournamentsList = ({tournaments}) => {
         <div>
             {tournaments.map((item, index)=> {
                 return (
-                    <div key={index} className="row">
-                        <div className="col s12 m6">
-                            <div className="card blue-grey darken-1">
-                                <div className="card-content white-text">
-                                    <span className="card-title">{item.title}</span>
+                    <div key={index}className="row">
+                        <div className="col s12 m7">
+                            <div className="card">
+                                <div className="card-image">
+                                    <img src={item.image}/>
+                                        <span className="card-title">{item.title}</span>
+
+                                </div>
+                                <div className="card-content">
                                     <p>Игра: {item.game}</p>
                                     <p>Описание: {item.description}</p>
                                     <p>Участников: {item.participants.length}</p>

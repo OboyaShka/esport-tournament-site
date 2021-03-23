@@ -22,7 +22,7 @@ export const useRoutes = (isAuthenticated)=> {
                 <Route path="/tournaments/:id" exact>
                     <TournamentDetailPage />
                 </Route>
-                <Route path="/tournament/create" exact>
+                <Route path="/tournament/create">
                     <TournamentsCreatePage />
                 </Route>
                 <Route path="/profile" exact>

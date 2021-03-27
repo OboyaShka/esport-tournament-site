@@ -6,7 +6,8 @@ import {Switch, Redirect, Route } from 'react-router-dom';
 import {TournamentsPage} from "./pages/TournamentsPage";
 import {TournamentsCreatePage} from "./pages/TournamentCreatePage";
 import {TournamentDetailPage} from "./pages/TournamentDetailPage";
-
+import {RegisterPage} from "./pages/RegisterPage";
+import {ProfileDetailPage} from "./pages/ProfileDetailPage";
 
 export const useRoutes = (isAuthenticated)=> {
 
@@ -27,6 +28,9 @@ export const useRoutes = (isAuthenticated)=> {
                 </Route>
                 <Route path="/profile" exact>
                     <ProfilePage />
+                </Route>
+                <Route path="/profile/:id" exact>
+                    <ProfileDetailPage />
                 </Route>
                 <Route path="/authentication" exact>
                     <AuthPage />
@@ -49,6 +53,9 @@ export const useRoutes = (isAuthenticated)=> {
             </Route>
             <Route path="/authentication" exact>
                 <AuthPage />
+            </Route>
+            <Route path="/registration" exact>
+                <RegisterPage />
             </Route>
             <Redirect to="/" />
         </Switch>

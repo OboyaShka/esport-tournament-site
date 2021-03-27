@@ -6,13 +6,13 @@ import {useHistory, Redirect} from 'react-router-dom'
 import {Loader} from "../components/Loader";
 
 
-export const AuthPage = () => {
+export const RegisterPage = () => {
     const history = useHistory()
     const auth = useContext(AuthContext)
     const message = useMessage()
     const {loading, error, request, clearError} = useHttp()
     const [form, setForm] = useState({
-        email: '', password: ''
+        nickname: '', email: '', password: ''
     })
 
     useEffect(() => {
@@ -30,19 +30,17 @@ export const AuthPage = () => {
     }
 
     const registerHandler = async () => {
-        history.push('/registration')
-    }
-
-    const loginHandler = async (event) => {
         try {
-            const data = await request('/api/auth/login', 'POST', {...form})
-            auth.login(data.token, data.userId, data.userRoles)
-            if(data.token){
-                history.push('/')
-            }
+            const data = await request('/api/auth/register', 'POST', {...form})
+            history.push('authentication')
+            message(data.message)
         } catch (e) {
 
         }
+    }
+
+    const cancelHandler = async (event) => {
+        history.push('authentication')
     }
 
     if(loading) {
@@ -56,9 +54,20 @@ export const AuthPage = () => {
                 <h1>Название</h1>
                 <div className="card blue-grey darken-1">
                     <div className="card-content white-text">
-                        <span className="card-title">Авторизация</span>
+                        <span className="card-title">Регистрация</span>
 
                         <div>
+                            <div className="input-field">
+                                <input
+                                    id="nickname"
+                                    name="nickname"
+                                    type="text"
+                                    className="login-input"
+                                    value={form.nickname}
+                                    onChange={changeHandler}
+                                />
+                                <label htmlFor="nickname">Введите имя пользователя</label>
+                            </div>
                             <div className="input-field">
                                 <input
                                     id="email"
@@ -86,14 +95,14 @@ export const AuthPage = () => {
                         <div className="card-action">
                             <button
                                 className="btn yellow darken-4"
-                                onClick={loginHandler}
-                            >Войти
+                                onClick={registerHandler}
+                            >Зарегистрироваться
                             </button>
                             <button
                                 className="btn grey lighten-1 black-text"
-                                onClick={registerHandler}
+                                onClick={cancelHandler}
                                 disabled={loading}
-                            >Регистрация
+                            >Отмена
                             </button>
                         </div>
                     </div>

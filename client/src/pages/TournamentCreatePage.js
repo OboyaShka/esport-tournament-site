@@ -8,6 +8,8 @@ import FileUpload from "../components/FileUpload";
 import {resetFirstInputPolyfill} from "web-vitals/dist/modules/lib/polyfills/firstInputPolyfill";
 import {Loader} from "../components/Loader";
 import Select from 'react-select'
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 export const TournamentsCreatePage = () => {
     const [startDate, setStartDate] = useState(new Date());
@@ -18,7 +20,7 @@ export const TournamentsCreatePage = () => {
     const [tournament, setTournament] = useState(null)
     const OBJECT_ID = new URLSearchParams(window.location.search).get('id') || null;
     const [form, setForm] = useState({
-        title: '', game: '', description: '', image: "", date: ''
+        title: '', game: '', typeTour: '', description: '', image: "", date: ''
     })
 
 
@@ -41,6 +43,7 @@ export const TournamentsCreatePage = () => {
                 const fetched = await request(`/api/tournaments/${OBJECT_ID}`, 'GET', null)
                 form.title = fetched.title
                 form.game = fetched.game
+                form.typeTour = fetched.typeTour
                 form.description = fetched.description
                 form.image = fetched.image
                 form.date = fetched.date
@@ -76,6 +79,11 @@ export const TournamentsCreatePage = () => {
     const changeSelectHandler = event => {
         setForm({...form, game: event.value})
     }
+
+    const changeSelectHandlerType = event => {
+        setForm({...form, typeTour: event.value})
+    }
+
 
     const changeDateHandler = event => {
         setStartDate(event)
@@ -120,6 +128,13 @@ export const TournamentsCreatePage = () => {
         {value: 'Dota 2', label: 'Dota 2'},
     ]
 
+    const optionsType = [
+        {value: '1x1', label: '1x1'},
+        {value: '5x5', label: '5x5'},
+        {value: '5x5 RTC', label: '5x5 RTC'},
+    ]
+
+
     if (loading) {
         return <Loader/>
     }
@@ -150,6 +165,14 @@ export const TournamentsCreatePage = () => {
                         onChange={changeSelectHandler}
                         // placeholder={form.game}
                     />
+                    <Select
+                        id="typeTour"
+                        name="typeTour"
+                        options={optionsType}
+                        value={{label: form.typeTour, value: form.typeTour}}
+                        onChange={changeSelectHandlerType}
+                        // placeholder={form.game}
+                    />
                     <div className='input-field'>
                         <input
                             id="description"
@@ -166,8 +189,9 @@ export const TournamentsCreatePage = () => {
                             selected={startDate}
                             onChange={changeDateHandler}
                             timeInputLabel="Time:"
-                            dateFormat="MM/dd/yyyy h:mm aa"
-                            value={form.date}
+                            dateFormat="dd/MM/yyyy HH:mm"
+                            timeFormat="HH:mm"
+                            value={moment(form.date).format("DD/MM/YY HH:mm")}
                             showTimeInput
                         />
                         {OBJECT_ID ?

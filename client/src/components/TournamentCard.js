@@ -4,25 +4,53 @@ import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext";
 import {Loader} from "./Loader";
 import {useMessage} from "../hooks/message.hook";
+import {ParticipantsTable} from "./ParticipantsTable";
+import moment from 'moment'
 
 export const TournamentCard = ({tournamentId}) => {
     const {loading, request} = useHttp()
+    const message = useMessage()
     const auth = useContext(AuthContext)
-    const [user, setUser] = useState( null)
     const [tournament, setTournament] = useState( null)
     const history = useHistory()
-    const message = useMessage()
+    const roles = auth.userRoles
+    const [user, setUser] = useState( null)
+
+
+
+    const fetchUser = useCallback(async () => {
+        try{
+            const fetched = await request('/api/user/info', 'GET', null, {
+                Authorization: `Bearer ${auth.token}`} )
+            setUser(fetched.user)
+        }catch (e) {
+
+        }
+    },[request])
+
+    useEffect(()=>{
+        fetchUser()
+    },[fetchUser])
+
 
     //Добавляем/удаляем пользователя из списка участников турнира
 
     const addingHandler = useCallback( async ( ) => {
         try {
+
+
+
             const data = await request('/api/tournaments/accept', 'PUT', {tournamentId, option: "add"}, {
                 Authorization: `Bearer ${auth.token}`,
             })
             getTournament()
         } catch (e) {}
     }, [auth.token, request])
+
+    const errorHandler = async () => {
+        history.push("/profile")
+        message('Заполните имя призывателя')
+    }
 
     const cancelHandler = useCallback( async ( ) => {
         try {
@@ -64,40 +92,35 @@ export const TournamentCard = ({tournamentId}) => {
     },[getTournament])
 
 
-    if(loading){
-        return <Loader/>
-    }
-    if(tournament){
-        if(auth.token)
-            return (
 
+    //
+    // if(loading){
+    //     return <Loader/>
+    // }
+    if(tournament && user){
+
+            return (
                 <div>
-                    <button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>
-                    <button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>
+                    {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>}
+                    {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>}
                     <h1>{tournament.title}</h1>
                     <p>Игра: {tournament.game}</p>
+                    <p>Тип: {tournament.typeTour}</p>
                     <img style={{width: "80%"}} src={tournament.image}/>
                     <p>Описание: {tournament.description}</p>
                     <p>Участников: {tournament.participants.length}</p>
-                    <p>Дата проведения: {tournament.date}</p>
+                    <p>Дата проведения: {moment(tournament.date).format("DD/MM/YY HH:mm")}</p>
                     <h4>Участников зарегистрировалось: {tournament.participants.length}</h4>
-                    {!tournament.participants.includes(auth.userId)?<button className="waves-effect waves-light btn-large"  onClick={addingHandler}>Записаться на турнир</button>:
-                            <button className="waves-effect waves-light btn-large" onClick={cancelHandler}>Отменить участие</button>}
+
+                    {auth.token? (!tournament.participants.includes(auth.userId)?<button className="waves-effect waves-light btn-large"  onClick={user.summonersName != null ? addingHandler : errorHandler}>Записаться на турнир</button>:
+                        <button className="waves-effect waves-light btn-large" onClick={cancelHandler}>Отменить участие</button>)
+                    :( <Link className="waves-effect waves-light btn-large" to='/authentication'>Записаться на турнир</Link>)}
 
 
+                    <ParticipantsTable participants={tournament.participants} />
                 </div>
-
             )
-        return(
-            <div>
-                <h1>{tournament.title}</h1>
-                <h4>Участников зарегистрировалось: {tournament.participants.length}</h4>
-                <Link className="waves-effect waves-light btn-large" to='/authentication'>Записаться на турнир</Link>
 
-
-
-            </div>
-        )
     }
     return <></>
 }

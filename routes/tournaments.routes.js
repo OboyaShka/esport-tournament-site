@@ -16,7 +16,7 @@ router.post(
     auth,
     async (req, res) => {
         try {
-            const {title, game, description, image, date} = req.body
+            const {title, game, typeTour, description, image, date} = req.body
 
 
             if (!req.user.userRoles.includes("ADMIN") && !req.user.userRoles.includes("MODERATOR")) {
@@ -38,10 +38,12 @@ router.post(
                 {
                     title: title,
                     game: game,
+                    typeTour: typeTour,
                     description: description,
                     image: image,
                     participants: [],
-                    date: date
+                    date: date,
+
                 })
 
             await tournament.save()
@@ -60,7 +62,7 @@ router.put(
     auth,
     async (req, res) => {
         try {
-            const {title, game, description, image, date, OBJECT_ID} = req.body
+            const {title, game, typeTour, description, image, date, OBJECT_ID} = req.body
 
 
             if (!req.user.userRoles.includes("ADMIN") && !req.user.userRoles.includes("MODERATOR")) {
@@ -73,6 +75,7 @@ router.put(
                     $set: {
                         title: title,
                         game: game,
+                        typeTour: typeTour,
                         description: description,
                         image: image,
                         date: date

@@ -6,11 +6,14 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 const {check, validationResult} = require('express-validator')
 const router = Router()
+const TypeTour = require('../models/TypeTour')
 
 // /api/auth/register
 router.post(
     '/register',
     [
+        check('nickname', 'Минимальная длина имени 4 символа')
+            .isLength({min: 4}),
         check('email', 'Некорректный email').isEmail(),
         check('password', 'Минимальная длина пароля 6 символов')
             .isLength({min: 6})
@@ -25,20 +28,33 @@ router.post(
                     message: 'Некорректные данные при регистрации'
                 })
             }
-            const {email, password} = req.body
+            const {nickname, email, password} = req.body
 
+            const candidateName = await User.findOne({nickname})
             const candidate = await User.findOne({email})
 
-            if (candidate) {
-                return res.status(400).json({message: 'Такой пользователь уже существует'})
+            if ( candidate ) {
+                return res.status(400).json({message: 'Такой e-mail уже зарегестрирован'})
             }
+
+            if ( candidateName ) {
+                return res.status(400).json({message: 'Пользователь с таким именем уже существует'})
+            }
+
+
+
 
             const userRole = await Role.findOne({value: "USER"})
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email,
+            const user = new User({
+                nickname,
+                email,
                 password: hashedPassword,
+                image:null,
                 roles: [userRole.value],
-                tournaments: []})
+                tournaments: [],
+                summonersName:null
+            })
 
             await user.save()
 
@@ -65,6 +81,7 @@ router.post(
                     message: 'Некорректные данные при входе в систему'
                 })
             }
+
 
             const {email, password} = req.body
 

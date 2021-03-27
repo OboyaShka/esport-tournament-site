@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
+import moment from "moment";
 
 export const TournamentsList = ({tournaments}) => {
     if (!tournaments.length){
@@ -20,9 +21,10 @@ export const TournamentsList = ({tournaments}) => {
                                 </div>
                                 <div className="card-content">
                                     <p>Игра: {item.game}</p>
+                                    <p>Тип: {item.typeTour}</p>
                                     <p>Описание: {item.description}</p>
                                     <p>Участников: {item.participants.length}</p>
-                                    <p>Дата проведения: {item.date}</p>
+                                    <p>Дата проведения: {moment(item.date).format("DD/MM/YY HH:mm")}</p>
                                 </div>
                                 <div className="card-action">
                                     <Link to={`tournaments/${item._id}`}>Подробнее</Link>

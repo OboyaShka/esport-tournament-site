@@ -12,7 +12,7 @@ app.use('/api/upload', require('./routes/upload.routes'))
 app.use('/api/user', require('./routes/user.routes'))
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/tournaments', require('./routes/tournaments.routes'))
-
+app.use('/api/participants', require('./routes/participants.routes'))
 
 const PORT = config.get('port') || 5000
 

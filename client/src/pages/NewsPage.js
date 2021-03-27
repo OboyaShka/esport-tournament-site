@@ -4,20 +4,21 @@ import {AuthContext} from "../context/AuthContext";
 import {useHttp} from "../hooks/http.hook";
 import {Loader} from "../components/Loader";
 import {TournamentsList} from "../components/TournamentsList";
+import {NewsList} from "../components/NewsList";
 
 
-export const TournamentsPage = () => {
-    const [tournaments, setTournament] = useState([])
+export const NewsPage = () => {
+    const [news, setNews] = useState([])
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
     const roles = auth.userRoles
 
     const fetchTournaments = useCallback(async () => {
         try{
-            const fetched = await request('/api/tournaments', 'GET', null )
-            setTournament(fetched)
+            const fetched = await request('/api/news', 'GET', null )
+            setNews(fetched)
         }catch (e) {
-            
+
         }
     },[request])
 
@@ -32,10 +33,10 @@ export const TournamentsPage = () => {
     return (
         <div>
             <div>
-                {roles && roles.includes('ADMIN') && <Link className="waves-effect waves-light btn-large" to='/tournament/create'>Создать турнир</Link>}
+                {roles && roles.includes('ADMIN') && <Link className="waves-effect waves-light btn-large" to='/new/create'>Создать Новость</Link>}
             </div>
             <div>
-            {!loading && <TournamentsList tournaments={tournaments}/>}
+                {!loading && <NewsList news={news}/>}
             </div>
         </div>
     )

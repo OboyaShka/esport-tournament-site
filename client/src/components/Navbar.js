@@ -22,7 +22,7 @@ export const Navbar = () => {
             <div className="nav-wrapper">
                 <a href="#" className="brand-logo">Название</a>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/main">Новости</NavLink></li>
+                    <li><NavLink to="/news">Новости</NavLink></li>
                     <li><NavLink to="/tournaments" >Турниры</NavLink></li>
                     {auth.isAuthenticated &&<li><NavLink to="/profile">Профиль</NavLink></li>}
                     { auth.isAuthenticated ?

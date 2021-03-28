@@ -22,7 +22,7 @@ export const NewsList = ({news}) => {
                                 <div className="card-content">
                                     <p>Топик: {item.topic}</p>
                                     <p>Описание: {item.content}</p>
-                                    <p>Дата проведения: {moment(item.date).format("DD/MM/YY HH:mm")}</p>
+                                    <p>Дата публикации: {moment(item.date).format("DD/MM/YY HH:mm")}</p>
                                 </div>
                                 <div className="card-action">
                                     <Link to={`news/${item._id}`}>Подробнее</Link>

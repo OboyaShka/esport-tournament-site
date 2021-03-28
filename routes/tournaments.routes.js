@@ -2,6 +2,7 @@ const {Router} = require('express')
 const Tournament = require('../models/Tournament')
 const Game = require('../models/Game')
 const User = require('../models/User')
+const StateTour = require('../models/StateTour')
 const Role = require('../models/Role')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -34,11 +35,14 @@ router.post(
                 return res.status(400).json({message: 'Такой игры нет'})
             }
 
+            const stateTour = await StateTour.findOne({value: "WAITING"})
+
             const tournament = new Tournament(
                 {
                     title: title,
                     game: game,
                     typeTour: typeTour,
+                    stateTour: stateTour.value,
                     description: description,
                     image: image,
                     participants: [],
@@ -68,7 +72,6 @@ router.put(
             if (!req.user.userRoles.includes("ADMIN") && !req.user.userRoles.includes("MODERATOR")) {
                 return res.status(403).json({message: 'У вас нет доступа'})
             }
-
 
             const tournament = await Tournament.updateOne({_id: OBJECT_ID},
                 {
@@ -121,42 +124,58 @@ router.put(
             const {tournamentId, option} = req.body
             {
                 const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
-                if (option === "add") {
-
-                    if (tournamentParticipants.participants.includes(req.user.userId)) {
-                        return res.status(400).json({message: 'Пользователь уже зарегистрирован'})
-                    }
-
-
-                    const tournament = await Tournament.updateOne(
-                        {_id: tournamentId},
-                        {$push: {participants: req.user.userId}}
-                    )
-
-                    const userTournament = await User.updateOne(
-                        {_id: req.user.userId},
-                        {$push: {tournaments: tournamentId}}
-                    )
-
-                    res.status(201).json({message: 'Пользователь добавлен в турнир'})
-                } else {
-                    if (!tournamentParticipants.participants.includes(req.user.userId)) {
-                        return res.status(400).json({message: 'Пользователь не зарегистрирован на турнире'})
-                    }
+                switch(option){
+                    case "add":
+                        if (tournamentParticipants.participants.includes(req.user.userId)) {
+                            return res.status(400).json({message: 'Пользователь уже зарегистрирован'})
+                        }
 
 
-                    const tournament = await Tournament.findOneAndUpdate(
-                        {_id: tournamentId},
-                        {$pull: {participants: req.user.userId}}
-                    )
+                        const tournament = await Tournament.updateOne(
+                            {_id: tournamentId},
+                            {$push: {participants: req.user.userId}}
+                        )
 
-                    const userTournament = await User.findOneAndUpdate(
-                        {_id: req.user.userId},
-                        {$pull: {tournaments: tournamentId}}
-                    )
+                        const userTournament = await User.updateOne(
+                            {_id: req.user.userId},
+                            {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"} }}
+                        )
 
-                    res.status(201).json({message: 'Пользователь удалён с турнира'})
+                        res.status(201).json({message: 'Пользователь добавлен в турнир'})
+
+                        break
+                    case "delete":
+                        if (!tournamentParticipants.participants.includes(req.user.userId)) {
+                            return res.status(400).json({message: 'Пользователь не зарегистрирован на турнире'})
+                        }
+
+
+                        const tournamentDel = await Tournament.findOneAndUpdate(
+                            {_id: tournamentId},
+                            {$pull: {participants: req.user.userId}}
+                        )
+
+                        const userTournamentDel = await User.findOneAndUpdate(
+                            {_id: req.user.userId},
+                            {$pull: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
+                        )
+
+                        res.status(201).json({message: 'Пользователь удалён с турнира'})
+                        break
+                    case "confirm":
+                        if (!tournamentParticipants.participants.includes(req.user.userId)) {
+                            return res.status(400).json({message: 'Пользователь не зарегистрирован на турнире'})
+                        }
+
+                        const userTournamentConfirm = await User.findOneAndUpdate(
+                            {_id: req.user.userId},
+                            {$set: {tournaments: {tournamentId: tournamentId, status: "ACCEPTED"}}}
+                        )
+
+                        break
+
                 }
+
             }
         } catch (e) {
             res.status(500).json({message: e})

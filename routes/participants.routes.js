@@ -7,23 +7,27 @@ router.post(
     '/',
     async (req, res) => {
         try {
-            const {participants} = req.body
+            const {participants, tournamentId} = req.body
 
             const participant = await User.find({_id: {$in: participants}})
+
+
 
             let participantInfo = []
 
             participant.forEach((participant, i) => {
+
+                let tournamentInfo = participant.tournaments.find(city => city.tournamentId == tournamentId)
+
+                console.log(tournamentInfo)
+
                 participantInfo.push({
                     id: participant.id,
                     nickname: participant.nickname,
-                    image: participant.image
+                    image: participant.image,
+                    tournaments: tournamentInfo
                 })
-                // participant = {
-                //     id: participant.id,
-                //     nickname: participant.nickname,
-                //     image: participant.image
-                // }
+
             })
 
             //res.json({participant: participantInfo})

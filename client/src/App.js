@@ -7,6 +7,7 @@ import {AuthContext} from "./context/AuthContext";
 import {Navbar} from "./components/Navbar";
 import {Loader} from "./components/Loader";
 
+
 function App() {
     const {token, login, logout, userId, userRoles, ready} = useAuth()
     const isAuthenticated = !!token

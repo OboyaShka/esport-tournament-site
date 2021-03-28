@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 const {check, validationResult} = require('express-validator')
 const router = Router()
-const TypeTour = require('../models/TypeTour')
+const StateUser = require('../models/StateUser')
 
 // /api/auth/register
 router.post(
@@ -81,7 +81,6 @@ router.post(
                     message: 'Некорректные данные при входе в систему'
                 })
             }
-
 
             const {email, password} = req.body
 

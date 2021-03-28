@@ -3,7 +3,9 @@ const config = require('config')
 const mongoose = require('mongoose')
 const fileUpload = require('express-fileupload')
 const app = express()
-
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+const Tournament = require('./models/Tournament')
 
 app.use(express.json({extended: true}))
 app.use(fileUpload())
@@ -24,7 +26,26 @@ async function start(){
             useUnifiedTopology: true,
             useCreateIndex: true
         })
-        app.listen( PORT, ()=> console.log(`App has been started on port ${PORT}...`))
+
+        io.on('connection', async (socket)=>{
+            socket.on('TOURNAMENTS/STATECHANGE', async ( tournamentId, state ) => {
+
+
+                const tournament = await Tournament.updateOne({_id: tournamentId},
+                    {
+                        $set: {
+                            stateTour: state,
+                        }
+                    }
+                )
+
+
+                io.emit('TOURNAMENTS/NEWSTATE', state)
+            })
+        })
+
+
+        http.listen( PORT, ()=> console.log(`App has been started on port ${PORT}...`))
     } catch (e) {
         console.log('Server error', e.message)
         process.exit(1)

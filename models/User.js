@@ -6,7 +6,10 @@ const User = new Schema({
     password: {type: String, required:true},
     image: {type: String},
     roles: [{type: String, ref: 'Role'}],
-    tournaments: [{type: Types.ObjectId, ref: 'Tournament'}],
+    tournaments: [{
+        tournamentId: {type: Types.ObjectId, ref: 'Tournament'},
+        status: {type: String, ref: 'StateUser'}
+    }],
     summonersName: {type: String},
 })
 

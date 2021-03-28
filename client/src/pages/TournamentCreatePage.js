@@ -20,7 +20,7 @@ export const TournamentsCreatePage = () => {
     const [tournament, setTournament] = useState(null)
     const OBJECT_ID = new URLSearchParams(window.location.search).get('id') || null;
     const [form, setForm] = useState({
-        title: '', game: '', typeTour: '', description: '', image: "", date: ''
+        title: '', game: '', typeTour: '', description: '', image: '', date: ''
     })
 
 

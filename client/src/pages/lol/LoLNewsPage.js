@@ -1,13 +1,13 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {Link, useHistory} from "react-router-dom";
-import {AuthContext} from "../context/AuthContext";
-import {useHttp} from "../hooks/http.hook";
-import {Loader} from "../components/Loader";
-import {TournamentsList} from "../components/TournamentsList";
-import {NewsList} from "../components/NewsList";
+import {AuthContext} from "../../context/AuthContext";
+import {useHttp} from "../../hooks/http.hook";
+import {Loader} from "../../components/Loader";
+import {TournamentsList} from "../../components/TournamentsList";
+import {NewsList} from "../../components/NewsList";
 
 
-export const NewsPage = () => {
+export const LoLNewsPage = () => {
     const [news, setNews] = useState([])
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)

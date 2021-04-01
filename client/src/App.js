@@ -2,14 +2,15 @@ import React from 'react'
 import {BrowserRouter as Router} from 'react-router-dom'
 import {useRoutes} from "./routes";
 import {useAuth} from "./hooks/auth.hook";
-import 'materialize-css'
 import {AuthContext} from "./context/AuthContext";
 import {Navbar} from "./components/Navbar";
 import {Loader} from "./components/Loader";
+import {Header} from "./components/Header";
+import {GameNavbar} from "./components/GameNavbar";
 
 
 function App() {
-    const {token, login, logout, userId, userRoles, ready} = useAuth()
+    const {token, login, logout, userId, userRoles, userNickname,userAvatar, ready} = useAuth()
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
 
@@ -24,12 +25,22 @@ function App() {
             logout,
             userId,
             userRoles,
+            userNickname,
+            userAvatar,
             isAuthenticated
         }}>
             <Router>
-                <Navbar></Navbar>
                 <div className="container">
-                    {routes}
+                <Header></Header>
+                    <div className="main-container">
+                        <div className="nav-bar">
+                            <GameNavbar ></GameNavbar>
+                            <Navbar></Navbar>
+                        </div>
+                        <div className="content-container">
+                            {routes}
+                        </div>
+                    </div>
                 </div>
             </Router>
         </AuthContext.Provider>

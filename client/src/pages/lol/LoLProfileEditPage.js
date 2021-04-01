@@ -1,12 +1,12 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
-import {useHttp} from "../hooks/http.hook";
-import {AuthContext} from "../context/AuthContext";
-import {Loader} from "../components/Loader";
-import FileUpload from "../components/FileUpload";
-import {useMessage} from "../hooks/message.hook";
+import {useHttp} from "../../hooks/http.hook";
+import {AuthContext} from "../../context/AuthContext";
+import {Loader} from "../../components/Loader";
+import FileUpload from "../../components/FileUpload";
+import {useMessage} from "../../hooks/message.hook";
 import {useHistory} from "react-router-dom";
 
-export const ProfilePage = () => {
+export const LoLProfileEditPage = () => {
     const history = useHistory()
     const [user, setUser] = useState([])
     const {loading, request} = useHttp()

@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {useParams} from "react-router-dom";
-import {ProfileCard} from "../components/ProfileCard";
+import {ProfileCard} from "../../components/ProfileCard";
 
-export const ProfileDetailPage = () => {
+export const LoLProfileDetailPage = () => {
 
     const profileId = useParams().id
 

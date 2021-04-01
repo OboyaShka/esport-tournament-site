@@ -6,6 +6,8 @@ const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const Tournament = require('./models/Tournament')
+const User = require('./models/User')
+const jwt = require('jsonwebtoken')
 
 app.use(express.json({extended: true}))
 app.use(fileUpload())
@@ -30,7 +32,6 @@ async function start(){
         io.on('connection', async (socket)=>{
             socket.on('TOURNAMENTS/STATECHANGE', async ( tournamentId, state ) => {
 
-
                 const tournament = await Tournament.updateOne({_id: tournamentId},
                     {
                         $set: {
@@ -38,9 +39,29 @@ async function start(){
                         }
                     }
                 )
-
-
                 io.emit('TOURNAMENTS/NEWSTATE', state)
+            })
+
+            socket.on('TOURNAMENTS/REGISTRED', async ( token, tournamentId ) => {
+
+                const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
+
+                const decoded = jwt.verify(token, config.get('jwtSecret'))
+
+                if (!tournamentParticipants.participants.includes(decoded.userId)) {
+
+                    const tournament = await Tournament.updateOne(
+                        {_id: tournamentId},
+                        {$push: {participants: decoded.userId}}
+                    )
+
+                    const userTournament = await User.updateOne(
+                        {_id: decoded.userId},
+                        {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"} }}
+                    )
+
+                    io.emit('TOURNAMENTS/REGISTRED:RES', 'Пользователь зарегистрирован на турнир')
+                }
             })
         })
 

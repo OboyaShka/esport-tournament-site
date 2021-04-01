@@ -21,7 +21,7 @@ export const AuthPage = () => {
     }, [error, message, clearError])
 
     useEffect(() => {
-        window.M.updateTextFields()
+        //window.M.updateTextFields()
     }, [])
 
 
@@ -36,7 +36,7 @@ export const AuthPage = () => {
     const loginHandler = async (event) => {
         try {
             const data = await request('/api/auth/login', 'POST', {...form})
-            auth.login(data.token, data.userId, data.userRoles)
+            auth.login(data.token, data.userId, data.userRoles, data.userNickname, data.userAvatar)
             if(data.token){
                 history.push('/')
             }

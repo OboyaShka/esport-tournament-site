@@ -54,14 +54,26 @@ export const TournamentCard = ({tournamentId}) => {
     }, [auth.token, request])
 
 
+    // const addingHandler = useCallback( async ( ) => {
+    //     try {
+    //         const data = await request('/api/tournaments/accept', 'PUT', {tournamentId, option: "add"}, {
+    //             Authorization: `Bearer ${auth.token}`,
+    //         })
+    //         getTournament()
+    //     } catch (e) {}
+    // }, [auth.token, request])
+
     const addingHandler = useCallback( async ( ) => {
         try {
-            const data = await request('/api/tournaments/accept', 'PUT', {tournamentId, option: "add"}, {
-                Authorization: `Bearer ${auth.token}`,
-            })
-            getTournament()
+            socket.emit('TOURNAMENTS/REGISTRED', auth.token, tournamentId)
         } catch (e) {}
-    }, [auth.token, request])
+    }, [])
+
+    useEffect(()=>{
+        socket.on('TOURNAMENTS/REGISTRED:RES', ( state ) => {
+            getTournament()
+        })
+    },[])
 
     const cancelHandler = useCallback( async ( ) => {
         try {
@@ -138,7 +150,7 @@ export const TournamentCard = ({tournamentId}) => {
                     <p>Игра: {tournament.game}</p>
                     <p>Тип: {tournament.typeTour}</p>
                     <p>Статус: {tournament.stateTour}</p>
-                    <img style={{width: "80%"}} src={tournament.image}/>
+                    <img style={{width: "10%"}} src={tournament.image}/>
                     <p>Описание: {tournament.description}</p>
                     <p>Участников: {tournament.participants.length}</p>
                     <p>Дата проведения: {moment(tournament.date).format("DD/MM/YY HH:mm")}</p>

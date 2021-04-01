@@ -1,10 +1,10 @@
 import React from 'react'
 
 import {useParams} from "react-router-dom";
-import {ProfileCard} from "../components/ProfileCard";
-import {NewsCard} from "../components/NewsCard";
+import {ProfileCard} from "../../components/ProfileCard";
+import {NewsCard} from "../../components/NewsCard";
 
-export const NewsDetailPage = () => {
+export const LoLNewsDetailPage = () => {
 
 
     const newsId = useParams().id

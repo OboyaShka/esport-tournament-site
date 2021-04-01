@@ -1,6 +1,9 @@
 import React, {useContext} from 'react'
 import {NavLink, useHistory} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
+import TournamentIcon from "../img/nav_img/tournament_icon.svg"
+import ProfileIcon from "../img/nav_img/profile_icon.svg"
+import NewsIcon from "../img/nav_img/news_icon.svg"
 
 export const Navbar = () => {
     const history = useHistory()
@@ -17,20 +20,14 @@ export const Navbar = () => {
         history.push('/authentication')
     }
 
+
     return (
-        <nav>
-            <div className="nav-wrapper">
-                <a href="#" className="brand-logo">Название</a>
-                <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/news">Новости</NavLink></li>
-                    <li><NavLink to="/tournaments" >Турниры</NavLink></li>
-                    {auth.isAuthenticated &&<li><NavLink to="/profile">Профиль</NavLink></li>}
-                    { auth.isAuthenticated ?
-                        <li><NavLink to="/" onClick={logoutHandler}>Выйти</NavLink></li>:<li><NavLink to="/authentication" onClick={loginHandler}>Войти</NavLink></li>}
-
-                </ul>
-            </div>
+        <nav className="option-nav">
+            <ul className="option-container">
+                <li className="option-li"><img src={TournamentIcon}/><NavLink className="option-link" to="/lol/tournaments">Турниры</NavLink></li>
+                <li className="option-li"><img src={NewsIcon}/><NavLink className="option-link" to="/lol/news">Новости</NavLink></li>
+                {auth.isAuthenticated && <li className="option-li"><img src={ProfileIcon}/><NavLink className="option-link" to="/lol/profile">Мой аккаунт</NavLink></li>}
+            </ul>
         </nav>
-
     )
 }

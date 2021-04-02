@@ -14,7 +14,8 @@ import CupIcon from "../../img/profile_img/cup_icon.svg";
 import PedestalIcon from "../../img/profile_img/pedestal_icon.svg";
 import TrendIcon from "../../img/profile_img/trend_icon.svg";
 import MoreIcon from "../../img/profile_img/more_icon.svg";
-
+import GameTest from "../../img/profile_img/games-league-of-legends-78709.jpg"
+import Participants from "../../img/nav_img/profile_icon.svg"
 
 export const LoLProfilePage = () => {
     const history = useHistory()
@@ -143,7 +144,73 @@ export const LoLProfilePage = () => {
                         <p>Рейтинг на сайте</p>
                     </div>
             </div>
-            <div className="my-profile-games">3</div>
+            <div className="my-profile-title-games">Мои турниры</div>
+            <div className="my-profile-games">
+                <div className="tournament-card">
+                    <div className="image-card">
+                        <h5>Турнир 1</h5>
+                        <img src={GameTest} />
+                    </div>
+                    <div className="card-left">
+                        <div className="card-format">Формат: </div>
+                        <div className="card-format">Тип:</div>
+                        <div className="card-date">24.05 20:30</div>
+                    </div>
+                    <div className="card-right">
+                        <div className="card-format">Взнос: </div>
+                        <div className="card-format">Призовые:</div>
+                        <div className="card-participants"><img src={Participants}/>7/32</div>
+                    </div>
+                </div>
+                <div className="tournament-card">
+                    <div className="image-card">
+                        <h5>Турнир 1</h5>
+                        <img src={GameTest} />
+                    </div>
+                    <div className="card-left">
+                        <div className="card-format">Формат: </div>
+                        <div className="card-format">Тип:</div>
+                        <div className="card-date">24.05 20:30</div>
+                    </div>
+                    <div className="card-right">
+                        <div className="card-format">Взнос: </div>
+                        <div className="card-format">Призовые:</div>
+                        <div className="card-participants"><img src={Participants}/>7/32</div>
+                    </div>
+                </div>
+                <div className="tournament-card">
+                    <div className="image-card">
+                        <h5>Турнир 1</h5>
+                        <img src={GameTest} />
+                    </div>
+                    <div className="card-left">
+                        <div className="card-format">Формат: </div>
+                        <div className="card-format">Тип:</div>
+                        <div className="card-date">24.05 20:30</div>
+                    </div>
+                    <div className="card-right">
+                        <div className="card-format">Взнос: </div>
+                        <div className="card-format">Призовые:</div>
+                        <div className="card-participants"><img src={Participants}/>7/32</div>
+                    </div>
+                </div>
+                <div className="tournament-card">
+                    <div className="image-card">
+                        <h5>Турнир 1</h5>
+                        <img src={GameTest} />
+                    </div>
+                    <div className="card-left">
+                        <div className="card-format">Формат: </div>
+                        <div className="card-format">Тип:</div>
+                        <div className="card-date">24.05 20:30</div>
+                    </div>
+                    <div className="card-right">
+                        <div className="card-format">Взнос: </div>
+                        <div className="card-format">Призовые:</div>
+                        <div className="card-participants"><img src={Participants}/>7/32</div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

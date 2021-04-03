@@ -19,7 +19,7 @@ router.post(
 
                 let tournamentInfo = participant.tournaments.find(city => city.tournamentId == tournamentId)
 
-                console.log(tournamentInfo)
+
 
                 participantInfo.push({
                     id: participant.id,

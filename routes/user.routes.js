@@ -3,6 +3,7 @@ const auth = require('../middleware/auth.middleware')
 const router = Router()
 const config = require('config')
 const User = require('../models/User')
+const Tournament = require('../models/Tournament')
 
 // /api/user/info
 router.get(
@@ -68,5 +69,7 @@ router.put(
             res.status(500).json({message: e})
         }
     })
+
+
 
 module.exports = router;

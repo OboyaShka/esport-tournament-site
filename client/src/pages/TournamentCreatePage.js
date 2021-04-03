@@ -29,9 +29,9 @@ export const TournamentsCreatePage = () => {
         clearError()
     }, [error, message, clearError])
 
-    useEffect(() => {
-        window.M.updateTextFields()
-    }, [])
+    // useEffect(() => {
+    //     window.M.updateTextFields()
+    // }, [])
 
     //setForm({...form, title: tournament.title, game: tournament.game, description: tournament.description, image: tournament.image, date: tournament.date})
 

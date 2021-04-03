@@ -18,6 +18,7 @@ app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/tournaments', require('./routes/tournaments.routes'))
 app.use('/api/participants', require('./routes/participants.routes'))
 app.use('/api/news', require('./routes/news.routes'))
+app.use('/api/profile', require('./routes/profile.routes'))
 
 const PORT = config.get('port') || 5000
 

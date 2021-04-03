@@ -30,7 +30,7 @@ export const useRoutes = (isAuthenticated)=> {
                 <Route path="/lol/tournaments" exact>
                     <LoLTournamentsPage />
                 </Route>
-                <Route path="/tournaments/:id" exact>
+                <Route path="/lol/tournaments/:id" exact>
                     <LoLTournamentDetailPage />
                 </Route>
                 <Route path="/lol/news" exact>
@@ -42,7 +42,7 @@ export const useRoutes = (isAuthenticated)=> {
                 <Route path="/lol/profile" exact>
                     <LoLProfilePage />
                 </Route>
-                <Route path="/profile/:id" exact>
+                <Route path="/lol/profile/:id" exact>
                     <LoLProfileDetailPage />
                 </Route>
 

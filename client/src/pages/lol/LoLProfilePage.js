@@ -4,7 +4,7 @@ import {AuthContext} from "../../context/AuthContext";
 import {Loader} from "../../components/Loader";
 import FileUpload from "../../components/FileUpload";
 import {useMessage} from "../../hooks/message.hook";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Red from "../../img/header_img/redcoin.svg";
 import Blue from "../../img/header_img/bluecoin.svg";
 import Edit from "../../img/nav_img/edit.svg";
@@ -16,6 +16,7 @@ import TrendIcon from "../../img/profile_img/trend_icon.svg";
 import MoreIcon from "../../img/profile_img/more_icon.svg";
 import GameTest from "../../img/profile_img/games-league-of-legends-78709.jpg"
 import Participants from "../../img/nav_img/profile_icon.svg"
+import moment from "moment";
 
 export const LoLProfilePage = () => {
     const history = useHistory()
@@ -23,6 +24,7 @@ export const LoLProfilePage = () => {
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
     const message = useMessage()
+    const [mytournaments, setMytournaments] = useState()
     const [sumName, setSumName] = useState(null)
     const [form, setForm] = useState({
         image: null, summonersName: null
@@ -32,6 +34,20 @@ export const LoLProfilePage = () => {
         setForm({...form, summonersName: event.target.value})
     }
 
+    const fetchMyTournaments = useCallback(async () => {
+        try {
+            const fetch = await request('/api/profile/tournaments', 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setMytournaments(fetch)
+        } catch (e) {
+
+        }
+    }, [request])
+
+    useEffect(() => {
+        fetchMyTournaments()
+    }, [fetchMyTournaments])
 
     const fetchUser = useCallback(async () => {
         try {
@@ -62,10 +78,11 @@ export const LoLProfilePage = () => {
         }
     }, [auth.token, request, {...form}])
 
+    //
+    // if (loading) {
+    //     return <Loader/>
+    // }
 
-    if (loading) {
-        return <Loader/>
-    }
 
     return (
         <div className="my-profile-container">
@@ -73,7 +90,7 @@ export const LoLProfilePage = () => {
             <div className="my-profile-card">
                 <div className="info-card">
 
-                    <img style={{maxWidth: "80%", borderRadius: "50%"}} src={user.image}/>
+                    <img style={{maxWidth: "90%", borderRadius: "50%"}} src={auth.userAvatar}/>
                     <div className="info-card-profile">
 
                         <div>
@@ -96,121 +113,87 @@ export const LoLProfilePage = () => {
 
             </div>
             <div className="my-profile-statistics">
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={TournamentIcon}/>
-                                <img src={LineIcon}/>
-                                <var>12</var>
-                            </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={TournamentIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
                         </div>
-                        <p>Турниров сыграно</p>
                     </div>
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={CupIcon}/>
-                                <img src={LineIcon}/>
-                                <var>12</var>
-                            </div>
+                    <p>Турниров сыграно</p>
+                </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={CupIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
                         </div>
-                        <p>Побед в турнирах</p>
                     </div>
+                    <p>Побед в турнирах</p>
+                </div>
 
-                    <div className="open-statistics">
-                        <div className="statistics-card-more">
-                            <img src={MoreIcon}/>
-                        </div>
+                <div className="open-statistics">
+                    <div className="statistics-card-more">
+                        <img src={MoreIcon}/>
                     </div>
+                </div>
 
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={PedestalIcon}/>
-                                <img src={LineIcon}/>
-                                <var>12</var>
-                            </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={PedestalIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
                         </div>
-                        <p>Призовых мест</p>
                     </div>
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={TrendIcon}/>
-                                <img src={LineIcon}/>
-                                <var>12</var>
-                            </div>
+                    <p>Призовых мест</p>
+                </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={TrendIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
                         </div>
-                        <p>Рейтинг на сайте</p>
                     </div>
+                    <p>Рейтинг на сайте</p>
+                </div>
             </div>
             <div className="my-profile-title-games">Мои турниры</div>
-            <div className="my-profile-games">
-                <div className="tournament-card">
-                    <div className="image-card">
-                        <h5>Турнир 1</h5>
-                        <img src={GameTest} />
-                    </div>
-                    <div className="card-left">
-                        <div className="card-format">Формат: </div>
-                        <div className="card-format">Тип:</div>
-                        <div className="card-date">24.05 20:30</div>
-                    </div>
-                    <div className="card-right">
-                        <div className="card-format">Взнос: </div>
-                        <div className="card-format">Призовые:</div>
-                        <div className="card-participants"><img src={Participants}/>7/32</div>
-                    </div>
-                </div>
-                <div className="tournament-card">
-                    <div className="image-card">
-                        <h5>Турнир 1</h5>
-                        <img src={GameTest} />
-                    </div>
-                    <div className="card-left">
-                        <div className="card-format">Формат: </div>
-                        <div className="card-format">Тип:</div>
-                        <div className="card-date">24.05 20:30</div>
-                    </div>
-                    <div className="card-right">
-                        <div className="card-format">Взнос: </div>
-                        <div className="card-format">Призовые:</div>
-                        <div className="card-participants"><img src={Participants}/>7/32</div>
-                    </div>
-                </div>
-                <div className="tournament-card">
-                    <div className="image-card">
-                        <h5>Турнир 1</h5>
-                        <img src={GameTest} />
-                    </div>
-                    <div className="card-left">
-                        <div className="card-format">Формат: </div>
-                        <div className="card-format">Тип:</div>
-                        <div className="card-date">24.05 20:30</div>
-                    </div>
-                    <div className="card-right">
-                        <div className="card-format">Взнос: </div>
-                        <div className="card-format">Призовые:</div>
-                        <div className="card-participants"><img src={Participants}/>7/32</div>
-                    </div>
-                </div>
-                <div className="tournament-card">
-                    <div className="image-card">
-                        <h5>Турнир 1</h5>
-                        <img src={GameTest} />
-                    </div>
-                    <div className="card-left">
-                        <div className="card-format">Формат: </div>
-                        <div className="card-format">Тип:</div>
-                        <div className="card-date">24.05 20:30</div>
-                    </div>
-                    <div className="card-right">
-                        <div className="card-format">Взнос: </div>
-                        <div className="card-format">Призовые:</div>
-                        <div className="card-participants"><img src={Participants}/>7/32</div>
-                    </div>
-                </div>
+            {!loading && mytournaments && <div className="my-profile-games">
+                {!mytournaments.length ?
+                    (<p>Турниров на данный момент нет</p>) :
+                    mytournaments.map((item, index) => {
+                        return (
+                            <Link className="tournament-card" key={index} to={`/lol/tournaments/${item._id}`}>
+                                <div className="image-card">
+                                    <h5 className="card-title">{item.title}</h5>
+                                    <img style={{width: "100%"}} src={item.image}/>
+                                </div>
+
+                                <div className="card-left">
+                                    <div className="card-format"><b>Формат: </b>{item.typeTour} </div>
+                                    <div className="card-format"><b>Тип: </b></div>
+                                    <div className="card-date">
+                                        <b>{moment(item.date).format("DD.MM")}</b> {moment(item.date).format("HH:mm")}
+                                    </div>
+                                </div>
+                                <div className="card-right">
+                                    <div className="card-format"><b>Взнос: </b></div>
+                                    <div className="card-format"><b>Призовые: </b></div>
+                                    <div className="card-participants"><img
+                                        src={Participants}/>{item.participants.length}/32
+                                    </div>
+                                </div>
+
+                            </Link>
+                        )
+                    })}
             </div>
+            }
+
         </div>
     )
 }

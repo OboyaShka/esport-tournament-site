@@ -32,7 +32,7 @@ export const TournamentsPage = () => {
     return (
         <div>
             <div>
-                {roles && roles.includes('ADMIN') && <Link className="waves-effect waves-light btn-large" to='/tournament/create'>Создать турнир</Link>}
+                {roles && roles.includes('ADMIN') && <Link to='/tournament/create'>Создать турнир</Link>}
             </div>
             <div>
             {!loading && <TournamentsList tournaments={tournaments}/>}

@@ -3,17 +3,18 @@ import {Link, useHistory} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
 import {Loader} from "../../components/Loader";
-import {TournamentsList} from "../../components/TournamentsList";
 import moment from "moment";
 import GameTest from "../../img/profile_img/games-league-of-legends-78709.jpg";
 import Participants from "../../img/nav_img/profile_icon.svg";
 import SearchIcon from "../../img/search_icon.svg";
+import {GameContext} from "../../context/GameContext";
 
 export const LoLTournamentsPage = () => {
     const [tournaments, setTournament] = useState([])
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
     const roles = auth.userRoles
+    const gameContext = useContext(GameContext)
 
     const fetchTournaments = useCallback(async () => {
         try {
@@ -54,7 +55,7 @@ export const LoLTournamentsPage = () => {
                     (<p>Турниров на данный момент нет</p>) :
                     tournaments.map((item, index) => {
                         return (
-                            <Link className="tournament-card" key={index} to={`/lol/tournaments/${item._id}`}>
+                            <Link className="tournament-card" onClick={gameContext.setTournamentNav("tournament")}  key={index} to={`/lol/tournaments/${item._id}`}>
                                 <div className="image-card">
                                     <h5 className="card-title">{item.title}</h5>
                                     <img style={{width: "100%"}} src={item.image}/>

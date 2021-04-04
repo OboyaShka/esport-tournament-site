@@ -3,8 +3,6 @@ import {Link, useHistory} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
 import {Loader} from "../../components/Loader";
-import {TournamentsList} from "../../components/TournamentsList";
-import {NewsList} from "../../components/NewsList";
 import moment from "moment";
 import SearchIcon from "../../img/search_icon.svg";
 import Participants from "../../img/nav_img/profile_icon.svg";

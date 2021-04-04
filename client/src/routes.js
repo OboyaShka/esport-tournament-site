@@ -3,7 +3,6 @@ import {ProfilePage} from './pages/lol/LoLProfilePage'
 import {MainPage} from './pages/lol/LoLNewsPage'
 import {AuthPage} from './pages/AuthPage'
 import {Switch, Redirect, Route } from 'react-router-dom';
-import {TournamentsPage} from "./pages/TournamentsPage";
 import {TournamentsCreatePage} from "./pages/TournamentCreatePage";
 import {TournamentDetailPage} from "./pages/lol/LoLTournamentDetailPage";
 import {RegisterPage} from "./pages/RegisterPage";
@@ -18,6 +17,10 @@ import {LoLNewsDetailPage} from "./pages/lol/LoLNewsDetailPage";
 import {LoLTournamentDetailPage} from "./pages/lol/LoLTournamentDetailPage";
 import {LoLProfilePage} from "./pages/lol/LoLProfilePage";
 import {LoLProfileDetailPage} from "./pages/lol/LoLProfileDetailPage";
+import {LoLTournamentRules} from "./pages/lol/LoLTournamentRules";
+import {LoLTournamentParticipants} from "./pages/lol/LoLTournamentParticipants";
+import {LoLTournamentBracket} from "./pages/lol/LoLTournamentBracket";
+import {LoLTournamentMatches} from "./pages/lol/LolTournamentMatches";
 
 export const useRoutes = (isAuthenticated)=> {
 
@@ -27,11 +30,24 @@ export const useRoutes = (isAuthenticated)=> {
                 <Route path="/lol" exact>
                     <LoLPage />
                 </Route>
+
                 <Route path="/lol/tournaments" exact>
                     <LoLTournamentsPage />
                 </Route>
                 <Route path="/lol/tournaments/:id" exact>
                     <LoLTournamentDetailPage />
+                </Route>
+                <Route path="/lol/tournaments/:id/rules" exact>
+                    <LoLTournamentRules />
+                </Route>
+                <Route path="/lol/tournaments/:id/participants" exact>
+                    <LoLTournamentParticipants/>
+                </Route>
+                <Route path="/lol/tournaments/:id/bracket" exact>
+                    <LoLTournamentBracket/>
+                </Route>
+                <Route path="/lol/tournaments/:id/matches" exact>
+                    <LoLTournamentMatches/>
                 </Route>
                 <Route path="/lol/news" exact>
                     <LoLNewsPage />
@@ -64,8 +80,8 @@ export const useRoutes = (isAuthenticated)=> {
 
     return (
         <Switch>
-            <Route path="/tournaments" exact>
-                <TournamentsPage />
+            <Route path="/lol/tournaments" exact>
+                <LoLTournamentsPage />
             </Route>
             <Route path="/authentication" exact>
                 <AuthPage />

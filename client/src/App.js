@@ -17,6 +17,7 @@ function App() {
     const routes = useRoutes(isAuthenticated)
     const [game, setGame] = useState("lol")
     const [option, setOption] = useState("tournaments")
+    const [tournamentNav, setTournamentNav] = useState()
 
     if (!ready) {
         return <Loader/>;
@@ -34,7 +35,7 @@ function App() {
             isAuthenticated
         }}>
             <GameContext.Provider value={{
-                game, setGame, option, setOption
+                game, setGame, option, setOption, tournamentNav, setTournamentNav
             }}>
             <Router>
                 <div className="container">

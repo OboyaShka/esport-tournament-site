@@ -661,3 +661,26 @@ b{
     color: #827081;
     font-size: 14px;
 }
+
+.tournament-nav{
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 28px;
+    margin: 2.5rem 2rem ;
+    font-weight: 500;
+}
+
+.tournaments_nav-link{
+    text-decoration: none;
+    color: #615060;
+    outline: 0;
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.tournaments_nav-link img{
+    padding-top: 5px;
+}
+

@@ -133,12 +133,31 @@ export const LoLProfilePage = () => {
                     </div>
                     <p>Побед в турнирах</p>
                 </div>
-
-                <div className="open-statistics">
-                    <div className="statistics-card-more">
-                        <img src={MoreIcon}/>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={CupIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
+                        </div>
                     </div>
+                    <p>Побед в турнирах</p>
                 </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={CupIcon}/>
+                            <img src={LineIcon}/>
+                            <var>12</var>
+                        </div>
+                    </div>
+                    <p>Побед в турнирах</p>
+                </div>
+                {/*<div className="open-statistics">*/}
+                {/*    <div className="statistics-card-more">*/}
+                {/*        <img src={MoreIcon}/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 <div className="statistics-card-area">
                     <div className="statistics-card">

@@ -22,12 +22,6 @@ export const TournamentCard = ({tournamentId}) => {
     const [stateT, setStateT] = useState( null)
 
 
-    useEffect(()=>{
-        socket.on('TOURNAMENTS/NEWSTATE', ( state ) => {
-            getTournament()
-        })
-    },[])
-
 
     const fetchUser = useCallback(async () => {
         try{
@@ -43,6 +37,7 @@ export const TournamentCard = ({tournamentId}) => {
         fetchUser()
     },[fetchUser])
 
+
     //Добавляем/удаляем пользователя из списка участников турнира
     const confirmHandler = useCallback( async ( ) => {
         try {
@@ -54,14 +49,13 @@ export const TournamentCard = ({tournamentId}) => {
     }, [auth.token, request])
 
 
-    // const addingHandler = useCallback( async ( ) => {
-    //     try {
-    //         const data = await request('/api/tournaments/accept', 'PUT', {tournamentId, option: "add"}, {
-    //             Authorization: `Bearer ${auth.token}`,
-    //         })
-    //         getTournament()
-    //     } catch (e) {}
-    // }, [auth.token, request])
+
+    useEffect(()=>{
+        socket.on('TOURNAMENTS/NEWSTATE', ( state ) => {
+            getTournament()
+        })
+    },[])
+
 
     const addingHandler = useCallback( async ( ) => {
         try {
@@ -85,7 +79,7 @@ export const TournamentCard = ({tournamentId}) => {
     }, [auth.token, request])
 
     const errorHandler = async () => {
-        history.push("/profile")
+        history.push("lol/profile")
         message('Заполните имя призывателя')
     }
 
@@ -142,8 +136,7 @@ export const TournamentCard = ({tournamentId}) => {
 
             return (
                 <div>
-                    {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>}
-                    {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>}
+
                     {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={stateHandler}>Начать подготовку</button>}
                     {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-dark btn-large" onClick={cancelStateHandler}>Отменить подготовку</button>}
                     <h1>{tournament.title}</h1>

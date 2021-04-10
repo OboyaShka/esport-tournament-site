@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 const router = Router()
 const auth = require('../middleware/auth.middleware')
-
+const moment = require('moment')
 
 // /api/tournaments/create
 router.post(
@@ -47,7 +47,8 @@ router.post(
                     image: image,
                     participants: [],
                     date: date,
-
+                    nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
+                    nextStateTour: "CONFIRMATION"
                 })
 
             await tournament.save()
@@ -81,7 +82,9 @@ router.put(
                         typeTour: typeTour,
                         description: description,
                         image: image,
-                        date: date
+                        date: date,
+                        nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
+                        nextStateTour: "CONFIRMATION"
                     }
                 }
             )

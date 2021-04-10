@@ -189,7 +189,7 @@ export const TournamentsCreatePage = () => {
                             selected={startDate}
                             onChange={changeDateHandler}
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy HH:mm"
+                            dateFormat="DD/MM/YY HH:mm"
                             timeFormat="HH:mm"
                             value={moment(form.date).format("DD/MM/YY HH:mm")}
                             showTimeInput

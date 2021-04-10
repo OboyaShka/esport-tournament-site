@@ -9,6 +9,9 @@ const Tournament = new Schema({
     image: {type: String, required:true},
     participants: [{type: Types.ObjectId, ref: 'User'}],
     date: {type: Date, required:true},
+    nextStateDate: {type: Date, required:true},
+    nextStateTour: {type: String, ref: 'StateTour', required:true},
+    matches: [{type: Types.ObjectId, ref: 'Match'}],
 })
 
 module.exports = model('Tournament', Tournament)

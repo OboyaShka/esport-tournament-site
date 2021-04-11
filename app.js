@@ -37,28 +37,79 @@ async function start() {
             useCreateIndex: true
         })
 
-// const connection = mongoose.connection
+
+        // const connection = mongoose.connection
         const mixArr = (arr) => {
-            return arr.map(i=>[Math.random(), i]).sort().map(i=>i[1])
+            return arr.map(i => [Math.random(), i]).sort().map(i => i[1])
         }
 
+        //Проверка на победителей в этапе
+        const checkWinner = (tournament, stage, stageTime, delayTimer, delayInterval) => {
+            let a = stageTime + 1
+            let checkWinnerTimer = setTimeout(() => {
+                console.log('Таймаут отработал')
+                checkWinnerTimer = setInterval(async () => {
+                    console.log('Интервал отработал')
+                    const matches = await Match.find({
+                        winner: {$exists: false},
+                        tournament: tournament._id,
+                        stateTour: stage
+                    },)
+
+                    if (matches.length > 0) {
+                        const tournamentTimer = await Tournament.updateOne({_id: tournament._id},
+                            {
+                                $set: {
+                                    nextStateDate: moment(tournament.nextStateDate).add(a, 'minutes').toDate().setSeconds(0, 0),
+                                }
+                            })
+
+                        io.emit('TOURNAMENTS/NEWSTATE', tournamentTimer.stateTour)
+                    }else{
+                        clearInterval(checkWinnerTimer)
+                    }
+                    a = a + 1
+                }, delayInterval)
+            }, delayTimer)
+
+        }
+
+        //Обновление состояния турнира
+        const updateTourStage = async (tournament, stage, nextStage) => {
+            const tournament16 = await Tournament.updateOne({_id: tournament._id},
+                {
+                    $set: {
+                        stateTour: stage,
+                        nextStateTour: nextStage,
+                        nextStateDate: moment(tournament.nextStateDate).add(3, 'minutes').toDate().setSeconds(0, 0),
+                    }
+                }
+            )
+            io.emit('TOURNAMENTS/NEWSTATE', tournament16.stateTour)
+        }
+
+        //Создание сетки и заполнение её первого этапа участниками
         const createBracket = async (tournament, format) => {
 
+            const participantsNumber = format * 2
+
+            //Миксовка участников
             const participantRandom = mixArr(tournament.participants)
 
+            //Добавление пустых мест при недоборе
             let p = -1
-            while(participantRandom.length < format){
+            while (participantRandom.length < participantsNumber) {
                 participantRandom.splice(p, 0, null);
                 p = p - 2
             }
 
 
             let flag = true
-            let l = 1
-            while (format >= 2) {
-                for (let i = 0; i < format; i = i + 2) {
+            let l = 1       //Номер каждого матча
+            while (format >= 1) {   //Пока не построится вся сетка
+                for (let i = 0; i < format * 2; i = i + 2) {    //Для каждой пары участников
 
-                    if (flag) {
+                    if (flag) {                             //При первом этапе создаём матчи с заполненными участниками
                         const match = new Match(
                             {
                                 tournament: tournament._id,
@@ -75,8 +126,11 @@ async function start() {
 
                         await match.save()
 
-                    } else {
+                    } else {                                //При последующих создаём пустные матчи
+
+
                         const matches = await Match.find({stateTour: `1/${format * 2}`})
+
 
                         const matchNow = new Match(
                             {
@@ -87,6 +141,8 @@ async function start() {
                             })
 
                         await matchNow.save()
+
+                        //Проставляем последующие матчи для предыдущих
 
                         const matchPrev1 = await Match.updateOne({_id: matches[i]._id},
                             {
@@ -104,6 +160,7 @@ async function start() {
                             })
 
 
+                        //Добавляем матчи к турниру
                         const tournamentPrep = await Tournament.updateOne(
                             {_id: tournament._id},
                             {$push: {matches: matchNow.id}}
@@ -113,14 +170,15 @@ async function start() {
                         l++
                     }
 
-
-
                 }
                 flag = false;
                 format = format / 2
             }
         }
 
+
+
+        //Главная функция проверки текущего состояния и перехода в следующее
         const changeTournamentState = async (item) => {
             const tournament = await Tournament.findOne({_id: item._id})
             switch (tournament.nextStateTour) {
@@ -145,27 +203,72 @@ async function start() {
                             console.log("Слишком мало людей")
                             break;
                         case tournament.participants.length === 8:
-                            await createBracket(tournament, 8)
+                            await createBracket(tournament, 4)
 
-                            nextStage = "1/8//"
-                            console.log("Сетка для топ 8")
+                            nextStage = "1/4"
+                            console.log("Сетка для топ 4")
                             break;
                         case 8 < tournament.participants.length <= 16:
 
-                            await createBracket(tournament, 16)
+                            await createBracket(tournament, 8)
 
+                            nextStage = "1/8"
+                            console.log("Сетка для топ 8")
+                            break;
+                        case 17 <= tournament.participants.length <= 32:
+
+                            await createBracket(tournament, 16)
                             nextStage = "1/16"
                             console.log("Сетка для топ 16")
                             break;
-                        case 17 <= tournament.participants.length <= 32:
+                        case 33 <= tournament.participants.length <= 64:
+                            await createBracket(tournament, 32)
+
                             nextStage = "1/32"
                             console.log("Сетка для топ 32")
                             break;
-                        case 33 <= tournament.participants.length <= 64:
-                            nextStage = "1/64"
-                            console.log("Сетка для топ 64")
-                            break;
                     }
+
+                    const matchesWithNull = await Match.find({
+                        participants: {$in: null},
+                        tournament: tournament._id,
+                    },)
+
+                    matchesWithNull.map( async (item) => {
+
+                        const matchWinner = await Match.updateOne({_id: item._id},
+                            {
+                                $set:{
+                                    winner: item.participants[1]
+                                }
+                            })
+
+                        if(item.matchNumber % 2 != 0){
+                            const match1 = await Match.updateOne({_id: item.nextMatch},
+                                {
+                                    $push: {
+                                        participants: {
+                                            $each: [item.participants[1]],
+                                            $position: 0
+                                        }
+                                    }
+                                }
+                            )
+                        }else{
+                            const match2 = await Match.updateOne({_id: item.nextMatch},
+                                {
+                                    $push: {
+                                        participants: {
+                                            $each: [item.participants[1]],
+                                            $position: 1
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
+                    })
+
                     const tournamentP = await Tournament.updateOne({_id: tournament._id},
                         {
                             $set: {
@@ -179,76 +282,43 @@ async function start() {
                     console.log("PREPARATION отработал")
                     break
                 case "1/16":
-                    const tournament16 = await Tournament.updateOne({_id: tournament._id},
-                        {
-                            $set: {
-                                stateTour: "1/16",
-                                nextStateTour: "1/8",
-                                nextStateDate: moment(tournament.nextStateDate).add(3, 'minutes').toDate().setSeconds(0, 0),
-                            }
-                        }
-                    )
-                    io.emit('TOURNAMENTS/NEWSTATE', tournament16.stateTour)
 
+                    await updateTourStage(tournament, '1/16', '1/8')
 
-                    // setTimeout(async ()=>{
-                    //     setInterval(async ()=>{
-                    //         const matches = await Match.find({winner: {$exists: false}})
-                    //         let a = 0
-                    //         if(matches.length != 0){
-                    //             const tournament16 = await Tournament.updateOne({_id: tournament._id},
-                    //                 {
-                    //                     $set: {
-                    //                         nextStateDate: moment(tournament.nextStateDate).add(3 + a, 'minutes').toDate().setSeconds(0, 0),
-                    //                     }
-                    //                 }
-                    //             )
-                    //             a++
-                    //             io.emit('TOURNAMENTS/NEWSTATE', tournament16.stateTour)
-                    //         }
-                    //     },1000*60)
-                    // }, 1000 * 60 * 1)
+                    await checkWinner(tournament, '1/16', 3, 1000 * 60, 1000 * 60)
 
                     console.log("1/16 отработал")
                     break
                 case "1/8":
-                    const tournament8 = await Tournament.updateOne({_id: tournament._id},
-                        {
-                            $set: {
-                                stateTour: "1/8",
-                                nextStateTour: "1/4",
-                                nextStateDate: moment(tournament.nextStateDate).add(5, 'minutes').toDate().setSeconds(0, 0),
-                            }
-                        }
-                    )
-                    io.emit('TOURNAMENTS/NEWSTATE', tournament8.stateTour)
+
+                    await updateTourStage(tournament, '1/8', '1/4')
+
+                    await checkWinner(tournament, '1/8', 3, 1000 * 60, 1000 * 60)
+
                     console.log("1/8 отработал")
                     break
                 case "1/4":
-                    const tournament4 = await Tournament.updateOne({_id: tournament._id},
-                        {
-                            $set: {
-                                stateTour: "1/4",
-                                nextStateTour: "1/2",
-                                nextStateDate: moment(tournament.nextStateDate).add(5, 'minutes').toDate().setSeconds(0, 0),
-                            }
-                        }
-                    )
-                    io.emit('TOURNAMENTS/NEWSTATE', tournament4.stateTour)
+
+                    await updateTourStage(tournament, '1/4', '1/2')
+
+                    await checkWinner(tournament, '1/4', 3, 1000 * 60, 1000 * 60)
+
                     console.log("1/4 отработал")
                     break
                 case "1/2":
-                    const tournament2 = await Tournament.updateOne({_id: tournament._id},
-                        {
-                            $set: {
-                                stateTour: "1/2",
-                                nextStateTour: "COMPLETION",
-                                nextStateDate: moment(tournament.nextStateDate).add(5, 'minutes').toDate().setSeconds(0, 0),
-                            }
-                        }
-                    )
-                    io.emit('TOURNAMENTS/NEWSTATE', tournament2.stateTour)
-                    console.log(tournament.participants.length)
+
+                    await updateTourStage(tournament, '1/2', 'FINAL')
+
+                    await checkWinner(tournament, '1/2', 3, 1000 * 60, 1000 * 60)
+
+                    console.log("1/2 отработал")
+                    break
+                case "1/1":
+
+                    await updateTourStage(tournament, '1/1', 'COMPLETION')
+
+                    await checkWinner(tournament, '1/1', 3, 1000 * 60, 1000 * 60)
+
                     console.log("1/2 отработал")
                     break
                 case "COMPLETION":

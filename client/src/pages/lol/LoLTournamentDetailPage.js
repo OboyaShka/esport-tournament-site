@@ -26,7 +26,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     const [timerHours, setTimerHours] = useState('00')
     const [timerMinutes, setTimerMinutes] = useState('00')
     const [timerSeconds, setTimerSeconds] = useState('00')
-
+    const [stage, setStage] = useState(null)
 
     let interval = useRef()
 
@@ -67,6 +67,10 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     useEffect(()=>{
         socket.on('TOURNAMENTS/NEWSTATE', ( state ) => {
             getTournament()
+            startTimer()
+            return() => {
+                clearInterval(interval.current)
+            }
         })
     },[])
 
@@ -108,6 +112,27 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
         try{
             const fetched = await request(`/api/tournaments/${tournamentId}`, 'GET', null)
             setTournament(fetched)
+
+            switch (fetched.stateTour) {
+                case "WAITING":
+                    setStage("Регистрация")
+                    break
+                case "CONFIRMATION":
+                    setStage("Подтверждение")
+                    break
+                case "PREPARATION":
+                    setStage("Подготовка")
+                    break
+                case "WAITING":
+                    setStage("Регистрация")
+                    break
+                case "COMPLETION":
+                    setStage("Завершён")
+                    break
+                default:
+                    setStage(fetched.stateTour)
+                    break
+            }
         }catch (e) {
 
         }
@@ -144,6 +169,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
         } catch (e) {}
     }, [auth.token, request])
 
+
+
+
     return(
         <div>
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
@@ -166,8 +194,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                         <button className="tournament-confirm-button info-bubble"><div>Подтвердить участие</div></button>
                     </div>
                     <div className="tournament-state card-bubble">
+
                         <div className="tournament-state-info info-bubble">
-                            <div>{tournament.stateTour}</div>
+                            <div>{stage}</div>
                             <img src={BigLine}/>
                             <p>Состояние турнира</p>
                         </div>
@@ -184,7 +213,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                     </div>
                     <div className="tournament-info card-bubble">
                         <div className="tournament-state-info info-bubble">
-                            <div>{tournament.participants.length}/16</div>
+                            <div>{tournament.participants.length}</div>
                             <img src={Line}/>
                             <p>Игроки</p>
                         </div>

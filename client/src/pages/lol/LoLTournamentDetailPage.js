@@ -174,6 +174,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
 
     return(
         <div>
+            {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>}
             {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>}

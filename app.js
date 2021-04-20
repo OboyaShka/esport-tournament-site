@@ -65,7 +65,7 @@ async function start() {
                             })
 
                         io.emit('TOURNAMENTS/NEWSTATE', tournamentTimer.stateTour)
-                    }else{
+                    } else {
                         clearInterval(checkWinnerTimer)
                     }
                     a = a + 1
@@ -177,7 +177,6 @@ async function start() {
         }
 
 
-
         //Главная функция проверки текущего состояния и перехода в следующее
         const changeTournamentState = async (item) => {
             const tournament = await Tournament.findOne({_id: item._id})
@@ -234,16 +233,16 @@ async function start() {
                         tournament: tournament._id,
                     },)
 
-                    matchesWithNull.map( async (item) => {
+                    matchesWithNull.map(async (item) => {
 
                         const matchWinner = await Match.updateOne({_id: item._id},
                             {
-                                $set:{
+                                $set: {
                                     winner: item.participants[1]
                                 }
                             })
 
-                        if(item.matchNumber % 2 != 0){
+                        if (item.matchNumber % 2 != 0) {
                             const match1 = await Match.updateOne({_id: item.nextMatch},
                                 {
                                     $push: {
@@ -254,7 +253,7 @@ async function start() {
                                     }
                                 }
                             )
-                        }else{
+                        } else {
                             const match2 = await Match.updateOne({_id: item.nextMatch},
                                 {
                                     $push: {
@@ -437,6 +436,99 @@ async function start() {
                     io.emit('TOURNAMENTS/REGISTRED:RES', 'Пользователь зарегистрирован на турнир')
                 }
             })
+
+
+            socket.on('TOURNAMENT/MATCHES', async (tournamentId) => {
+                const tournament = await Tournament.findOne({_id: tournamentId})
+
+                let matches = []
+
+                Promise.all(tournament.matches.map(async (matchId) => {
+                        const match = await Match.findOne({_id: matchId})
+
+                        if (match.participants[0] != null && match.participants[0]) {
+                            const gamer1 = await User.findOne({_id: match.participants[0]})
+                            match.participants[0] = gamer1
+                        }
+
+                        if (match.participants[1] != null && match.participants[1]) {
+                            const gamer2 = await User.findOne({_id: match.participants[1]})
+                            match.participants[1] = gamer2
+                        }
+
+                        matches.push(match)
+                    }
+                )).then(() => {
+                        matches.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1)
+
+                        io.emit('TOURNAMENT/MATCHES:RES', matches)
+                    }
+                )
+            })
+
+            socket.on('TOURNAMENT/MATCH', async (matchId) => {
+                    const match = await Match.findOne({_id: matchId})
+
+                    if (match.participants[0] != null && match.participants[0]) {
+                        const gamer1 = await User.findOne({_id: match.participants[0]})
+                        match.participants[0] = gamer1
+                    }
+
+                    if (match.participants[1] != null && match.participants[1]) {
+                        const gamer2 = await User.findOne({_id: match.participants[1]})
+                        match.participants[1] = gamer2
+                    }
+
+                    io.emit('TOURNAMENT/MATCH:RES', match)
+
+                }
+            )
+
+            socket.on('TOURNAMENT/MATCH-WINNER', async (matchId, n) => {
+                    console.log("Ура!")
+                    console.log(matchId, n)
+                    const match = await Match.findOne({_id: matchId})
+
+
+                    const matchWinner = await Match.updateOne(
+                        {_id: matchId},
+                        {
+                            $set: {
+                                winner: match.participants[n],
+                            }
+                        }
+                    )
+
+                    if (match.matchNumber % 2 != 0) {
+                        const match1 = await Match.updateOne({_id: match.nextMatch},
+                            {
+                                $push: {
+                                    participants: {
+                                        $each: [match.participants[n]],
+                                        $position: 0
+                                    }
+                                }
+                            }
+                        )
+                    } else {
+                        const match2 = await Match.updateOne({_id: match.nextMatch},
+                            {
+                                $push: {
+                                    participants: {
+                                        $each: [match.participants[n]],
+                                        $position: 1
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+
+                    io.emit('TOURNAMENT/MATCH-WINNER:RES')
+                }
+            )
+
+
         })
 
 

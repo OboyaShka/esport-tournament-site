@@ -888,7 +888,7 @@ b{
     background: #D9D7F1;
     border-radius: 25px 0 0 25px;
     width: 100%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     height: 100px;
     margin-bottom: 2rem;
 }
@@ -897,7 +897,7 @@ b{
     background: #D9D7F1;
     border-radius: 0 25px 25px 0;
     width: 100%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     height: 100px;
     margin-bottom: 2rem;
     display: flex;
@@ -909,7 +909,7 @@ b{
     background: #D9D7F1;
 
     width: 100%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     height: 100px;
     margin-bottom: 2rem;
 }
@@ -918,20 +918,20 @@ b{
     background: rgb(193, 200, 199);
     border-radius: 25px 0 0 25px;
     height: 90%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
 
 .match-indicator-r{
     background: rgb(193, 200, 199);
     border-radius: 0 25px 25px 0;
     height: 90%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
 
 .match-indicator-c{
     background: rgb(193, 200, 199);
     height: 90%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
 
 .left-gamer{

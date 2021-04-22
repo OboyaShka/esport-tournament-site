@@ -48,7 +48,8 @@ router.post(
                     participants: [],
                     date: date,
                     nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
-                    nextStateTour: "CONFIRMATION"
+                    nextStateTour: "CONFIRMATION",
+                    matches: []
                 })
 
             await tournament.save()

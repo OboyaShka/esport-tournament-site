@@ -129,7 +129,7 @@ async function start() {
                     } else {                                //При последующих создаём пустные матчи
 
 
-                        const matches = await Match.find({stateTour: `1/${format * 2}`})
+                        const matches = await Match.find({stateTour: `1/${format * 2}`, tournament: tournament._id})
 
 
                         const matchNow = new Match(
@@ -440,41 +440,61 @@ async function start() {
 
             socket.on('TOURNAMENT/MATCHES', async (tournamentId) => {
                 const tournament = await Tournament.findOne({_id: tournamentId})
+                //
+                // const getMatches = async (matches) => {
+                //     for (const matchId in matches) {
+                //
+                //         const match = await Match.findOne({_id: matchId})
+                //
+                //         if (match.participants[0] != null && match.participants[0]) {
+                //             const gamer1 = await User.findOne({_id: match.participants[0]})
+                //             match.participants[0] = gamer1
+                //         }
+                //
+                //         if (match.participants[1] != null && match.participants[1]) {
+                //             const gamer2 = await User.findOne({_id: match.participants[1]})
+                //             match.participants[1] = gamer2
+                //         }
+                //     }
+                // }
 
-                let matches = []
+                let matchesArr = []
+                if (tournament.matches && tournament.matches != null) {
 
-                Promise.all(tournament.matches.map(async (matchId) => {
-                        const match = await Match.findOne({_id: matchId})
+                    Promise.all(tournament.matches.map(async (matchId) => {
 
-                        if (match.participants[0] != null && match.participants[0]) {
-                            const gamer1 = await User.findOne({_id: match.participants[0]})
-                            match.participants[0] = gamer1
+                            const match = await Match.findOne({_id: matchId})
+
+                            console.log(match)
+
+                            if (match && match.participants[0] != null && match.participants[0]) {
+                                const gamer1 = await User.findOne({_id: match.participants[0]})
+                                match.participants[0] = gamer1
+                            }
+
+                            if ( match && match.participants[1] != null && match.participants[1]) {
+                                const gamer2 = await User.findOne({_id: match.participants[1]})
+                                match.participants[1] = gamer2
+                            }
+
+                            return match
                         }
+                    ))
+                        .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
+                        .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
 
-                        if (match.participants[1] != null && match.participants[1]) {
-                            const gamer2 = await User.findOne({_id: match.participants[1]})
-                            match.participants[1] = gamer2
-                        }
-
-                        matches.push(match)
-                    }
-                )).then(() => {
-                        matches.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1)
-
-                        io.emit('TOURNAMENT/MATCHES:RES', matches)
-                    }
-                )
+                }
             })
 
             socket.on('TOURNAMENT/MATCH', async (matchId) => {
                     const match = await Match.findOne({_id: matchId})
 
-                    if (match.participants[0] != null && match.participants[0]) {
+                    if (match && match.participants[0] != null && match.participants[0]) {
                         const gamer1 = await User.findOne({_id: match.participants[0]})
                         match.participants[0] = gamer1
                     }
 
-                    if (match.participants[1] != null && match.participants[1]) {
+                    if (match && match.participants[1] != null && match.participants[1]) {
                         const gamer2 = await User.findOne({_id: match.participants[1]})
                         match.participants[1] = gamer2
                     }
@@ -528,6 +548,25 @@ async function start() {
                 }
             )
 
+            socket.on('TOURNAMENT/MATCH-RESET', async (matchId) => {
+
+                const match = await Match.findOne({_id: matchId})
+
+
+                const match1 = await Match.updateOne({_id: match.nextMatch},
+                    {
+                        $pull: {
+                            participants: match.winner
+                        }
+                    }
+                )
+
+                const matchWinner = await Match.updateOne(
+                    {_id: matchId}, {$unset: {winner: 1}}, {multi: true});
+
+
+                io.emit('TOURNAMENT/MATCH-WINNER:RES')
+            })
 
         })
 

@@ -15,7 +15,7 @@ export const LoLTournamentMatches = () => {
     const getTournament = useCallback(async () => {
         try {
             const fetched = await request(`/api/tournaments/${tournamentId}`, 'GET', null)
-            setTournament(fetched)
+                setTournament(fetched)
 
         } catch (e) {
 
@@ -24,7 +24,6 @@ export const LoLTournamentMatches = () => {
 
     useEffect(() => {
         getTournament()
-
     }, [getTournament])
 
     const getMatches = useCallback(async () => {
@@ -32,10 +31,12 @@ export const LoLTournamentMatches = () => {
             socket.emit('TOURNAMENT/MATCHES', tournamentId)
 
             socket.on('TOURNAMENT/MATCHES:RES', async (matches) => {
-                console.log(matches)
-                setMatches(matches)
+                 setMatches(matches);
+
             })
 
+
+            return () => socket.off('TOURNAMENT/MATCHES:RES')
         } catch (e) {
         }
     }, [])
@@ -49,14 +50,20 @@ export const LoLTournamentMatches = () => {
         socket.on('TOURNAMENTS/NEWSTATE', (state) => {
             getTournament()
             getMatches()
+
         })
+
+        return () => socket.off('TOURNAMENTS/NEWSTATE')
     }, [])
 
     useEffect(() => {
         socket.on('TOURNAMENT/MATCH-WINNER:RES', () => {
             getTournament()
             getMatches()
+
         })
+
+        return () => socket.off('TOURNAMENT/MATCH-WINNER:RES')
     }, [])
 
     return (
@@ -69,12 +76,14 @@ export const LoLTournamentMatches = () => {
                 <div className="matches-content">
                     {matches != [] && matches.map((match, index) => {
                         return (
+                            !!match && !!tournament && match.stateTour && tournament.stateTour &&
                             <Link className="match-link" key={index}
                                   to={`/lol/tournaments/${tournamentId}/matches/${match._id}`}>
                                 <div className="match-status">
 
                                     {/*<div className="indicator-gamer-l" ></div>*/}
-                                    <div className="match-indicator-l"  style={{background: match.winner ? ( match.participants[0]===null ? "#fe7968" : ( match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968" )) : ""}}>
+                                    <div className="match-indicator-l"
+                                         style={{background: match.winner ? (match.participants[0] === null ? "#fe7968" : (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968")) : ""}}>
                                         <div className="match-card-l">
                                             <div className="left-gamer">
                                                 {match.participants[0] && (match.participants[0] === null) ?
@@ -113,8 +122,10 @@ export const LoLTournamentMatches = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="match-indicator-c"   style={tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
-                                        (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>
+                                    {tournament.stateTour && match.stateTour &&
+                                    <div className="match-indicator-c"
+                                         style={tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
+                                             (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>
                                         <div className="match-card-c">
                                             <div className="center-gamer">
                                                 <p>vs</p>
@@ -123,8 +134,9 @@ export const LoLTournamentMatches = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="match-indicator-r" style={{background: match.winner ? ( match.participants[1]===null ? "#fe7968" : ( match.winner === match.participants[1]._id ? "#a5c6b1" : "#fe7968" )) : ""}}>
+                                    </div>}
+                                    <div className="match-indicator-r"
+                                         style={{background: match.winner ? (match.participants[1] === null ? "#fe7968" : (match.winner === match.participants[1]._id ? "#a5c6b1" : "#fe7968")) : ""}}>
                                         <div className="match-card-r">
                                             <div className="right-gamer">
                                                 {match.participants[1] && (match.participants[1] != null) ?

@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from "react"
 import {TournamentNav} from "../../components/TournamentNav";
 import {AuthContext} from "../../context/AuthContext";
 import socket from "../../socket";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 
 export const LoLTournamentMatchDetailPage = () => {
@@ -29,16 +29,24 @@ export const LoLTournamentMatchDetailPage = () => {
 
     }, [getTournament])
 
+
     const getMatches = useCallback(async () => {
         try {
+
             socket.emit('TOURNAMENT/MATCH', matchId)
 
-            socket.on('TOURNAMENT/MATCH:RES', async (match) => {
-                setMatch(match)
-            })
 
         } catch (e) {
         }
+    }, [])
+
+    useEffect(() => {
+        socket.on('TOURNAMENT/MATCH:RES', async (match) => {
+            setMatch(match)
+
+        })
+
+        return () => socket.off('TOURNAMENT/MATCH:RES')
     }, [])
 
 
@@ -48,27 +56,21 @@ export const LoLTournamentMatchDetailPage = () => {
 
     useEffect(() => {
         socket.on('TOURNAMENTS/NEWSTATE', (state) => {
+
             getTournament()
             getMatches()
+
         })
+
+        return () => socket.off('TOURNAMENTS/NEWSTATE')
     }, [])
 
     const setWinner = useCallback(async (n) => {
         try {
-                socket.emit('TOURNAMENT/MATCH-WINNER', matchId, n)
+            socket.emit('TOURNAMENT/MATCH-WINNER', matchId, n)
 
         } catch (e) {
             console.log(e)
-        }
-    }, [])
-
-
-
-    const delWinner = useCallback(async () => {
-        try {
-
-
-        } catch (e) {
         }
     }, [])
 
@@ -76,16 +78,32 @@ export const LoLTournamentMatchDetailPage = () => {
         socket.on('TOURNAMENT/MATCH-WINNER:RES', () => {
             getTournament()
             getMatches()
+
+
         })
+
+        return () => socket.off('TOURNAMENT/MATCH-WINNER:RES')
+    }, [])
+
+    const delWinner = useCallback(async () => {
+        try {
+            socket.emit('TOURNAMENT/MATCH-RESET', matchId)
+        } catch (e) {
+        }
     }, [])
 
 
     return (
         <div>
+
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
-            {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
-            {match && match.participants &&
+            {tournament &&
+            <div><h2 className="my-profile-title">{tournament.title}</h2>
+                <Link to={`/lol/tournaments/${tournamentId}/matches/`}>Назад</Link></div>}
+            {!!match && !!tournament && match.stateTour && tournament.stateTour && match.stateTour != null && tournament.stateTour != null &&
+
             <div className="detail-match">
+                {console.log(match.stateTour)}
                 <div>
                     <button onClick={e => {
                         setWinner(0)
@@ -101,7 +119,7 @@ export const LoLTournamentMatchDetailPage = () => {
                     </button>
                 </div>
                 <div className="players-match">
-                    {tournament.stateTour&&
+
                     <div className="left-gamer-indicator"
                          style={{background: match.winner ? (match.participants[0] != null ? (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-l">
@@ -141,8 +159,8 @@ export const LoLTournamentMatchDetailPage = () => {
 
                             </div>
                         </div>
-                    </div>}
-                    {tournament.stateTour&&
+                    </div>
+                    {tournament.stateTour && tournament.stateTour != null &&
                     <div className="left-gamer-indicator"
                          style={tournament.stateTour != null && tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
                              (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>

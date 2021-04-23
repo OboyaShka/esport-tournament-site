@@ -79,9 +79,7 @@ export const LoLTournamentMatches = () => {
                             !!match && !!tournament && match.stateTour && tournament.stateTour &&
                             <Link className="match-link" key={index}
                                   to={`/lol/tournaments/${tournamentId}/matches/${match._id}`}>
-                                <div className="match-status">
-
-                                    {/*<div className="indicator-gamer-l" ></div>*/}
+                                <div className={match.participants[0]!=null && match.participants[1]!=null && (match.participants[0]._id===(auth.userId)||match.participants[1]._id===(auth.userId))?"match-status-my":"match-status"}>
                                     <div className="match-indicator-l"
                                          style={{background: match.winner ? (match.participants[0] === null ? "#fe7968" : (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968")) : ""}}>
                                         <div className="match-card-l">

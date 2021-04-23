@@ -18,22 +18,6 @@ const FileUpload = props => {
     }
 
 
-    // const loadFile = async(e) => {
-    //     e.preventDefault()
-    //     const formData = new FormData()
-    //     formData.append( 'file', file)
-    //     try{
-    //         const fetched = await request(`/api/upload/`, 'POST', {formData}, {
-    //             Authorization: `Bearer ${auth.token}`,
-    //         })
-    //
-    //         const {fileName, filePath} = fetched
-    //         setUploadedFile({fileName, filePath})
-    //         console.log(fileName)
-    //     }catch (e) {
-    //     }
-    // }
-
     const loadFile = async e =>{
         e.preventDefault()
         const formData = new FormData()

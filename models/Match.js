@@ -10,6 +10,7 @@ const Match = new Schema({
     startDate: {type: Date},
     prevMatches: [{type: Types.ObjectId, ref: 'Match'}],
     nextMatch: {type: Types.ObjectId, ref: 'Match'},
+    messages: [{type: Types.ObjectId, ref: 'Message'}],
 })
 
 module.exports = model('Match', Match)

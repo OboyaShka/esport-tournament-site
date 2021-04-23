@@ -49,7 +49,7 @@ router.post(
                     date: date,
                     nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
                     nextStateTour: "CONFIRMATION",
-                    matches: []
+                    matches: [],
                 })
 
             await tournament.save()

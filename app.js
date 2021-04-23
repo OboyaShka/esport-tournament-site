@@ -7,6 +7,7 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const Tournament = require('./models/Tournament')
 const Match = require('./models/Match')
+const Message = require('./models/Message')
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
@@ -117,6 +118,7 @@ async function start() {
                                 stateTour: `1/${format}`,
                                 participants: [participantRandom[i], participantRandom[i + 1]],
                                 startDate: moment(tournament.nextStateDate).add(1, 'minutes').toDate().setSeconds(0, 0),
+                                messages: []
                             })
                         const tournamentPrep = await Tournament.updateOne(
                             {_id: tournament._id},
@@ -138,6 +140,7 @@ async function start() {
                                 matchNumber: l,
                                 stateTour: `1/${format}`,
                                 prevMatches: [matches[i]._id, matches[i + 1]._id],
+                                messages: []
                             })
 
                         await matchNow.save()
@@ -465,14 +468,12 @@ async function start() {
 
                             const match = await Match.findOne({_id: matchId})
 
-                            console.log(match)
-
                             if (match && match.participants[0] != null && match.participants[0]) {
                                 const gamer1 = await User.findOne({_id: match.participants[0]})
                                 match.participants[0] = gamer1
                             }
 
-                            if ( match && match.participants[1] != null && match.participants[1]) {
+                            if (match && match.participants[1] != null && match.participants[1]) {
                                 const gamer2 = await User.findOne({_id: match.participants[1]})
                                 match.participants[1] = gamer2
                             }
@@ -568,6 +569,86 @@ async function start() {
                 io.emit('TOURNAMENT/MATCH-WINNER:RES')
             })
 
+            socket.on('TOURNAMENT/MATCH-SCREEN', async (matchId, screen) => {
+
+                    const match = await Match.updateOne({_id: matchId},
+                        {
+                            $set: {
+                                screen: screen
+                            }
+                        }
+                    )
+
+                    io.emit('TOURNAMENT/MATCH-SCREEN:RES')
+
+                }
+            )
+
+            socket.on('TOURNAMENT/MATCH-SCREEN', async (matchId, screen) => {
+
+                    const match = await Match.updateOne({_id: matchId},
+                        {
+                            $set: {
+                                screen: screen
+                            }
+                        }
+                    )
+
+                    io.emit('TOURNAMENT/MATCH-SCREEN:RES')
+
+                }
+            )
+
+            socket.on('TOURNAMENT/MESSAGE', async (matchIdProps, message, user, nickname) => {
+
+                    let matchId = matchIdProps.matchId
+
+                    let date = new Date()
+
+                    const messageCreate = new Message({
+                        content: message,
+                        user: user,
+                        nickname: nickname,
+                        match: matchId,
+                        date: date,
+                    })
+
+                    const match = await Match.updateOne(
+                        {_id: matchId},
+                        {$push: {messages: messageCreate._id}}
+                    )
+
+                    await messageCreate.save();
+
+
+                    io.emit('TOURNAMENT/MESSAGE:RES')
+                }
+            )
+
+            socket.on('TOURNAMENT/GET-MESSAGES', async (matchIdProps) => {
+
+                    let matchId = matchIdProps.matchId
+
+                    const match = await Match.findOne(
+                        {_id: matchId})
+
+
+                    Promise.all(match.messages.map(async (messageId) => {
+
+                            const message = await Message.findOne({_id: messageId})
+
+
+                            return message
+                        }
+                    ))
+                        .then((messageArr) => messageArr.sort((a, b) => b.date > a.date ? 1 : -1))
+                        .then((messageArr) => io.emit('TOURNAMENT/GET-MESSAGES:RES', messageArr))
+
+
+                }
+            )
+
+            //Конец
         })
 
 

@@ -78,6 +78,8 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     const addingHandler = useCallback( async ( ) => {
         try {
             socket.emit('TOURNAMENTS/REGISTRED', auth.token, tournamentId)
+
+            return () => socket.off('TOURNAMENTS/REGISTRED')
         } catch (e) {}
     }, [])
 
@@ -85,6 +87,8 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
         socket.on('TOURNAMENTS/REGISTRED:RES', ( state ) => {
             getTournament()
         })
+
+        return () => socket.off('TOURNAMENTS/REGISTRED:RES')
     },[])
 
     const errorHandler = async () => {

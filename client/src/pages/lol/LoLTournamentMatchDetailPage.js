@@ -4,6 +4,9 @@ import {AuthContext} from "../../context/AuthContext";
 import socket from "../../socket";
 import {Link, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import FileUpload from "../../components/FileUpload";
+import {ChatMatch} from "../../components/ChatMatch"
+import {Modal} from "../../components/Modal"
 
 export const LoLTournamentMatchDetailPage = () => {
     const auth = useContext(AuthContext)
@@ -13,6 +16,8 @@ export const LoLTournamentMatchDetailPage = () => {
     const [tournament, setTournament] = useState(null)
     const {loading, request} = useHttp()
     const [match, setMatch] = useState([])
+    const [form, setForm] = useState({image: ''})
+    const [modalActive, setModalActive] = useState(false)
 
     const getTournament = useCallback(async () => {
         try {
@@ -30,15 +35,24 @@ export const LoLTournamentMatchDetailPage = () => {
     }, [getTournament])
 
 
+    const sendScreen = useCallback(async () => {
+        try {
+            socket.emit('TOURNAMENT/MATCH-SCREEN', matchId, form.image)
+
+        } catch (e) {
+        }
+    }, [form.image != ''])
+
     const getMatches = useCallback(async () => {
         try {
 
             socket.emit('TOURNAMENT/MATCH', matchId)
 
-
+            return () => socket.off('TOURNAMENT/MATCH')
         } catch (e) {
         }
     }, [])
+
 
     useEffect(() => {
         socket.on('TOURNAMENT/MATCH:RES', async (match) => {
@@ -55,6 +69,17 @@ export const LoLTournamentMatchDetailPage = () => {
     }, [getMatches])
 
     useEffect(() => {
+        socket.on('TOURNAMENT/MATCH-SCREEN:RES', (state) => {
+
+            getTournament()
+            getMatches()
+
+        })
+
+        return () => socket.off('TOURNAMENT/MATCH-SCREEN:RES')
+    }, [])
+
+    useEffect(() => {
         socket.on('TOURNAMENTS/NEWSTATE', (state) => {
 
             getTournament()
@@ -69,6 +94,8 @@ export const LoLTournamentMatchDetailPage = () => {
         try {
             socket.emit('TOURNAMENT/MATCH-WINNER', matchId, n)
 
+
+            return () => socket.off('TOURNAMENT/MATCH-WINNER')
         } catch (e) {
             console.log(e)
         }
@@ -88,6 +115,8 @@ export const LoLTournamentMatchDetailPage = () => {
     const delWinner = useCallback(async () => {
         try {
             socket.emit('TOURNAMENT/MATCH-RESET', matchId)
+
+            return () => socket.off('TOURNAMENT/MATCH-RESET')
         } catch (e) {
         }
     }, [])
@@ -103,7 +132,6 @@ export const LoLTournamentMatchDetailPage = () => {
             {!!match && !!tournament && match.stateTour && tournament.stateTour && match.stateTour != null && tournament.stateTour != null &&
 
             <div className="detail-match">
-                {console.log(match.stateTour)}
                 <div>
                     <button onClick={e => {
                         setWinner(0)
@@ -211,12 +239,32 @@ export const LoLTournamentMatchDetailPage = () => {
                     (match.participants[0]._id === auth.userId ||
                         match.participants[1]._id === auth.userId) || auth.userRoles.includes("ADMIN") || auth.userRoles.includes("MODERATOR")) &&
                 <div className="bottom-match">
-                    <div>Кнопки</div>
-                    <div className="chat-match"></div>
+                    <div>
+                        {/*Кнопки*/}
+                        {match.screen &&
+                        <div  className="match-screen">
+                            <img onClick={e=>{setModalActive(true)}}  style={{width: "100%"}} src={match.screen} alt=""></img>
+                            <Modal active={modalActive} setActive={setModalActive} link={match.screen }></Modal>
+                        </div>
+
+                        }
+
+
+
+                        <FileUpload form={form} setForm={setForm}/>
+                        <button onClick={e => {
+                            sendScreen()
+                        }}>Отправить победу
+                        </button>
+                    </div>
+
+                    <ChatMatch matchId={matchId}></ChatMatch>
+
                     <div>Описание</div>
                 </div>}
             </div>
             }
+
         </div>
     )
 }

@@ -133,6 +133,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                 case "COMPLETION":
                     setStage("Завершён")
                     break
+                case "1/1":
+                    setStage("Финал")
+                    break
                 default:
                     setStage(fetched.stateTour)
                     break

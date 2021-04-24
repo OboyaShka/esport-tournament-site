@@ -309,7 +309,7 @@ async function start() {
                     break
                 case "1/2":
 
-                    await updateTourStage(tournament, '1/2', 'FINAL')
+                    await updateTourStage(tournament, '1/2', '1/1')
 
                     await checkWinner(tournament, '1/2', 3, 1000 * 60, 1000 * 60)
 
@@ -321,7 +321,7 @@ async function start() {
 
                     await checkWinner(tournament, '1/1', 3, 1000 * 60, 1000 * 60)
 
-                    console.log("1/2 отработал")
+                    console.log("1/1 отработал")
                     break
                 case "COMPLETION":
                     const tournamentFinish = await Tournament.updateOne({_id: tournament._id},
@@ -443,23 +443,7 @@ async function start() {
 
             socket.on('TOURNAMENT/MATCHES', async (tournamentId) => {
                 const tournament = await Tournament.findOne({_id: tournamentId})
-                //
-                // const getMatches = async (matches) => {
-                //     for (const matchId in matches) {
-                //
-                //         const match = await Match.findOne({_id: matchId})
-                //
-                //         if (match.participants[0] != null && match.participants[0]) {
-                //             const gamer1 = await User.findOne({_id: match.participants[0]})
-                //             match.participants[0] = gamer1
-                //         }
-                //
-                //         if (match.participants[1] != null && match.participants[1]) {
-                //             const gamer2 = await User.findOne({_id: match.participants[1]})
-                //             match.participants[1] = gamer2
-                //         }
-                //     }
-                // }
+
 
                 let matchesArr = []
                 if (tournament.matches && tournament.matches != null) {
@@ -482,6 +466,7 @@ async function start() {
                         }
                     ))
                         .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
+                        .then((matchesArr) => matchesArr.reverse())
                         .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
 
                 }

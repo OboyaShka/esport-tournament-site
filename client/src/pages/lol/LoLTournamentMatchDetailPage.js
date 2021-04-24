@@ -128,7 +128,8 @@ export const LoLTournamentMatchDetailPage = () => {
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament &&
             <div><h2 className="my-profile-title">{tournament.title}</h2>
-                <Link to={`/lol/tournaments/${tournamentId}/matches/`}>Назад</Link></div>}
+                <Link to={`/lol/tournaments/${tournamentId}/matches/`}>Назад</Link>
+                <Link to={`/lol/tournaments/${tournamentId}/bracket/`}>Назад</Link></div>}
             {!!match && !!tournament && match.stateTour && tournament.stateTour && match.stateTour != null && tournament.stateTour != null &&
 
             <div className="detail-match">

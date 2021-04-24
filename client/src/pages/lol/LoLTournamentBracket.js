@@ -140,28 +140,28 @@ export const LoLTournamentBracket = () => {
 
                         <div className="bracket-matches-chain">
                             <div>
-                                {matches8[0].participants[0] != null &&
+                                {matches8[0].participants[0] != null ?
                                 <Link to={`/lol/tournaments/${tournamentId}/matches/${matches8[0]._id}`} style={{ textDecoration:"none"}}  className={matches8[0].winner && matches8[0].participants[0]._id === matches8[0].winner? "bracket-match-t-w":"bracket-match-t"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[0].winner && matches8[0].participants[0]._id === matches8[0].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[0].participants[0].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                             <div className="bracket-match-border-block">
                                 <div>
-                                    {matches8[0].participants[1] != null &&
+                                    {matches8[0].participants[1] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[0]._id}`} style={{ textDecoration:"none"}}  className={matches8[0].winner && matches8[0].participants[1]._id === matches8[0].winner? "bracket-match-b-w":"bracket-match-b"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[0].winner && matches8[0].participants[1]._id === matches8[0].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[0].participants[1].nickname}</div>
 
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
 
                                 <div>
-                                    {matches8[1].participants[0] != null &&
+                                    {matches8[1].participants[0] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[1]._id}`} style={{ textDecoration:"none"}}  className={matches8[1].winner && matches8[1].participants[0]._id === matches8[1].winner? "bracket-match-t-w":"bracket-match-t"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}}
@@ -169,60 +169,60 @@ export const LoLTournamentBracket = () => {
                                         </div>
                                         <div  className={matches8[1].winner && matches8[1].participants[0]._id === matches8[1].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[1].participants[0].nickname}
                                         </div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
                             </div>
                             <div>
-                                {matches8[1].participants[1] != null &&
+                                {matches8[1].participants[1] != null ?
                                 <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[1]._id}`} style={{ textDecoration:"none"}}   className={matches8[1].winner && matches8[1].participants[1]._id === matches8[1].winner? "bracket-match-b-w":"bracket-match-b"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[1].winner && matches8[1].participants[1]._id === matches8[1].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[1].participants[1].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                         </div>
 
                         <div></div>
                         <div className="bracket-matches-chain">
                             <div>
-                                {matches8[2].participants[0] != null &&
+                                {matches8[2].participants[0] != null ?
                                 <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[2]._id}`} style={{ textDecoration:"none"}}   className={matches8[2].winner && matches8[2].participants[0]._id === matches8[2].winner? "bracket-match-t-w":"bracket-match-t"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[2].winner && matches8[2].participants[0]._id === matches8[2].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[2].participants[0].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                             <div className="bracket-match-border-block">
                                 <div>
-                                    {matches8[2].participants[1] != null &&
+                                    {matches8[2].participants[1] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[2]._id}`} style={{ textDecoration:"none"}}   className={matches8[2].winner && matches8[2].participants[1]._id === matches8[2].winner? "bracket-match-b-w":"bracket-match-b"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[2].winner && matches8[2].participants[1]._id === matches8[2].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[2].participants[1].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
 
                                 <div>
-                                    {matches8[3].participants[0] != null &&
+                                    {matches8[3].participants[0] != null ?
                                     <Link to={`/lol/tournaments/${tournamentId}/matches/${matches8[3]._id}`} style={{ textDecoration:"none"}}   className={matches8[3].winner && matches8[3].participants[0]._id === matches8[3].winner? "bracket-match-t-w":"bracket-match-t"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[3].winner && matches8[3].participants[0]._id === matches8[3].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[3].participants[0].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
                             </div>
                             <div>
-                                {matches8[3].participants[1] != null &&
+                                {matches8[3].participants[1] != null ?
                                 <Link to={`/lol/tournaments/${tournamentId}/matches/${matches8[3]._id}`} style={{ textDecoration:"none"}}   className={matches8[3].winner && matches8[3].participants[1]._id === matches8[3].winner? "bracket-match-b-w":"bracket-match-b"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[3].winner && matches8[3].participants[1]._id === matches8[3].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[3].participants[1].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                         </div>
                     </div>}
@@ -368,86 +368,86 @@ export const LoLTournamentBracket = () => {
                     <div className="bracket-main-content-8">
                         <div className="bracket-matches-chain">
                             <div className="match-set-end">
-                                {matches8[4].participants[0] != null &&
+                                {matches8[4].participants[0] != null ?
                                 <Link to={`/lol/tournaments/${tournamentId}/matches/${matches8[4]._id}`} style={{ textDecoration:"none"}}  className={matches8[4].winner && matches8[4].participants[0]._id === matches8[4].winner? "bracket-match-t-w":"bracket-match-t"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[4].winner && matches8[4].participants[0]._id === matches8[4].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[4].participants[0].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                             <div className="bracket-match-border-block-r">
                                 <div className="match-set-end">
-                                    {matches8[4].participants[1] != null &&
+                                    {matches8[4].participants[1] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[4]._id}`} style={{ textDecoration:"none"}}  className={matches8[4].winner && matches8[4].participants[1]._id === matches8[4].winner? "bracket-match-b-w":"bracket-match-b"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[4].winner && matches8[4].participants[1]._id === matches8[4].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[4].participants[1].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
 
                                 <div className="match-set-end">
-                                    {matches8[5].participants[0] != null &&
+                                    {matches8[5].participants[0] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[5]._id}`} style={{ textDecoration:"none"}}  className={matches8[5].winner && matches8[5].participants[0]._id === matches8[5].winner? "bracket-match-t-w":"bracket-match-t"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[5].winner && matches8[5].participants[0]._id === matches8[5].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[5].participants[0].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
                             </div>
                             <div className="match-set-end">
-                                {matches8[5].participants[1] != null &&
+                                {matches8[5].participants[1] != null ?
                                 <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[5]._id}`} style={{ textDecoration:"none"}}  className={matches8[5].winner && matches8[5].participants[1]._id === matches8[5].winner? "bracket-match-b-w":"bracket-match-b"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div  className={matches8[5].winner && matches8[5].participants[1]._id === matches8[5].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[5].participants[1].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                         </div>
 
                         <div></div>
                         <div className="bracket-matches-chain">
-                            {matches8[6].participants[0] != null &&
                             <div className="match-set-end">
+                                {matches8[6].participants[0] != null ?
                                 <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[6]._id}`} style={{ textDecoration:"none"}}  className={matches8[6].winner && matches8[6].participants[0]._id === matches8[6].winner? "bracket-match-t-w":"bracket-match-t"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div className={matches8[6].winner && matches8[6].participants[0]._id === matches8[6].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[6].participants[0].nickname}</div>
-                                </Link>
-                            </div>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
+                            </div>
                             <div className="bracket-match-border-block-r">
                                 <div className="match-set-end">
-                                    {matches8[6].participants[1] != null &&
+                                    {matches8[6].participants[1] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[6]._id}`} style={{ textDecoration:"none"}}  className={matches8[6].winner && matches8[6].participants[1]._id === matches8[6].winner? "bracket-match-b-w":"bracket-match-b"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[6].winner && matches8[6].participants[1]._id === matches8[6].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[6].participants[1].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
 
                                 <div className="match-set-end">
-                                    {matches8[7].participants[0] != null &&
+                                    {matches8[7].participants[0] != null ?
                                     <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[7]._id}`} style={{ textDecoration:"none"}}  className={matches8[7].winner && matches8[7].participants[0]._id === matches8[7].winner? "bracket-match-t-w":"bracket-match-t"}>
                                         <div className="bracket-img-l">
                                             <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                         </div>
                                         <div  className={matches8[7].winner && matches8[7].participants[0]._id === matches8[7].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[7].participants[0].nickname}</div>
-                                    </Link>}
+                                    </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                                 </div>
                             </div>
                             <div className="match-set-end">
-                                {matches8[7].participants[1] != null &&
+                                {matches8[7].participants[1] != null ?
                                 <Link  to={`/lol/tournaments/${tournamentId}/matches/${matches8[7]._id}`} style={{ textDecoration:"none"}}   className={matches8[7].winner && matches8[7].participants[1]._id === matches8[7].winner? "bracket-match-b-w":"bracket-match-b"}>
                                     <div className="bracket-img-l">
                                         <img style={{maxWidth: "80%", borderRadius: "50%"}} src={auth.userAvatar}/>
                                     </div>
                                     <div className={matches8[7].winner && matches8[7].participants[1]._id === matches8[7].winner? "bracket-match-text-w":"bracket-match-text"}>{matches8[7].participants[1].nickname}</div>
-                                </Link>}
+                                </Link>:<div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                         </div>
                     </div>}

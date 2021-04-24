@@ -1389,7 +1389,7 @@ b{
 .bracket-match-b-w{
     width: 183px;
     height: 50%;
-    background: #827081;
+    background:#827081;
     border-left: 2px solid #827081;
     border-bottom: 2px solid #827081;
     border-right: 2px solid #827081;
@@ -1532,3 +1532,14 @@ flex-grow: 1;
     border-bottom: 2px solid #827081;
 }
 
+.bracket-match-no-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Montserrat;
+    font-size: 400px;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 29px;
+    color: #615060;
+}

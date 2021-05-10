@@ -166,7 +166,7 @@ export const LoLTournamentMatchDetailPage = () => {
                 </div>}
                 <div className="players-match">
 
-                    <Link to={`/lol/profile/${match.participants[0]._id}`} className="left-gamer-indicator"
+                    <Link to={match.participants[0]!=null ?`/lol/profile/${match.participants[0]._id}`:""} className={match.participants[0]!=null ?"left-gamer-indicator":"left-gamer-indicator disalbed-a"}
                          style={{background: match.winner ? (match.participants[0] != null ? (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-l">
                             <div   className="left-gamer">
@@ -202,7 +202,6 @@ export const LoLTournamentMatchDetailPage = () => {
                                             </div>
                                     )
                                 }
-
                             </div>
                         </div>
                     </Link>
@@ -213,7 +212,7 @@ export const LoLTournamentMatchDetailPage = () => {
                         <div className="time-match"><p>{match.stateTour} 18:00</p></div>
                     </div>}
 
-                    <Link to={`/lol/profile/${match.participants[1]._id}`} className="left-gamer-indicator"
+                    <Link to={match && match.participants[1]!=null?`/lol/profile/${match.participants[1]._id}`:""} className="left-gamer-indicator"
                          style={{background: match.winner ? (match.participants[1] != null ? (match.participants[1]._id && match.winner === match.participants[1]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-r">
                             <div className="right-gamer">

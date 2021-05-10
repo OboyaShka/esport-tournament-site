@@ -1762,6 +1762,20 @@ flex-grow: 1;
     color: #827081;
 }
 
+.match-number-block{
+    display: inline-flex;
+    align-items: flex-start;
+}
+
+.match-number{
+
+}
+
+.disalbed-a{
+    pointer-events: none; /* делаем ссылку некликабельной */
+    cursor: default;  /* устанавливаем курсор в виде стрелки */
+}
+
 .participants-card-elo{
     font-family: Montserrat;
     font-style: normal;

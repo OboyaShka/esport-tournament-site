@@ -90,7 +90,7 @@ export const LoLProfilePage = () => {
             <div className="my-profile-card">
                 <div className="info-card">
 
-                    <img style={{maxWidth: "90%", borderRadius: "50%"}} src={auth.userAvatar}/>
+                    <img style={{maxWidth: "90%", borderRadius: "50%"}} src={user.image}/>
                     <div className="info-card-profile">
 
                         <div>
@@ -107,7 +107,7 @@ export const LoLProfilePage = () => {
                         <div>Почта: {user.email}</div>
                         <div>Почта: {user.email}</div>
                     </div>
-                    <div className="card-edit"><img src={Edit}/></div>
+                    <Link to='/lol/profile-edit' className="card-edit"><img src={Edit}/></Link>
                 </div>
 
 

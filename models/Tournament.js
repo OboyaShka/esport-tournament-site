@@ -7,6 +7,7 @@ const Tournament = new Schema({
     stateTour: {type: String, ref: 'StateTour', required:true},
     description: {type: String, required:true},
     image: {type: String, required:true},
+    candidates: [{type: Types.ObjectId, ref: 'User'}],
     participants: [{type: Types.ObjectId, ref: 'User'}],
     date: {type: Date, required:true},
     nextStateDate: {type: Date, required:true},

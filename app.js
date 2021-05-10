@@ -373,38 +373,7 @@ async function start() {
 
         io.on('connection', async (socket) => {
 
-            // connection.on("open", async () => {
-            //     console.log("connected to Mongo")
-            //     const stream = connection.collection("tournaments").watch()
-            //
-            //
-            //
-            //
-            //     //[{$match: { game: "League of Legends" }}]
-            //
-            //     // stream.on("change", (change) => {
-            //     //     console.log(1)
-            //     // })
-            //
-            //     // stream.on( 'change', async (item) =>{
-            //     //     console.log(item)
-            //     // })
-            //
-            //     // stream.on( '', ( item ) =>{
-            //     //     console.log(item)
-            //     // } )
-            //
-            //     // stream.insert({title: "Турнир 1"}, () =>{
-            //     //     console.log(1)
-            //     // } )
-            //
-            //
-            //     // stream.on("change", (change) => {
-            //     //     console.log(change)
-            //     // })
-            //
-            // })
-
+            //Смена состояния турнира
 
             socket.on('TOURNAMENTS/STATECHANGE', async (tournamentId, state) => {
 
@@ -418,13 +387,51 @@ async function start() {
                 io.emit('TOURNAMENTS/NEWSTATE', state)
             })
 
+            //Регистрация пользователя на турнир
+
             socket.on('TOURNAMENTS/REGISTRED', async (token, tournamentId) => {
 
                 const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
 
                 const decoded = jwt.verify(token, config.get('jwtSecret'))
 
+                if (!tournamentParticipants.candidates.includes(decoded.userId)) {
+
+                    const tournament = await Tournament.updateOne(
+                        {_id: tournamentId},
+                        {$push: {candidates: decoded.userId}}
+                    )
+
+
+                    io.emit('TOURNAMENTS/REGISTRED:RES', 'Пользователь зарегистрирован на турнир')
+                }
+            })
+
+            socket.on('TOURNAMENTS/CANCEL', async (token, tournamentId) => {
+
+                const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
+
+                const decoded = jwt.verify(token, config.get('jwtSecret'))
+
                 if (!tournamentParticipants.participants.includes(decoded.userId)) {
+
+                    const tournamentDel = await Tournament.findOneAndUpdate(
+                        {_id: tournamentId},
+                        {$pull: {candidates: decoded.userId}}
+                    )
+
+
+                    io.emit('TOURNAMENTS/CANCEL:RES', 'Пользователь удалён на турнир')
+                }
+            })
+
+            socket.on('TOURNAMENTS/CONFIRM', async (token, tournamentId) => {
+
+                const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
+
+                const decoded = jwt.verify(token, config.get('jwtSecret'))
+
+                if (!tournamentParticipants.participants.includes(decoded.userId) && tournamentParticipants.candidates.includes(decoded.userId)) {
 
                     const tournament = await Tournament.updateOne(
                         {_id: tournamentId},
@@ -436,7 +443,7 @@ async function start() {
                         {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
                     )
 
-                    io.emit('TOURNAMENTS/REGISTRED:RES', 'Пользователь зарегистрирован на турнир')
+                    io.emit('TOURNAMENTS/CONFIRM:RES', 'Пользователь является участником турнира')
                 }
             })
 
@@ -628,6 +635,24 @@ async function start() {
                     ))
                         .then((messageArr) => messageArr.sort((a, b) => b.date > a.date ? 1 : -1))
                         .then((messageArr) => io.emit('TOURNAMENT/GET-MESSAGES:RES', messageArr))
+
+
+                }
+            )
+
+            socket.on('TOURNAMENT/PARTICIPANTS', async (tournamentId) => {
+
+                    const tournament = await Tournament.findOne({_id: tournamentId})
+
+                    // console.log(tournament)
+
+                    Promise.all(tournament.participants.map(async (participantId) => {
+
+                            const participant = await User.findOne({_id: participantId})
+                            return participant
+                        }
+                    ))
+                        .then((participantsArr) =>  io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
 
 
                 }

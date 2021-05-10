@@ -40,10 +40,17 @@ export const LoLProfileEditPage = () => {
 
     const editHandler = useCallback(async () => {
         try {
+            const storageName = 'userData'
+
             const data = await request('/api/user/edit', 'PUT', {...form}, {
                 Authorization: `Bearer ${auth.token}`
             })
             message(data.message)
+            console.log(auth.userAvatar)
+
+            auth.userAvatar = form.image
+
+            console.log(auth.userAvatar)
 
             fetchUser()
         } catch (e) {
@@ -54,6 +61,8 @@ export const LoLProfileEditPage = () => {
     if(loading){
         return <Loader/>
     }
+
+
 
     return (
         <div>

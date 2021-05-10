@@ -11,14 +11,15 @@ import {AuthContext} from "../../context/AuthContext";
 import socket from "../../socket";
 import {useMessage} from "../../hooks/message.hook";
 import moment from "moment";
+import Arror from "../../img/left_arrow_button.svg";
 
 
 export const LoLTournamentDetailPage = (callback, inputs) => {
-    const [tournament, setTournament] = useState( null)
+    const [tournament, setTournament] = useState(null)
     const tournamentId = useParams().id
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
-    const [user, setUser] = useState( null)
+    const [user, setUser] = useState(null)
     const history = useHistory()
     const message = useMessage()
     const roles = auth.userRoles
@@ -30,11 +31,10 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
 
     let interval = useRef()
 
-    const startTimer = () =>{
+    const startTimer = () => {
 
-        if(tournament) {
+        if (tournament) {
             const countdownDate = new Date(tournament.nextStateDate).getTime()
-
 
 
             interval = setInterval(() => {
@@ -57,39 +57,74 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
             }, 1000)
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         startTimer()
-        return() => {
+        return () => {
             clearInterval(interval.current)
         }
     })
 
-    useEffect(()=>{
-        socket.on('TOURNAMENTS/NEWSTATE', ( state ) => {
+    useEffect(() => {
+        socket.on('TOURNAMENTS/NEWSTATE', (state) => {
             getTournament()
             startTimer()
-            return() => {
+            return () => {
                 clearInterval(interval.current)
             }
         })
-    },[])
+    }, [])
 
 
-    const addingHandler = useCallback( async ( ) => {
+    const addingHandler = useCallback(async () => {
         try {
             socket.emit('TOURNAMENTS/REGISTRED', auth.token, tournamentId)
 
             return () => socket.off('TOURNAMENTS/REGISTRED')
-        } catch (e) {}
+        } catch (e) {
+        }
     }, [])
 
-    useEffect(()=>{
-        socket.on('TOURNAMENTS/REGISTRED:RES', ( state ) => {
+    useEffect(() => {
+        socket.on('TOURNAMENTS/REGISTRED:RES', (state) => {
             getTournament()
         })
 
         return () => socket.off('TOURNAMENTS/REGISTRED:RES')
-    },[])
+    }, [])
+
+    const cancelHandler = useCallback(async () => {
+        try {
+            socket.emit('TOURNAMENTS/CANCEL', auth.token, tournamentId)
+
+            return () => socket.off('TOURNAMENTS/CANCEL')
+        } catch (e) {
+        }
+    }, [])
+
+    useEffect(() => {
+        socket.on('TOURNAMENTS/CANCEL:RES', (state) => {
+            getTournament()
+        })
+
+        return () => socket.off('TOURNAMENTS/CANCEL:RES')
+    }, [])
+
+    const acceptHandler = useCallback(async () => {
+        try {
+            socket.emit('TOURNAMENTS/CONFIRM', auth.token, tournamentId)
+
+            return () => socket.off('TOURNAMENTS/CONFIRM')
+        } catch (e) {
+        }
+    }, [])
+
+    useEffect(() => {
+        socket.on('TOURNAMENTS/CONFIRM:RES', (state) => {
+            getTournament()
+        })
+
+        return () => socket.off('TOURNAMENTS/CONFIRM:RES')
+    }, [])
 
     const errorHandler = async () => {
         history.push("lol/profile")
@@ -97,23 +132,24 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     }
 
     const fetchUser = useCallback(async () => {
-        try{
+        try {
             const fetched = await request('/api/user/info', 'GET', null, {
-                Authorization: `Bearer ${auth.token}`} )
+                Authorization: `Bearer ${auth.token}`
+            })
             setUser(fetched)
-        }catch (e) {
+        } catch (e) {
 
         }
-    },[request])
+    }, [request])
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchUser()
-    },[fetchUser])
+    }, [fetchUser])
 
 
     //Подтягиваем информацию о турнире
-    const getTournament = useCallback( async() => {
-        try{
+    const getTournament = useCallback(async () => {
+        try {
             const fetched = await request(`/api/tournaments/${tournamentId}`, 'GET', null)
             setTournament(fetched)
 
@@ -140,7 +176,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                     setStage(fetched.stateTour)
                     break
             }
-        }catch (e) {
+        } catch (e) {
 
         }
     }, [tournamentId, request])
@@ -148,111 +184,150 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     useEffect(() => {
         getTournament()
 
-    },[getTournament])
+    }, [getTournament])
 
 
-    const cancelHandler = useCallback( async ( ) => {
-        try {
-            const data = await request('/api/tournaments/accept', 'PUT', {tournamentId, option: "delete"}, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            getTournament()
-        } catch (e) {}
-    }, [auth.token, request])
-
-    const editHandler = useCallback( async () => {
+    const editHandler = useCallback(async () => {
         try {
             history.push(`/tournament/create?id=${tournamentId}`)
-        } catch (e) {}
+        } catch (e) {
+        }
     }, [auth.token, request])
 
-    const deleteHandler = useCallback( async () => {
+    const deleteHandler = useCallback(async () => {
         try {
             const data = await request('/api/tournaments/delete', 'DELETE', {tournamentId}, {
                 Authorization: `Bearer ${auth.token}`
             })
             message(data.message)
             history.push('/tournaments')
-        } catch (e) {}
+        } catch (e) {
+        }
     }, [auth.token, request])
 
+    const backButton = () => {
+        history.go(-1)
+    }
 
-
-
-    return(
+    return (
         <div>
-            {!tournament && <h2 className="my-profile-title">Турнир</h2>}
-            {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
-            {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить турнир</button>}
-            {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать турнир</button>}
-            <TournamentNav></TournamentNav>
-            {tournament && user && <div className="tournament-about-container">
-                <div className="tournament-info-top">
-                    <img src={tournament.image}/>
-                    <div className="tournaments-description">
-                        <div>Описание</div>
-                        {tournament.description}
-                    </div>
+            {tournament && user && roles &&
+            <div>
+                <div className="profile-header my-profile-title">
+                    <button className="back-button" onClick={e => {
+                        backButton()
+                    }}>
+                        <img src={Arror}/>
+                    </button>
+                    <h2>{tournament.title}</h2>
                 </div>
-                <div className="tournament-info-bottom">
-                    <div className="tournament-state card-bubble">
-                        {(auth.token? (!tournament.participants.includes(auth.userId)?<button className="tournament-register-button info-bubble" onClick={user.summonersName!= null ? addingHandler : errorHandler}><div>Зарегистрироваться</div></button>:
-                            <button className="tournament-register-button info-bubble" onClick={cancelHandler}><div>Отменить участие</div></button>)
-                            :( <Link className="tournament-register-button info-bubble"> to='/authentication'>Записаться на турнир</Link>))}
-                        <button className="tournament-confirm-button info-bubble"><div>Подтвердить участие</div></button>
-                    </div>
-                    <div className="tournament-state card-bubble">
+                <div style={{display: "flex"}}>
+                    {roles.includes('ADMIN') && <button className="button" style={{marginRight: "20px"}}
+                                                        onClick={editHandler}>Редактировать</button>}
+                    {roles.includes('ADMIN') && <button className="button" onClick={deleteHandler}>Удалить</button>}
+                </div>
 
-                        <div className="tournament-state-info info-bubble">
-                            <div>{stage}</div>
-                            <img src={BigLine}/>
-                            <p>Состояние турнира</p>
+                <TournamentNav></TournamentNav>
+                <div className="tournament-about-container">
+                    <div className="tournament-info-top">
+                        <img src={tournament.image}/>
+                        <div className="tournaments-description">
+                            <div>Описание</div>
+                            {tournament.description}
                         </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div className="tournament-timer">
-                                <p>{timerDays}д</p>
-                                <p>{timerHours}ч</p>
-                                <p>{timerMinutes}м</p>
-                                <p>{timerSeconds}с</p>
+                    </div>
+                    <div className="tournament-info-bottom">
+                        <div className="tournament-state card-bubble">
+                            {(auth.token ? (!tournament.candidates.includes(auth.userId) ?
+                                <button className="tournament-register-button info-bubble"
+                                        disabled={tournament.stateTour != "WAITING"}
+                                        onClick={user.summonersName != null ? addingHandler : errorHandler}>
+                                    <div>Зарегистрироваться</div>
+                                </button> :
+                                <button className="tournament-register-button info-bubble" onClick={cancelHandler}
+                                        disabled={tournament.stateTour != "WAITING"}>
+                                    <div>Отменить участие</div>
+                                </button>)
+                                : (<Link
+                                    className="tournament-register-button info-bubble"> to='/authentication'>Записаться
+                                    на турнир</Link>))}
+                            {!tournament.participants.includes(auth.userId) ?
+                                <button className="tournament-confirm-button info-bubble"
+                                        disabled={tournament.stateTour != "CONFIRMATION"} onClick={acceptHandler}>
+                                    <div>Подтвердить участие</div>
+                                </button> :
+                                <button className="tournament-confirm-button info-bubble"
+                                        disabled onClick={acceptHandler}>
+                                    <div>Участие подтверждено</div>
+                                </button>
+                            }
+                        </div>
+                        <div className="tournament-state card-bubble">
+
+                            <div className="tournament-state-info info-bubble">
+                                <div>{stage}</div>
+                                <img src={BigLine}/>
+                                <p>Состояние турнира</p>
                             </div>
-                            <img src={BigLine}/>
-                            <p>Следующий этап начнётся через</p>
+                            <div className="tournament-state-info info-bubble">
+                                <div className="tournament-timer">
+                                    <p>{timerDays}д</p>
+                                    <p>{timerHours}ч</p>
+                                    <p>{timerMinutes}м</p>
+                                    <p>{timerSeconds}с</p>
+                                </div>
+                                <img src={BigLine}/>
+                                <p>Следующий этап начнётся через</p>
+                            </div>
+                        </div>
+                        <div className="tournament-info card-bubble">
+                            {tournament.stateTour === "WAITING" &&
+                            <div className="tournament-state-info info-bubble">
+                                <div>{tournament.candidates.length}</div>
+                                <img src={Line}/>
+                                <p>Зарегистрировано</p>
+                            </div>}
+                            {tournament.stateTour === "CONFIRMATION" &&
+                            <div className="tournament-state-info info-bubble">
+                                <div>{tournament.participants.length}/{tournament.candidates.length}</div>
+                                <img src={Line}/>
+                                <p>Подтверждение</p>
+                            </div>}
+                            {tournament.stateTour != "WAITING" && tournament.stateTour != "CONFIRMATION" &&
+                            <div className="tournament-state-info info-bubble">
+                                <div>{tournament.participants.length}</div>
+                                <img src={Line}/>
+                                <p>Участников</p>
+                            </div>}
+                            <div className="tournament-state-info info-bubble">
+                                <div>{tournament.typeTour}</div>
+                                <img src={Line}/>
+                                <p>Формат</p>
+                            </div>
+                            <div className="tournament-state-info info-bubble">
+                                <div>Daily</div>
+                                <img src={Line}/>
+                                <p>Тип</p>
+                            </div>
+                            <div className="tournament-state-info info-bubble">
+                                <div>24.05</div>
+                                <img src={Line}/>
+                                <p>Дата</p>
+                            </div>
+                            <div className="tournament-state-info info-bubble">
+                                <div style={{fontSize: "34px", marginTop: "40px"}}>Бесплатно</div>
+                                <img src={Line}/>
+                                <p>Взнос</p>
+                            </div>
+                            <div className="tournament-state-info info-bubble">
+                                <div>200 R</div>
+                                <img src={Line}/>
+                                <p>Призовые</p>
+                            </div>
                         </div>
                     </div>
-                    <div className="tournament-info card-bubble">
-                        <div className="tournament-state-info info-bubble">
-                            <div>{tournament.participants.length}</div>
-                            <img src={Line}/>
-                            <p>Игроки</p>
-                        </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div>5x5</div>
-                            <img src={Line}/>
-                            <p>Формат</p>
-                        </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div>Daily</div>
-                            <img src={Line}/>
-                            <p>Тип</p>
-                        </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div>24.05</div>
-                            <img src={Line}/>
-                            <p>Дата</p>
-                        </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div style={{fontSize: "34px", marginTop: "40px"}}>Бесплатно</div>
-                            <img src={Line}/>
-                            <p>Взнос</p>
-                        </div>
-                        <div className="tournament-state-info info-bubble">
-                            <div>200 R</div>
-                            <img src={Line}/>
-                            <p>Призовые</p>
-                        </div>
-                    </div>
-                </div>
 
+                </div>
             </div>}
         </div>
     )

@@ -41,6 +41,16 @@ export const LoLTournamentMatches = () => {
         }
     }, [])
 
+    useEffect(() => {
+        socket.on('TOURNAMENT/MATCH-WINNER:RES', () => {
+            getTournament()
+            getMatches()
+
+
+        })
+
+        return () => socket.off('TOURNAMENT/MATCH-WINNER:RES')
+    }, [])
 
     useEffect(() => {
         getMatches()
@@ -84,15 +94,15 @@ export const LoLTournamentMatches = () => {
                                          style={{background: match.winner ? (match.participants[0] === null ? "#fe7968" : (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968")) : ""}}>
                                         <div className="match-card-l">
                                             <div className="left-gamer">
-                                                {match.participants[0] && (match.participants[0] === null) ?
+                                                {match.participants[0] && ((match.participants[0] === null) ?
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
-                                                             src={auth.userAvatar}/>
+                                                                 src={auth.userAvatar}/>
                                                     </div> :
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
-                                                             src={auth.userAvatar}/>
-                                                    </div>
+                                                             src={match.participants[0].image}/>
+                                                    </div>)
                                                 }
                                                 {match.participants[0] && (match.participants[0] != null) ?
                                                     <div className="info-card-profile">
@@ -109,7 +119,7 @@ export const LoLTournamentMatches = () => {
                                                                 </div>
                                                             </div> :
                                                             <div className="info-card-profile">
-                                                                <div>
+                                                                <div className="noenemy">
                                                                     <h3 className="nickname-card">Нет оппонента</h3>
                                                                     <p className="summonersname-card"></p>
                                                                 </div>
@@ -159,15 +169,15 @@ export const LoLTournamentMatches = () => {
                                                             </div>
                                                     )
                                                 }
-                                                {match.participants[1] && (match.participants[1] === null) ?
+                                                {match.participants[1] && ((match.participants[1] === null) ?
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
                                                              src={auth.userAvatar}/>
                                                     </div> :
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
-                                                             src={auth.userAvatar}/>
-                                                    </div>
+                                                             src={match.participants[1].image}/>
+                                                    </div>)
                                                 }
                                             </div>
                                         </div>

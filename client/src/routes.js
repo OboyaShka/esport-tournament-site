@@ -22,6 +22,7 @@ import {LoLTournamentParticipants} from "./pages/lol/LoLTournamentParticipants";
 import {LoLTournamentBracket} from "./pages/lol/LoLTournamentBracket";
 import {LoLTournamentMatches} from "./pages/lol/LolTournamentMatches";
 import {LoLTournamentMatchDetailPage} from "./pages/lol/LoLTournamentMatchDetailPage";
+import {LoLProfileEditPage} from "./pages/lol/LoLProfileEditPage";
 
 export const useRoutes = (isAuthenticated)=> {
 
@@ -66,6 +67,9 @@ export const useRoutes = (isAuthenticated)=> {
                 </Route>
                 <Route path="/lol/profile/:id" exact>
                     <LoLProfileDetailPage />
+                </Route>
+                <Route path="/lol/profile-edit" exact>
+                    <LoLProfileEditPage />
                 </Route>
 
                 <Route path="/new/create" exact>

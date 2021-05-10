@@ -97,8 +97,9 @@ input.login-input:focus {
 
 body{
     box-sizing: border-box;
-    /*background: #D6D3FF; D5D4DF*/
-    background: #ebeef9;
+    /*background: #D6D3FF; D5D4DF #fafbff #ebeef9*/
+    background: #fafbff;
+
 }
 *, *::before, *::after{
     box-sizing: inherit;
@@ -113,6 +114,7 @@ body{
     border-radius: 25px;
     background: #E7E6F7;
     /*background: #f6f7ff;*/
+
 }
 
 .header-logo{
@@ -301,6 +303,7 @@ body{
     color: #615060;
     font-size: 36px;
     font-weight: bold ;
+padding-right: 104px;
 }
 
 .my-profile-title-games{
@@ -310,6 +313,7 @@ body{
     color: #615060;
     font-size: 36px;
     font-weight: bold ;
+    padding-right: 104px;
 }
 
 .my-profile-card{
@@ -651,8 +655,8 @@ b{
     outline: none;
     background: #827081;
     border-radius: 25px;
-    width: 66px;
-    height: 46px;
+    width: 68px;
+    height: 48px;
     margin-right: 400px;
     left:489px;
 }
@@ -1029,14 +1033,15 @@ b{
 .bottom-match{
     margin-top: 2rem;
     background: #D9D7F1;
-    min-height: 41.4rem;
+    min-height: 40rem;
+    height: 45rem;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
     display: grid;
     grid-template-columns: 2fr 4fr 3fr;
     padding: 2rem;
     grid-gap: 2rem;
-
+    margin-bottom: 5px;
 }
 
 .chat-match{
@@ -1064,15 +1069,64 @@ b{
 
 .chat-sendder{
     border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.back-button{
+    width: 104px;
+    height: 35px;
+    background: #827081;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline:none;
+    outline-offset: 0;
+
+}
+
+.match-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 2rem;
+}
+
+.profile-header{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+}
+
+button:disabled {
+    background-color: grey;
 }
 
 .chat-button{
-    margin-top: 1rem;
+    outline: none !important;
     width: 10rem;
     border-radius: 15px;
     background: #998598 ;
     height: 30px;
     color: #FFFFFF;
+}
+
+.button{
+    outline: none !important;
+    width: 10rem;
+    border-radius: 15px;
+    background: #998598 ;
+        height: 30px;
+    color: #FFFFFF;
+    outline: none !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button a{
+    text-decoration:none;
+    color: #ffffff
 }
 
 .chat-message{
@@ -1115,6 +1169,7 @@ b{
     border-radius: 25px;
     height: 7.5rem;
     border: 2px solid #615060;
+    text-decoration: none
 }
 
 ::-webkit-scrollbar-button {
@@ -1243,6 +1298,18 @@ b{
     align-items: center;
 }
 
+.bracket-match-final-left{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.bracket-match-final-right{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .bracket-match-final-r-w{
     width: 50%;
     height: 100%;
@@ -1344,13 +1411,22 @@ b{
 .bracket-main-text{
     display: flex;
     justify-content: center;
-    padding-top:1rem
+    padding-top:1rem;
+    align-items: center;
+
 }
 
 .bracket-match{
     width: 183px;
     height: 80px;
 }
+
+.bracket-match-block{
+    display: flex;
+    align-items: center;
+    justify-self: center;
+}
+
 
 .bracket-match-t{
     width: 183px;;
@@ -1542,4 +1618,178 @@ flex-grow: 1;
     font-size: 17px;
     line-height: 29px;
     color: #615060;
+}
+
+.morderator-buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 4rem;
+    padding-bottom: 2rem;
+}
+
+.moderator-button{
+    display: flex;
+    justify-content: center;
+}
+
+.match-description{
+    display: flex;
+    flex-direction: column;
+}
+
+.match-description h6{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    color: #827081;
+    padding-bottom: 1rem;
+}
+
+.match-description p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+
+    color: #827081;
+}
+
+.rules-bubble{
+    background: #D9D7F1;
+    mix-blend-mode: normal;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    min-height: 650px;
+    margin-bottom: 4px;
+}
+
+.rules-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 34px;
+    line-height: 44px;
+
+    color: #827081;
+    height: 100px;
+}
+
+.rules-content{
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+
+.rule-title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 21px;
+    line-height: 27px;
+
+    color: #615060;
+    padding-bottom: 1rem;
+}
+
+.rule-block{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 27px;
+
+    color: #615060;
+    padding-bottom: 2rem;
+}
+
+.participants-content{
+
+}
+
+.participants-cards{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 4rem;
+    grid-row-gap: 2rem;
+    padding-top: 2rem;
+    grid-template-rows: 80px;
+}
+
+.participants-card{
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    height: 80px;
+    display: grid;
+    grid-template-rows: 80px;
+    grid-template-columns: 80px 1fr 60px;
+    text-decoration: none
+}
+
+.participants-card-info{
+    padding: 7px;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.participants-card-nickname{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #615060;
+}
+
+.participants-card-summonersname{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+
+
+    color: #827081;
+}
+
+.participants-card-elo{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+
+    color: #827081;
+}
+
+.participants-card-statistic{
+    padding: 7px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    display: inline-block;
+
+
+    color: #827081;
+}
+
+.noenemy{
+    padding-left: 20px;
+}
+
+.noenemy-block{
+    height: 85px;
 }

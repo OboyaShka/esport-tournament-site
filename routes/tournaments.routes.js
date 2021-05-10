@@ -47,7 +47,7 @@ router.post(
                     image: image,
                     participants: [],
                     date: date,
-                    nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
+                    nextStateDate: moment(date).subtract(3, 'minutes').toDate().setSeconds(0, 0),
                     nextStateTour: "CONFIRMATION",
                     matches: [],
                 })
@@ -84,7 +84,7 @@ router.put(
                         description: description,
                         image: image,
                         date: date,
-                        nextStateDate: moment(date).subtract(1, 'minutes').toDate().setSeconds(0, 0),
+                        nextStateDate: moment(date).subtract(3, 'minutes').toDate().setSeconds(0, 0),
                         nextStateTour: "CONFIRMATION"
                     }
                 }

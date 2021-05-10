@@ -46,10 +46,11 @@ export const LoLTournamentsPage = () => {
                 <div>Фитльры типа</div>
                 <div>Фильтры формы</div>
             </div>
-            <div>
-                {roles && roles.includes('ADMIN') &&
-                <Link className="waves-effect waves-light btn-large" to='/tournament/create'>Создать турнир</Link>}
-            </div>
+            {roles && roles.includes('ADMIN') &&
+            <div className="button" >
+
+                <Link className="waves-effect waves-light btn-large" to='/tournament/create' >Создать</Link>
+            </div>}
             {!loading && <div className="tournaments-cards">
                 {!tournaments.length ?
                     (<p>Турниров на данный момент нет</p>) :

@@ -46,16 +46,16 @@ export const Header = () => {
                         <div className="barricade">
                             <img src={Line}/>
                         </div>
-                        <h3 className="profile">{auth.userNickname}</h3>
-                        <img className="profile-img" src={ auth.userAvatar}/>
+                        <h3 className="profile">{ auth.userNickname }</h3>
+                        <img className="profile-img" src={ auth.userAvatar }/>
                         {/*<img src={IconProfile}/>*/}
-                        <img src={Arrow}/>
+
                         <ul id="nav-mobile" className="right hide-on-med-and-down">
                             {auth.isAuthenticated ?
                                 <li><NavLink to="/" onClick={logoutHandler}>Выйти</NavLink></li> :
                                 <li><NavLink to="/authentication" onClick={loginHandler}>Войти</NavLink></li>}
-
                         </ul>
+                        <img src={Arrow}/>
                     </div>
 
 

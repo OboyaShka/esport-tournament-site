@@ -17,7 +17,7 @@ router.post(
     auth,
     async (req, res) => {
         try {
-            const {title, game, typeTour, description, image, date} = req.body
+            const {title, game, typeTour, description, image, date, payment, prize} = req.body
 
 
             if (!req.user.userRoles.includes("ADMIN") && !req.user.userRoles.includes("MODERATOR")) {
@@ -50,6 +50,8 @@ router.post(
                     nextStateDate: moment(date).subtract(3, 'minutes').toDate().setSeconds(0, 0),
                     nextStateTour: "CONFIRMATION",
                     matches: [],
+                    payment: payment,
+                    prize: prize
                 })
 
             await tournament.save()
@@ -68,7 +70,7 @@ router.put(
     auth,
     async (req, res) => {
         try {
-            const {title, game, typeTour, description, image, date, OBJECT_ID} = req.body
+            const {title, game, typeTour, description, image, date, payment, prize, OBJECT_ID} = req.body
 
 
             if (!req.user.userRoles.includes("ADMIN") && !req.user.userRoles.includes("MODERATOR")) {
@@ -85,7 +87,9 @@ router.put(
                         image: image,
                         date: date,
                         nextStateDate: moment(date).subtract(3, 'minutes').toDate().setSeconds(0, 0),
-                        nextStateTour: "CONFIRMATION"
+                        nextStateTour: "CONFIRMATION",
+                        payment: payment,
+                        prize: prize
                     }
                 }
             )

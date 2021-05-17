@@ -11,6 +11,8 @@ const User = new Schema({
         status: {type: String, ref: 'StateUser'}
     }],
     summonersName: {type: String},
+    redCoin:{type: Number},
+    blueCoin:{type: Number}
 })
 
 module.exports = model('User', User)

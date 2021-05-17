@@ -13,6 +13,11 @@ const Tournament = new Schema({
     nextStateDate: {type: Date, required:true},
     nextStateTour: {type: String, ref: 'StateTour', required:true},
     matches: [{type: Types.ObjectId, ref: 'Match'}],
+    payment: {type: Number},
+    prize: {type: Number},
+    place1: {type: Object, ref: 'User'},
+    place2: {type: Object, ref: 'User'},
+    place34: [{type: Object, ref: 'User'}]
 })
 
 module.exports = model('Tournament', Tournament)

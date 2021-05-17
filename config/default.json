@@ -1,5 +1,6 @@
 {
   "port": 5000,
   "mongoUri": "mongodb+srv://poznanskiy:D1e2n3is4@cluster0.js2ni.mongodb.net/app?retryWrites=true&w=majority",
-  "jwtSecret": "poznanskiy"
+  "jwtSecret": "poznanskiy",
+  "ghost": "60997a65c61bea02000a4476"
 }

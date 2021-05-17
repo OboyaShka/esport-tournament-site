@@ -34,7 +34,7 @@ export const Footer = () => {
                 <section className="section-content"></section>
                 <div className="footer-container">
                     <a className="footer-item">
-                        О компании
+                        О сервисе
                     </a>
                     <a className="footer-item">
                         Политика приватности

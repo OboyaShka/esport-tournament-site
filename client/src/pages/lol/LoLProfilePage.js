@@ -16,6 +16,8 @@ import TrendIcon from "../../img/profile_img/trend_icon.svg";
 import MoreIcon from "../../img/profile_img/more_icon.svg";
 import GameTest from "../../img/profile_img/games-league-of-legends-78709.jpg"
 import Participants from "../../img/nav_img/profile_icon.svg"
+import BlueCoinStat from "../../img/profile_img/bluecoin_stat.svg";
+import RedCoinStat from "../../img/profile_img/redcoin_stat.svg";
 import moment from "moment";
 
 export const LoLProfilePage = () => {
@@ -98,14 +100,15 @@ export const LoLProfilePage = () => {
                             <p className="summonersname-card">{user.summonersName}</p>
                         </div>
                     </div>
-                    <div className="currency">
-                        <div className="redcoin">0 R<img src={Red}/></div>
-                        <div className="redcoin">0 B<img src={Blue}/></div>
-                    </div>
+                    <div></div>
+                    {/*<div className="currency">*/}
+                    {/*    <div className="redcoin">0 R<img src={Red}/></div>*/}
+                    {/*    <div className="redcoin">0 B<img src={Blue}/></div>*/}
+                    {/*</div>*/}
                     <div className="info-card-main">
                         <div>Почта: {user.email}</div>
-                        <div>Почта: {user.email}</div>
-                        <div>Почта: {user.email}</div>
+                        <div>Вывод средств: Банковская карта</div>
+                        <div>Discord: NICKNAME#3463</div>
                     </div>
                     <Link to='/lol/profile-edit' className="card-edit"><img src={Edit}/></Link>
                 </div>
@@ -118,7 +121,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={TournamentIcon}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-var-block">12</var>
                         </div>
                     </div>
                     <p>Турниров сыграно</p>
@@ -128,7 +131,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={CupIcon}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-var-block">5</var>
                         </div>
                     </div>
                     <p>Побед в турнирах</p>
@@ -136,22 +139,22 @@ export const LoLProfilePage = () => {
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
-                            <img className="line-statistics" src={CupIcon}/>
+                            <img className="line-statistics" src={RedCoinStat}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-font-size">2300</var>
                         </div>
                     </div>
-                    <p>Побед в турнирах</p>
+                    <p>Заработано RedCoin</p>
                 </div>
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
-                            <img className="line-statistics" src={CupIcon}/>
+                            <img className="line-statistics" src={PedestalIcon}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-var-block">7</var>
                         </div>
                     </div>
-                    <p>Побед в турнирах</p>
+                    <p>Призовых мест</p>
                 </div>
                 {/*<div className="open-statistics">*/}
                 {/*    <div className="statistics-card-more">*/}
@@ -162,22 +165,22 @@ export const LoLProfilePage = () => {
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
-                            <img className="line-statistics" src={PedestalIcon}/>
+                            <img className="line-statistics" src={TrendIcon}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-var-block">12</var>
                         </div>
                     </div>
-                    <p>Призовых мест</p>
+                    <p>Рейтинг на сайте</p>
                 </div>
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
-                            <img className="line-statistics" src={TrendIcon}/>
+                            <img className="line-statistics" src={BlueCoinStat}/>
                             <img src={LineIcon}/>
-                            <var>12</var>
+                            <var className="stat-font-size">1100</var>
                         </div>
                     </div>
-                    <p>Рейтинг на сайте</p>
+                    <p>Заработано BlueCoin</p>
                 </div>
             </div>
             <div className="my-profile-title-games">Мои турниры</div>
@@ -193,15 +196,15 @@ export const LoLProfilePage = () => {
                                 </div>
 
                                 <div className="card-left">
-                                    <div className="card-format"><b>Формат: </b>{item.typeTour} </div>
-                                    <div className="card-format"><b>Тип: </b></div>
+                                    <div className="card-format"><b>Формат: </b> {item.typeTour==="Daily"?"1x1": item.typeTour==="Premium"?"5x5 RTC":item.typeTour==="Elite"?"5x5 RTC":""}</div>
+                                    <div className="card-format"><b>Тип: </b>{item.typeTour}</div>
                                     <div className="card-date">
                                         <b>{moment(item.date).format("DD.MM")}</b> {moment(item.date).format("HH:mm")}
                                     </div>
                                 </div>
                                 <div className="card-right">
-                                    <div className="card-format"><b>Взнос: </b></div>
-                                    <div className="card-format"><b>Призовые: </b></div>
+                                    <div className="card-format"><b>Взнос: </b>{item.typeTour==="Daily"?"Бесплатно": item.typeTour==="Premium"? `${item.payment} RC`:item.typeTour==="Elite"?`${item.payment} BC`:""}</div>
+                                    <div className="card-format"><b>Призовые: </b>{item.typeTour==="Daily"?`${item.prize} RC`: item.typeTour==="Premium"? `${item.prize} BC`:item.typeTour==="Elite"?`${item.prize} BC`:""}</div>
                                     <div className="card-participants"><img
                                         src={Participants}/>{item.participants.length}/32
                                     </div>

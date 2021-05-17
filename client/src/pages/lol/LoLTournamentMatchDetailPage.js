@@ -133,11 +133,11 @@ export const LoLTournamentMatchDetailPage = () => {
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament &&
             <div className="match-header">
-                <button className="back-button" onClick={e => {
+                <a className="back-button" onClick={e => {
                     backButton()
                 }}>
                     <img src={Arror}/>
-                </button>
+                </a>
                 <h2 className="my-profile-title">{tournament.title}</h2>
             </div>}
             {!!match && !!tournament && match.stateTour && tournament.stateTour && match.stateTour != null && tournament.stateTour != null &&
@@ -165,9 +165,8 @@ export const LoLTournamentMatchDetailPage = () => {
                     </div>
                 </div>}
                 <div className="players-match">
-
-                    <Link to={match.participants[0]!=null ?`/lol/profile/${match.participants[0]._id}`:""} className={match.participants[0]!=null ?"left-gamer-indicator":"left-gamer-indicator disalbed-a"}
-                         style={{background: match.winner ? (match.participants[0] != null ? (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
+                    <Link to={match && match.participants[0]!=null ?`/lol/profile/${match.participants[0]._id}`:""} className={match.participants[0]!=null ?"left-gamer-indicator":"left-gamer-indicator disalbed-a"}
+                         style={{background: match.winner ? (match.participants[0] != null ? (match.participants[0]._id && match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-l">
                             <div   className="left-gamer">
                                 {match.participants[0] && ((match.participants[0] === null) ?
@@ -209,7 +208,7 @@ export const LoLTournamentMatchDetailPage = () => {
                     <div className="left-gamer-indicator"
                          style={tournament.stateTour != null && tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
                              (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>
-                        <div className="time-match"><p>{match.stateTour} 18:00</p></div>
+                        <div className="time-match"><p>{match.stateTour==="1/1"?"Финал":match.stateTour} 18:45</p></div>
                     </div>}
 
                     <Link to={match && match.participants[1]!=null?`/lol/profile/${match.participants[1]._id}`:""} className="left-gamer-indicator"
@@ -252,7 +251,7 @@ export const LoLTournamentMatchDetailPage = () => {
                         </div>
                     </Link>
                 </div>
-                {(match.participants[0] != null && match.participants[0] != null &&
+                {(match.participants[0] != null && match.participants[1] != null &&
                     (match.participants[0]._id === auth.userId ||
                         match.participants[1]._id === auth.userId) || auth.userRoles.includes("ADMIN") || auth.userRoles.includes("MODERATOR")) &&
                 <div className="bottom-match">
@@ -270,7 +269,7 @@ export const LoLTournamentMatchDetailPage = () => {
 
 
                         <FileUpload form={form} setForm={setForm}/>
-                        <button className="chat-button" onClick={e => {
+                        <button className="chat-button load-button input__wrapper send-win-btn" onClick={e => {
                             sendScreen()
                         }}>Отправить победу
                         </button>
@@ -280,25 +279,9 @@ export const LoLTournamentMatchDetailPage = () => {
 
                     <div className="match-description">
                         <h6>Руководство</h6>
-                        <p>
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
-                            Инструкции Инструкции Инструкции
+                        <p style={{lineHeight: "1.5"}}>
+                            Игрок ниже по сетке создаёт игру, после чего приглашает оппонента.<br/> Настройки игры для турнира ARAM. <br/>
+                            Игра завершается после первого убийства. Победитель отправляет скриншот с победой, после чего модератор подтверждает победу в паре.
                         </p>
                     </div>
                 </div>}

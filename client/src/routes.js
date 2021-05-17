@@ -55,13 +55,16 @@ export const useRoutes = (isAuthenticated)=> {
                     <LoLTournamentMatchDetailPage/>
                 </Route>
 
-
+                <Route path="/new/create" exact>
+                    <NewsCreatePage />
+                </Route>
                 <Route path="/lol/news" exact>
                     <LoLNewsPage />
                 </Route>
                 <Route path="/lol/news/:id" exact>
                     <LoLNewsDetailPage />
                 </Route>
+
                 <Route path="/lol/profile" exact>
                     <LoLProfilePage />
                 </Route>
@@ -72,9 +75,7 @@ export const useRoutes = (isAuthenticated)=> {
                     <LoLProfileEditPage />
                 </Route>
 
-                <Route path="/new/create" exact>
-                    <NewsCreatePage />
-                </Route>
+
                 <Route path="/tournament/create">
                     <TournamentsCreatePage />
                 </Route>

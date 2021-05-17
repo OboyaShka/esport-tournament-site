@@ -4,6 +4,7 @@ import {AuthContext} from "../../context/AuthContext";
 import socket from "../../socket";
 import {Link, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import Select from "react-select";
 
 export const LoLTournamentMatches = () => {
     const auth = useContext(AuthContext)
@@ -76,13 +77,29 @@ export const LoLTournamentMatches = () => {
         return () => socket.off('TOURNAMENT/MATCH-WINNER:RES')
     }, [])
 
+    const optionsType =[
+        { value: 'Daily', label: 'Daily' },
+        { value: 'Premium', label: 'Premium' },
+        { value: 'Elite', label: 'Elite' }
+    ]
+
+    const optionsFormat =[
+        { value: '1x1', label: '1x1' },
+        { value: '5x5', label: '5x5' },
+        { value: '5x5 RTC', label: '5x5 RTC' }
+    ]
+
     return (
         <div>
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
             <div className="matches">
-                <div className="matches-filters">Фитльтры</div>
+                <div className="matches-filters">
+                    <div><Select className="matches-filters-selector select-type" placeholder="Поиск по игроку..." options={optionsType}/></div>
+                    <div><Select className="matches-filters-selector select-type" placeholder="Этап матча..." options={optionsType}/></div>
+                    <div><Select className=" matches-filters-selector select-type" placeholder="Состояние матча..." options={optionsFormat}/></div>
+                </div>
                 <div className="matches-content">
                     {matches != [] && matches.map((match, index) => {
                         return (

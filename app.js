@@ -26,7 +26,7 @@ app.use('/api/news', require('./routes/news.routes'))
 app.use('/api/profile', require('./routes/profile.routes'))
 
 const PORT = config.get('port') || 5000
-
+const GHOST = config.get('ghost')
 
 async function start() {
     try {
@@ -100,7 +100,7 @@ async function start() {
             //Добавление пустых мест при недоборе
             let p = -1
             while (participantRandom.length < participantsNumber) {
-                participantRandom.splice(p, 0, null);
+                participantRandom.splice(p, 0, GHOST);
                 p = p - 2
             }
 
@@ -139,6 +139,7 @@ async function start() {
                                 tournament: tournament._id,
                                 matchNumber: l,
                                 stateTour: `1/${format}`,
+                                participants: [null, null],
                                 prevMatches: [matches[i]._id, matches[i + 1]._id],
                                 messages: []
                             })
@@ -198,7 +199,16 @@ async function start() {
                     console.log("CONFIRMATION отработал")
                     break
                 case "PREPARATION":
+
+                    const tournamentConfirm = await Tournament.updateOne({_id: item._id},
+                        {
+                            $set: {
+                                participants: tournament.candidates
+                            }
+                        })
+
                     let nextStage
+
                     switch (true) {
                         case tournament.participants.length < 8:
                             nextStage = "CANCELLATION"
@@ -231,12 +241,12 @@ async function start() {
                             break;
                     }
 
-                    const matchesWithNull = await Match.find({
-                        participants: {$in: null},
+                    const matchesWithGhost = await Match.find({
+                        participants: {$in: GHOST},
                         tournament: tournament._id,
                     },)
 
-                    matchesWithNull.map(async (item) => {
+                    matchesWithGhost.map(async (item) => {
 
                         const matchWinner = await Match.updateOne({_id: item._id},
                             {
@@ -246,6 +256,14 @@ async function start() {
                             })
 
                         if (item.matchNumber % 2 != 0) {
+
+                            const match3 = await Match.updateOne({_id: item.nextMatch},
+                                {
+                                    $pop: {
+                                        participants: -1
+                                    }
+                                })
+
                             const match1 = await Match.updateOne({_id: item.nextMatch},
                                 {
                                     $push: {
@@ -257,6 +275,14 @@ async function start() {
                                 }
                             )
                         } else {
+
+                            const match4 = await Match.updateOne({_id: item.nextMatch},
+                                {
+                                    $pop: {
+                                        participants: 1
+                                    }
+                                })
+
                             const match2 = await Match.updateOne({_id: item.nextMatch},
                                 {
                                     $push: {
@@ -324,11 +350,46 @@ async function start() {
                     console.log("1/1 отработал")
                     break
                 case "COMPLETION":
+
+                    let place1
+                    let place2
+                    let place3
+                    let place4
+
+                    const final = await Match.findOne({tournament: tournament._id, stateTour: "1/1" })
+                    place1 = final.winner
+                    if(final.participants[0]!=final.winner){
+                        place2=final.participants[1]
+                    }else{
+                        place2=final.participants[0]
+                    }
+                    console.log(place1, place2)
+                    const semiFinal1 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place1 })
+                    if(semiFinal1.participants[0]!=semiFinal1.winner){
+                        place3=semiFinal1.participants[1]
+                    }else{
+                        place3=semiFinal1.participants[0]
+                    }
+                    const semiFinal2 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place2 })
+                    if(semiFinal2.participants[0]!=semiFinal2.winner){
+                        place4=semiFinal2.participants[1]
+                    }else{
+                        place4=semiFinal2.participants[0]
+                    }
+                    console.log(place1, place2, place3, place4)
+                    const place1Obj = await User.findOne({_id: place1})
+                    const place2Obj = await User.findOne({_id: place2})
+                    const place3Obj = await User.findOne({_id: place3})
+                    const place4Obj = await User.findOne({_id: place4})
+
                     const tournamentFinish = await Tournament.updateOne({_id: tournament._id},
                         {
                             $set: {
                                 stateTour: "COMPLETION",
                                 nextStateTour: "FINISH",
+                                place1: place1Obj,
+                                place2: place2Obj,
+                                place34: [place3Obj,place4Obj]
                             }
                         }
                     )
@@ -395,11 +456,16 @@ async function start() {
 
                 const decoded = jwt.verify(token, config.get('jwtSecret'))
 
-                if (!tournamentParticipants.candidates.includes(decoded.userId)) {
+                if (!tournamentParticipants.participants.includes(decoded.userId)) {
 
                     const tournament = await Tournament.updateOne(
                         {_id: tournamentId},
-                        {$push: {candidates: decoded.userId}}
+                        {$push: {participants: decoded.userId}}
+                    )
+
+                    const userTournament = await User.updateOne(
+                        {_id: decoded.userId},
+                        {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
                     )
 
 
@@ -413,11 +479,16 @@ async function start() {
 
                 const decoded = jwt.verify(token, config.get('jwtSecret'))
 
-                if (!tournamentParticipants.participants.includes(decoded.userId)) {
+                if (tournamentParticipants.participants.includes(decoded.userId)) {
 
-                    const tournamentDel = await Tournament.findOneAndUpdate(
+                    const tournament = await Tournament.updateOne(
                         {_id: tournamentId},
-                        {$pull: {candidates: decoded.userId}}
+                        {$pull: {participants: decoded.userId}}
+                    )
+
+                    const userTournament = await User.updateOne(
+                        {_id: decoded.userId},
+                        {$pull: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
                     )
 
 
@@ -431,16 +502,11 @@ async function start() {
 
                 const decoded = jwt.verify(token, config.get('jwtSecret'))
 
-                if (!tournamentParticipants.participants.includes(decoded.userId) && tournamentParticipants.candidates.includes(decoded.userId)) {
+                if (!tournamentParticipants.candidates.includes(decoded.userId) && tournamentParticipants.participants.includes(decoded.userId)) {
 
                     const tournament = await Tournament.updateOne(
                         {_id: tournamentId},
-                        {$push: {participants: decoded.userId}}
-                    )
-
-                    const userTournament = await User.updateOne(
-                        {_id: decoded.userId},
-                        {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
+                        {$push: {candidates: decoded.userId}}
                     )
 
                     io.emit('TOURNAMENTS/CONFIRM:RES', 'Пользователь является участником турнира')
@@ -498,8 +564,7 @@ async function start() {
             )
 
             socket.on('TOURNAMENT/MATCH-WINNER', async (matchId, n) => {
-                    console.log("Ура!")
-                    console.log(matchId, n)
+
                     const match = await Match.findOne({_id: matchId})
 
 
@@ -513,6 +578,14 @@ async function start() {
                     )
 
                     if (match.matchNumber % 2 != 0) {
+
+                        const match3 = await Match.updateOne({_id: match.nextMatch},
+                            {
+                                $pop: {
+                                    participants: -1
+                                }
+                            })
+
                         const match1 = await Match.updateOne({_id: match.nextMatch},
                             {
                                 $push: {
@@ -524,6 +597,13 @@ async function start() {
                             }
                         )
                     } else {
+                        const match4 = await Match.updateOne({_id: match.nextMatch},
+                            {
+                                $pop: {
+                                    participants: 1
+                                }
+                            })
+
                         const match2 = await Match.updateOne({_id: match.nextMatch},
                             {
                                 $push: {
@@ -546,13 +626,44 @@ async function start() {
                 const match = await Match.findOne({_id: matchId})
 
 
-                const match1 = await Match.updateOne({_id: match.nextMatch},
-                    {
-                        $pull: {
-                            participants: match.winner
+                if (match.matchNumber % 2 != 0) {
+
+                    const match3 = await Match.updateOne({_id: match.nextMatch},
+                        {
+                            $pop: {
+                                participants: -1
+                            }
+                        })
+
+                    const match1 = await Match.updateOne({_id: match.nextMatch},
+                        {
+                            $push: {
+                                participants: {
+                                    $each: [null],
+                                    $position: 0
+                                }
+                            }
                         }
-                    }
-                )
+                    )
+                } else {
+                    const match4 = await Match.updateOne({_id: match.nextMatch},
+                        {
+                            $pop: {
+                                participants: 1
+                            }
+                        })
+
+                    const match2 = await Match.updateOne({_id: match.nextMatch},
+                        {
+                            $push: {
+                                participants: {
+                                    $each: [null],
+                                    $position: 1
+                                }
+                            }
+                        }
+                    )
+                }
 
                 const matchWinner = await Match.updateOne(
                     {_id: matchId}, {$unset: {winner: 1}}, {multi: true});
@@ -652,7 +763,7 @@ async function start() {
                             return participant
                         }
                     ))
-                        .then((participantsArr) =>  io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+                        .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
 
 
                 }

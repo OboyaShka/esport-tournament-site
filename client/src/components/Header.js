@@ -34,28 +34,28 @@ export const Header = () => {
                     </div>
                     <section className="section-content"></section>
                     <div className="profile-container">
-                        <div className="currency">
-                            <var className="redcoin">0 R
+                        {auth.isAuthenticated && <div className="currency">
+                            <var className="redcoin">0 RC
                                 <img src={Red}/></var>
-                            <var className="bluecoin">0 B
+                            <var className="bluecoin">0 BC
                                 <img src={Blue}/></var>
-                        </div>
-                        <div className="bell">
+                        </div>}
+                        {auth.isAuthenticated && <div className="bell">
                             <img src={Bell}/>
-                        </div>
-                        <div className="barricade">
+                        </div>}
+                        {auth.isAuthenticated && <div className="barricade">
                             <img src={Line}/>
-                        </div>
-                        <h3 className="profile">{ auth.userNickname }</h3>
-                        <img className="profile-img" src={ auth.userAvatar }/>
+                        </div>}
+                        {auth.isAuthenticated && <h3 className="profile">{ auth.userNickname }</h3>}
+                        {auth.isAuthenticated && <img className="profile-img" src={ auth.userAvatar }/>}
                         {/*<img src={IconProfile}/>*/}
 
                         <ul id="nav-mobile" className="right hide-on-med-and-down">
                             {auth.isAuthenticated ?
-                                <li><NavLink to="/" onClick={logoutHandler}>Выйти</NavLink></li> :
-                                <li><NavLink to="/authentication" onClick={loginHandler}>Войти</NavLink></li>}
+                                <li><NavLink className="header-login-text" to="/" onClick={logoutHandler}>Выйти</NavLink></li> :
+                                <li><NavLink className="header-login-text" to="/authentication" onClick={loginHandler}>Войти</NavLink></li>}
                         </ul>
-                        <img src={Arrow}/>
+                        {/*<img src={Arrow}/>*/}
                     </div>
 
 

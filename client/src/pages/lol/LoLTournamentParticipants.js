@@ -5,11 +5,30 @@ import {AuthContext} from "../../context/AuthContext";
 import GoldCup from "../../img/gold_cup.svg"
 import {Link, useParams} from "react-router-dom";
 import socket from "../../socket";
+import {useHttp} from "../../hooks/http.hook";
 
 export const LoLTournamentParticipants = () => {
     const auth = useContext(AuthContext)
     const tournamentId = useParams().id
     const [participants, setParticipants] = useState([])
+    const [tournament, setTournament] = useState(null)
+    const {loading, request} = useHttp()
+
+    //Подтягиваем информацию о турнире
+    const getTournament = useCallback(async () => {
+        try {
+            const fetched = await request(`/api/tournaments/${tournamentId}`, 'GET', null)
+            setTournament(fetched)
+
+        } catch (e) {
+
+        }
+    }, [tournamentId, request])
+
+    useEffect(() => {
+        getTournament()
+
+    }, [getTournament])
 
 
     const getParticipants = useCallback(async () => {
@@ -35,7 +54,7 @@ export const LoLTournamentParticipants = () => {
 
     return (
         <div>
-            <h2 className="my-profile-title">Турнир такой-то</h2>
+            {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
             <div className="participants-content">
                 <div className="tournaments-search">

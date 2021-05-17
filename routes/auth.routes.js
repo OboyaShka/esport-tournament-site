@@ -101,7 +101,7 @@ router.post(
                 config.get('jwtSecret'),
                 {expiresIn: '24h'}
             )
-            console.log(user.nickname)
+
             res.json({token, userId: user.id, userRoles: user.roles, userNickname: user.nickname, userAvatar: user.image})
 
         } catch (e) {

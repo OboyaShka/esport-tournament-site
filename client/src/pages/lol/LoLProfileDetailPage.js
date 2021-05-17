@@ -84,9 +84,7 @@ export const LoLProfileDetailPage = () => {
                         {/*    <div className="redcoin">0 B<img src={Blue}/></div>*/}
                         {/*</div>*/}
                         <div className="info-card-main">
-                            <div>Почта: {profile.email}</div>
-                            <div>Почта: {profile.email}</div>
-                            <div>Почта: {profile.email}</div>
+                            <div>DISCORD: введите данные</div>
                         </div>
 
                     </div>
@@ -174,15 +172,15 @@ export const LoLProfileDetailPage = () => {
                                     </div>
 
                                     <div className="card-left">
-                                        <div className="card-format"><b>Формат: </b>{item.typeTour} </div>
-                                        <div className="card-format"><b>Тип: </b></div>
+                                        <div className="card-format"><b>Формат: </b> {item.typeTour==="Daily"?"1x1": item.typeTour==="Premium"?"5x5 RTC":item.typeTour==="Elite"?"5x5 RTC":""}</div>
+                                        <div className="card-format"><b>Тип: </b>{item.typeTour}</div>
                                         <div className="card-date">
                                             <b>{moment(item.date).format("DD.MM")}</b> {moment(item.date).format("HH:mm")}
                                         </div>
                                     </div>
                                     <div className="card-right">
-                                        <div className="card-format"><b>Взнос: </b></div>
-                                        <div className="card-format"><b>Призовые: </b></div>
+                                        <div className="card-format"><b>Взнос: </b>{item.typeTour==="Daily"?"Бесплатно": item.typeTour==="Premium"? `${item.payment} RC`:item.typeTour==="Elite"?`${item.payment} BC`:""}</div>
+                                        <div className="card-format"><b>Призовые: </b>{item.typeTour==="Daily"?`${item.prize} RC`: item.typeTour==="Premium"? `${item.prize} BC`:item.typeTour==="Elite"?`${item.prize} BC`:""}</div>
                                         <div className="card-participants"><img
                                             src={Participants}/>{item.participants.length}/32
                                         </div>

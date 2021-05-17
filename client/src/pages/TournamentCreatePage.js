@@ -20,7 +20,7 @@ export const TournamentsCreatePage = () => {
     const [tournament, setTournament] = useState(null)
     const OBJECT_ID = new URLSearchParams(window.location.search).get('id') || null;
     const [form, setForm] = useState({
-        title: '', game: '', typeTour: '', description: '', image: '', date: ''
+        title: '', game: '', typeTour: '', description: '', image: '', date: '', payment: '', prize: ''
     })
 
 
@@ -47,6 +47,8 @@ export const TournamentsCreatePage = () => {
                 form.description = fetched.description
                 form.image = fetched.image
                 form.date = fetched.date
+                form.payment = fetched.payment
+                form.prize = fetched.prize
                 setTournament(fetched)
             }
         } catch (e) {
@@ -129,9 +131,9 @@ export const TournamentsCreatePage = () => {
     ]
 
     const optionsType = [
-        {value: '1x1', label: '1x1'},
-        {value: '5x5', label: '5x5'},
-        {value: '5x5 RTC', label: '5x5 RTC'},
+        {value: 'Daily', label: 'Daily'},
+        {value: 'Premium', label: 'Premium'},
+        {value: 'Elite', label: 'Elite'},
     ]
 
 
@@ -183,6 +185,28 @@ export const TournamentsCreatePage = () => {
                             onChange={changeHandler}
                         />
                         <label htmlFor="password">Введите описание турнира</label>
+                    </div>
+                    <div className='input-field'>
+                        <input
+                            id="payment"
+                            name="payment"
+                            type="text"
+                            disabled={loading}
+                            value={form.payment}
+                            onChange={changeHandler}
+                        />
+                        <label htmlFor="password">Введите взнос на турнир</label>
+                    </div>
+                    <div className='input-field'>
+                        <input
+                            id="prize"
+                            name="prize"
+                            type="text"
+                            disabled={loading}
+                            value={form.prize}
+                            onChange={changeHandler}
+                        />
+                        <label htmlFor="password">Введите призовые турнира</label>
                     </div>
                     <div>
                         <DatePicker

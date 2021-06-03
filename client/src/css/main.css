@@ -647,8 +647,8 @@ b{
     background: #FFFFFF;
     border-radius: 25px;
     color: #827081;
-    padding-left: 30px;
-
+    padding-left: 20px;
+    padding-top: 3px;
 }
 
 .tournaments-search button{
@@ -2102,4 +2102,279 @@ flex-grow: 1;
     100% {
         transform: rotate(360deg);
     }
+}
+
+.window-main-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    min-height:900px;
+}
+
+.start-main-content{
+    width: 80%;
+    height: 80%;
+
+    background: #E7E6F7;
+    box-shadow: 0px 4px 4px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 25px;
+
+    display: grid;
+    grid-template-rows: 1.2fr 1fr 0.5fr 1.3fr;
+}
+
+.prev-text{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 59px;
+    text-align: center;
+
+    color: #827081;
+}
+
+.prev-logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.prev-text-sub{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 44px;
+    text-align: center;
+
+    color: #615060;
+}
+
+.prev-games{
+
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.prev-games-items{
+    width: 55%;
+    height: 90%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.match-screen-view{
+    padding-top: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 44px;
+    text-align: center;
+
+    color: #827081;
+
+}
+
+.auth-content {
+
+    padding-top: 1rem;
+    display: flex;
+    justify-content: center;
+
+}
+
+.auth-bubble{
+    margin-top: 15vh;
+    position:fixed;
+    width: 542px;
+    height: 363px;
+    text-align: center;
+    background: #D9D7F1;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.register-bubble{
+    margin-top: 15vh;
+    position:fixed;
+    width: 542px;
+    height: 413px;
+    text-align: center;
+    background: #D9D7F1;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.auth-title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #827081;
+}
+
+.button-login{
+    background: #827081;
+    border: 2px solid #E3D0D8;
+    box-sizing: border-box;
+    border-radius: 25px;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+
+    width: 136px;
+    height: 61px;
+    color: #E3D0D8;
+}
+
+.button-register-confirm{
+    background: #E3D0D8;
+    border: 2px solid #827081;
+    box-sizing: border-box;
+    border-radius: 25px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    width: 220px;
+    height: 61px;
+    color: #827081;
+
+    margin-right: 10px;
+}
+
+.button-register-cancel{
+    background: #827081;
+    border: 2px solid #E3D0D8;
+    box-sizing: border-box;
+    border-radius: 25px;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+
+    width: 126px;
+    height: 61px;
+    color: #E3D0D8;
+}
+
+.button-register{
+    background: #E3D0D8;
+    border: 2px solid #827081;
+    box-sizing: border-box;
+    border-radius: 25px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    width: 178px;
+    height: 61px;
+    color: #827081;
+
+    margin-left: 30px;
+}
+
+.notification-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 10px;
+    width: 300px;
+}
+
+.notification-item {
+    box-shadow: 0 0 10px rgba(0,0,0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    animation: SlideLeft 0.4s;
+    animation-fill-mode: forwards;
+    width: 300px;
+    background-color: #998598;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+
+    color:#FFFFFF;
+}
+
+@keyframes SlideLeft {
+    0% {
+        margin-left: 120%;
+    }
+
+    100% {
+        margin-left: 0;
+    }
+}
+
+@keyframes SlideRight {
+    0% {
+        margin-left: 0;
+    }
+
+    100% {
+        margin-left: 120%;
+    }
+}
+
+.notification-item.exit {
+    animation: SlideRight 0.4s;
+    animation-fill-mode: forwards;
+}
+
+.notification-item p {
+    margin: 0;
+    padding: 10px;
+}
+
+.notification-item .bar {
+    height: 10px;
+}
+
+.notification-item.success .bar {
+    background-color: rgb(165, 198, 177);
+}
+
+.notification-item.error .bar {
+    background-color: rgb(254, 121, 104);
+}
+
+.loader-center{
+    margin-top: 25vh;
+    position:fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

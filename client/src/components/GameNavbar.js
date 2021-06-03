@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {BrowserRouter as Router, NavLink, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, NavLink, Redirect, Switch, useHistory} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import {GameContext} from "../context/GameContext";
 import {Navbar} from "./Navbar";
@@ -8,6 +8,7 @@ import Dota2Active from "../img/nav_img/dota2_active_icon.svg"
 import LoL from "../img/nav_img/lol.svg"
 import LoLActive from "../img/nav_img/lol_active_icon.svg"
 import Menu from "../img/nav_img/menu_icon.svg"
+import {RegisterPage} from "../pages/RegisterPage";
 
 
 
@@ -15,16 +16,17 @@ export const GameNavbar = () => {
     const history = useHistory()
     const auth = useContext(AuthContext)
     const {game, setGame} = useContext(GameContext)
-
+    const gameContext = useContext(GameContext)
 
 
     const GameHandler =  event => {
         setGame(event)
-
+        gameContext.setOption("tournaments")
     }
 
     useEffect(()=>{
         if(game) {
+            // console.log(history.push)
             // history.push(`/${game}/tournaments`)
         }
     },[game])

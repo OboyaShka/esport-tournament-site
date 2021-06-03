@@ -144,7 +144,7 @@ export const LoLTournamentMatchDetailPage = () => {
             {!!match && !!tournament && match.stateTour && tournament.stateTour && match.stateTour != null && tournament.stateTour != null &&
 
             <div className="detail-match">
-                {auth.userRoles.includes("ADMIN", "MODERATOR") &&
+                {auth.userRoles && auth.userRoles.includes("ADMIN", "MODERATOR") &&
                 <div className="morderator-buttons">
                     <div className="moderator-button">
                         <button className="chat-button" onClick={e => {
@@ -166,10 +166,11 @@ export const LoLTournamentMatchDetailPage = () => {
                     </div>
                 </div>}
                 <div className="players-match">
-                    <Link to={match && match.participants[0]!=null ?`/lol/profile/${match.participants[0]._id}`:""} className={match.participants[0]!=null ?"left-gamer-indicator":"left-gamer-indicator disalbed-a"}
-                         style={{background: match.winner ? (match.participants[0] != null ? (match.participants[0]._id && match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
+                    <Link to={match && match.participants[0] != null ? `/lol/profile/${match.participants[0]._id}` : ""}
+                          className={match.participants[0] != null ? "left-gamer-indicator" : "left-gamer-indicator disalbed-a"}
+                          style={{background: match.winner ? (match.participants[0] != null ? (match.participants[0]._id && match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-l">
-                            <div   className="left-gamer">
+                            <div className="left-gamer">
                                 {match.participants[0] && ((match.participants[0] === null) ?
                                     <div className="match-gamer">
                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
@@ -209,11 +210,14 @@ export const LoLTournamentMatchDetailPage = () => {
                     <div className="left-gamer-indicator"
                          style={tournament.stateTour != null && tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
                              (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>
-                        <div className="time-match"><p>{match.stateTour==="1/1"?"Финал":match.stateTour} {moment(tournament.date).add(45,'minutes').format("HH:mm")}</p></div>
+                        <div className="time-match">
+                            <p>{match.stateTour === "1/1" ? "Финал" : match.stateTour} {moment(tournament.date).add(45, 'minutes').format("HH:mm")}</p>
+                        </div>
                     </div>}
 
-                    <Link to={match && match.participants[1]!=null?`/lol/profile/${match.participants[1]._id}`:""} className="left-gamer-indicator"
-                         style={{background: match.winner ? (match.participants[1] != null ? (match.participants[1]._id && match.winner === match.participants[1]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
+                    <Link to={match && match.participants[1] != null ? `/lol/profile/${match.participants[1]._id}` : ""}
+                          className="left-gamer-indicator"
+                          style={{background: match.winner ? (match.participants[1] != null ? (match.participants[1]._id && match.winner === match.participants[1]._id ? "#a5c6b1" : "#fe7968") : "#fe7968") : ""}}>
                         <div className="players-match-r">
                             <div className="right-gamer">
                                 {match.participants[1] && (match.participants[1] != null) ?
@@ -232,7 +236,7 @@ export const LoLTournamentMatchDetailPage = () => {
                                             </div> :
                                             <div className="info-card-profile">
                                                 <div className="noenemy noenemy-block">
-                                                    <h3 className="nickname-card" >Нет оппонента</h3>
+                                                    <h3 className="nickname-card">Нет оппонента</h3>
                                                     <p className="summonersname-card"></p>
                                                 </div>
                                             </div>
@@ -252,40 +256,59 @@ export const LoLTournamentMatchDetailPage = () => {
                         </div>
                     </Link>
                 </div>
-                {(match.participants[0] != null && match.participants[1] != null &&
+                {auth.userRoles ? (match.participants[0] != null && match.participants[1] != null &&
                     (match.participants[0]._id === auth.userId ||
-                        match.participants[1]._id === auth.userId) || auth.userRoles.includes("ADMIN") || auth.userRoles.includes("MODERATOR")) &&
-                <div className="bottom-match">
-                    <div>
-                        {/*Кнопки*/}
-                        {match.screen &&
-                        <div className="match-screen">
-                            <img onClick={e => {
-                                setModalActive(true)
-                            }} style={{width: "100%"}} src={match.screen} alt=""></img>
-                            <Modal active={modalActive} setActive={setModalActive} link={match.screen}></Modal>
+                        match.participants[1]._id === auth.userId) || auth.userRoles.includes("ADMIN") || auth.userRoles.includes("MODERATOR")) ?
+                    <div className="bottom-match">
+                        <div>
+                            {/*Кнопки*/}
+                            {match.screen &&
+                            <div className="match-screen">
+                                <img onClick={e => {
+                                    setModalActive(true)
+                                }} style={{width: "100%"}} src={match.screen} alt=""></img>
+                                <Modal active={modalActive} setActive={setModalActive} link={match.screen}></Modal>
+                            </div>
+
+                            }
+
+
+                            <FileUpload form={form} setForm={setForm}/>
+                            <button className="chat-button load-button input__wrapper send-win-btn" onClick={e => {
+                                sendScreen()
+                            }}>Отправить победу
+                            </button>
                         </div>
 
-                        }
+                        <ChatMatch matchId={matchId}></ChatMatch>
 
+                        <div className="match-description">
+                            <h6>Руководство</h6>
+                            <p style={{lineHeight: "1.5"}}>
+                                Игрок ниже по сетке создаёт игру, после чего приглашает оппонента.<br/> Настройки игры
+                                для турнира ARAM. <br/>
+                                Игра завершается после первого убийства. Победитель отправляет скриншот с победой, после
+                                чего модератор подтверждает победу в паре.
+                            </p>
+                        </div>
+                    </div>:
+                    match.screen ?
+                        <div className="match-screen-view">
+                            <img onClick={e => {
+                                setModalActive(true)
+                            }} style={{width: "50%", borderRadius:"25px"}} src={match.screen} alt=""></img>
+                            <Modal active={modalActive} setActive={setModalActive} link={match.screen}></Modal>
+                        </div>:  <div className="match-screen-view">Скриншота нет</div>
+                    :
+                    match.screen ?
+                    <div className="match-screen-view">
+                        <img onClick={e => {
+                            setModalActive(true)
+                        }} style={{width: "50%", borderRadius:"25px"}} src={match.screen} alt=""></img>
+                        <Modal active={modalActive} setActive={setModalActive} link={match.screen}></Modal>
+                    </div>:  <div className="match-screen-view">Скриншота нет</div>
 
-                        <FileUpload form={form} setForm={setForm}/>
-                        <button className="chat-button load-button input__wrapper send-win-btn" onClick={e => {
-                            sendScreen()
-                        }}>Отправить победу
-                        </button>
-                    </div>
-
-                    <ChatMatch matchId={matchId}></ChatMatch>
-
-                    <div className="match-description">
-                        <h6>Руководство</h6>
-                        <p style={{lineHeight: "1.5"}}>
-                            Игрок ниже по сетке создаёт игру, после чего приглашает оппонента.<br/> Настройки игры для турнира ARAM. <br/>
-                            Игра завершается после первого убийства. Победитель отправляет скриншот с победой, после чего модератор подтверждает победу в паре.
-                        </p>
-                    </div>
-                </div>}
+                }
             </div>
             }
 

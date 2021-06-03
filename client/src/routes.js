@@ -84,6 +84,7 @@ export const useRoutes = (isAuthenticated)=> {
                 <Route path="/authentication" exact>
                     <AuthPage />
                 </Route>
+
                 <Redirect to="/" />
             </Switch>
         )
@@ -93,6 +94,28 @@ export const useRoutes = (isAuthenticated)=> {
         <Switch>
             <Route path="/lol/tournaments" exact>
                 <LoLTournamentsPage />
+            </Route>
+            <Route path="/lol/tournaments/:id" exact>
+                <LoLTournamentDetailPage />
+            </Route>
+            <Route path="/lol/tournaments/:id/rules" exact>
+                <LoLTournamentRules />
+            </Route>
+            <Route path="/lol/tournaments/:id/participants" exact>
+                <LoLTournamentParticipants/>
+            </Route>
+            <Route path="/lol/tournaments/:id/bracket" exact>
+                <LoLTournamentBracket/>
+            </Route>
+            <Route path="/lol/tournaments/:id/matches" exact>
+                <LoLTournamentMatches/>
+            </Route>
+            <Route path="/lol/tournaments/:id/matches/:idm" exact>
+                <LoLTournamentMatchDetailPage/>
+            </Route>
+
+            <Route path="/lol/news" exact>
+                <LoLNewsPage />
             </Route>
             <Route path="/authentication" exact>
                 <AuthPage />

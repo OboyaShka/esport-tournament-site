@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {NavLink, useHistory} from "react-router-dom";
+import {Link, NavLink, useHistory} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import Logo from "../img/header_img/header_logo.svg"
 import Blue from "../img/header_img/bluecoin.svg"
@@ -8,15 +8,18 @@ import Bell from "../img/header_img/bell.svg"
 import Line from "../img/header_img/line_profile.svg"
 import IconProfile from "../img/header_img/icon_profile.svg"
 import Arrow from "../img/header_img/bottom_arrow.svg"
+import {GameContext} from "../context/GameContext";
 
 export const Header = () => {
     const history = useHistory()
     const auth = useContext(AuthContext)
+    const {game, setGame} = useContext(GameContext)
+    const gameContext = useContext(GameContext)
 
     const logoutHandler = event => {
         event.preventDefault()
         auth.logout()
-        history.push('/')
+        history.push(`/${game}/tournaments`)
     }
     const loginHandler = event => {
         event.preventDefault()
@@ -28,9 +31,9 @@ export const Header = () => {
             <header>
                 <div className="flex-header-container">
                     <div className="header-logo">
-                        <a href="#" className="header-logo-link">
+                        <Link to="/" style={{ outline: "none"}} className="header-logo-link">
                             <img src={Logo} alt="logo"/>
-                        </a>
+                        </Link>
                     </div>
                     <section className="section-content"></section>
                     <div className="profile-container">

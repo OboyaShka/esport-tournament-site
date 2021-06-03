@@ -213,7 +213,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
 
     return (
         <div>
-            {tournament && user && roles &&
+            {tournament  &&
             <div>
                 <div className="profile-header my-profile-title">
                     <a className="back-button" onClick={e => {
@@ -223,11 +223,12 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                     </a>
                     <h2>{tournament.title}</h2>
                 </div>
+                {user && roles &&
                 <div style={{display: "flex"}}>
                     {roles.includes('ADMIN') && <button className="button" style={{marginRight: "20px"}}
                                                         onClick={editHandler}>Редактировать</button>}
                     {roles.includes('ADMIN') && <button className="button" onClick={deleteHandler}>Удалить</button>}
-                </div>
+                </div>}
 
                 <TournamentNav></TournamentNav>
                 <div className="tournament-about-container">
@@ -292,9 +293,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                         disabled={tournament.stateTour != "WAITING"}>
                                     <div>Отменить участие</div>
                                 </button>)
-                                : (<Link
-                                    className="tournament-register-button info-bubble"> to='/authentication'>Записаться
-                                    на турнир</Link>))}
+                                : (<Link style={{outline: "none", textDecoration: "none"}}
+                                    className="tournament-register-button info-bubble" to='/authentication'>
+                                    <div>Записаться на турнир</div></Link>))}
                             {!tournament.candidates.includes(auth.userId) ?
                                 <button className="tournament-confirm-button info-bubble"
                                         disabled={tournament.stateTour != "CONFIRMATION"} onClick={acceptHandler}>

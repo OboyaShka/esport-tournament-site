@@ -84,7 +84,7 @@ export const LoLProfileDetailPage = () => {
                         {/*    <div className="redcoin">0 B<img src={Blue}/></div>*/}
                         {/*</div>*/}
                         <div className="info-card-main">
-                            <div>DISCORD: введите данные</div>
+                            <div>DISCORD: нет данных</div>
                         </div>
 
                     </div>
@@ -97,7 +97,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={TournamentIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Турниров сыграно</p>
@@ -107,7 +107,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={CupIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Побед в турнирах</p>
@@ -117,7 +117,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={CupIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Побед в турнирах</p>
@@ -127,7 +127,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={CupIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Побед в турнирах</p>
@@ -143,7 +143,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={PedestalIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Призовых мест</p>
@@ -153,7 +153,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={TrendIcon}/>
                                 <img src={LineIcon}/>
-                                <var>12</var>
+                                <var>0</var>
                             </div>
                         </div>
                         <p>Рейтинг на сайте</p>

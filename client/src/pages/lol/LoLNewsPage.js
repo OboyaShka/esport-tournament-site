@@ -40,8 +40,8 @@ export const LoLNewsPage = () => {
                     <button type="submit">
                         <img src={SearchIcon}/></button>
                 </div>
-                <div>Фитльры типа</div>
-                <div>Фильтры формы</div>
+                <div></div>
+                <div></div>
             </div>
             {/*<div>*/}
             {/*    {roles && roles.includes('ADMIN') && <Link className="waves-effect waves-light btn-large" to='/new/create'>Создать Новость</Link>}*/}

@@ -167,7 +167,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={TrendIcon}/>
                             <img src={LineIcon}/>
-                            <var className="stat-var-block">12</var>
+                            <var className="stat-var-block">1</var>
                         </div>
                     </div>
                     <p>Рейтинг на сайте</p>

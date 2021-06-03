@@ -6,6 +6,7 @@ import GoldCup from "../../img/gold_cup.svg"
 import {Link, useParams} from "react-router-dom";
 import socket from "../../socket";
 import {useHttp} from "../../hooks/http.hook";
+import {Loader} from "../../components/Loader"
 
 export const LoLTournamentParticipants = () => {
     const auth = useContext(AuthContext)
@@ -50,12 +51,13 @@ export const LoLTournamentParticipants = () => {
         getParticipants()
     }, [getParticipants])
 
-    console.log(participants)
+
 
     return (
         <div>
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
+
             <div className="participants-content">
                 <div className="tournaments-search">
                     <input name="s" placeholder="Никнейм игрока..." type="search"/>

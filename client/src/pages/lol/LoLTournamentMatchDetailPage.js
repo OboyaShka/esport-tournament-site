@@ -8,6 +8,7 @@ import FileUpload from "../../components/FileUpload";
 import {ChatMatch} from "../../components/ChatMatch"
 import {Modal} from "../../components/Modal"
 import Arror from "../../img/left_arrow_button.svg"
+import moment from "moment";
 
 export const LoLTournamentMatchDetailPage = () => {
     const auth = useContext(AuthContext)
@@ -208,7 +209,7 @@ export const LoLTournamentMatchDetailPage = () => {
                     <div className="left-gamer-indicator"
                          style={tournament.stateTour != null && tournament.stateTour === match.stateTour ? {background: "#9BC3FF"} :
                              (match.winner ? {background: "#c1c8c7"} : {background: "#f2b9cc"})}>
-                        <div className="time-match"><p>{match.stateTour==="1/1"?"Финал":match.stateTour} 18:45</p></div>
+                        <div className="time-match"><p>{match.stateTour==="1/1"?"Финал":match.stateTour} {moment(tournament.date).add(45,'minutes').format("HH:mm")}</p></div>
                     </div>}
 
                     <Link to={match && match.participants[1]!=null?`/lol/profile/${match.participants[1]._id}`:""} className="left-gamer-indicator"

@@ -5,6 +5,8 @@ import {Link, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 import socket from "../../socket";
 import {match} from "http-proxy-middleware/dist/context-matcher";
+import {Loader} from "../../components/Loader"
+import moment from "moment";
 
 export const LoLTournamentBracket = () => {
     const auth = useContext(AuthContext)
@@ -118,6 +120,10 @@ export const LoLTournamentBracket = () => {
         return () => socket.off('TOURNAMENTS/NEWSTATE')
     }, [])
 
+
+
+
+
     return (
         <div>{tournament &&
         <div>
@@ -126,11 +132,11 @@ export const LoLTournamentBracket = () => {
             {matches && matches != [] && tournament != [] && matches1 && matches2 && matches4 && matches8 &&
             <div className="bracket-content">
 
-                {tournament.participants.length === 8 &&
+                { tournament.participants.length === 8 &&
                 <div className="bracket-main-4">
 
                     <div className="bracket-final-4">
-                        <h5 className="bracket-text">Финал 18:00</h5>
+                        <h5 className="bracket-text">Финал {moment(tournament.date).add(30,'minutes').format("HH:mm")}</h5>
                         {matches1 != null && matches1 && matches1 != [] && matches1[0] != undefined &&
                         <Link to={`/lol/tournaments/${tournamentId}/matches/${matches1[0]._id}`}
                               style={{textDecoration: "none"}} className="bracket-match-final">
@@ -146,7 +152,7 @@ export const LoLTournamentBracket = () => {
                                 </div> : ""}
                             </div>
                             <div
-                                className={matches.winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-final-r-w" : "bracket-match-final-r"}>
+                                className={matches1[0].winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-final-r-w" : "bracket-match-final-r"}>
                                 {matches1[0].participants[1] && <div className="bracket-match-final-right">
                                     <div
                                         className={matches1[0].winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-text-final-w" : "bracket-match-text-final"}>{matches1[0].participants[1].nickname}</div>
@@ -359,18 +365,18 @@ export const LoLTournamentBracket = () => {
                         <div></div>
                     </div>}
 
-                    <div className="bracket-text bracket-main-text">1/4 18:00</div>
-                    <div className="bracket-text bracket-main-text">1/2 18:00</div>
-                    <div className="bracket-text bracket-main-text">1/2 18:00</div>
-                    <div className="bracket-text bracket-main-text">1/4 18:00</div>
+
+                    <div className="bracket-text bracket-main-text">1/4 {moment(tournament.date).format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/2 {moment(tournament.date).add(15,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/2 {moment(tournament.date).add(15,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/4 {moment(tournament.date).format("HH:mm")}</div>
 
                 </div>}
 
                 {tournament.participants.length > 8 && tournament.participants.length <=16 &&
                 <div className="bracket-main-8">
-
                     <div className="bracket-final-8">
-                        <h5 className="bracket-text">Финал 18:45</h5>
+                        <h5 className="bracket-text">Финал {moment(tournament.date).add(45,'minutes').format("HH:mm")}</h5>
                         {matches1 != null && matches1 && matches1 != [] && matches1[0] != undefined &&
                         <Link to={`/lol/tournaments/${tournamentId}/matches/${matches1[0]._id}`}
                               style={{textDecoration: "none"}} className="bracket-match-final">
@@ -386,7 +392,7 @@ export const LoLTournamentBracket = () => {
                                 </div> : ""}
                             </div>
                             <div
-                                className={matches.winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-final-r-w" : "bracket-match-final-r"}>
+                                className={matches1[0].winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-final-r-w" : "bracket-match-final-r"}>
                                 {matches1[0].participants[1] && <div className="bracket-match-final-right">
                                     <div
                                         className={matches1[0].winner && matches1[0].participants[1]._id === matches1[0].winner ? "bracket-match-text-final-w" : "bracket-match-text-final"}>{matches1[0].participants[1].nickname}</div>
@@ -541,8 +547,7 @@ export const LoLTournamentBracket = () => {
                                     <div className="bracket-match-t bracket-match-no-text">Нет оппонента</div>}
                             </div>
                         </div>
-                    </div>
-                    }
+                    </div>}
 
                     {matches4 != null && matches4 && matches4 != [] && matches4[0] != undefined &&
                     <div className="bracket-main-content-4">
@@ -881,16 +886,17 @@ export const LoLTournamentBracket = () => {
                     </div>}
 
 
-                    <div className="bracket-text bracket-main-text">1/8 18:00</div>
-                    <div className="bracket-text bracket-main-text">1/4 18:15</div>
-                    <div className="bracket-text bracket-main-text">1/2 18:30</div>
-                    <div className="bracket-text bracket-main-text">1/2 18:30</div>
-                    <div className="bracket-text bracket-main-text">1/4 18:15</div>
-                    <div className="bracket-text bracket-main-text">1/8 18:00</div>
+                    <div className="bracket-text bracket-main-text">1/8 {moment(tournament.date).format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/4 {moment(tournament.date).add(15,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/2 {moment(tournament.date).add(30,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/2 {moment(tournament.date).add(30,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/4 {moment(tournament.date).add(15,'minutes').format("HH:mm")}</div>
+                    <div className="bracket-text bracket-main-text">1/8 {moment(tournament.date).format("HH:mm")}</div>
                 </div>}
 
 
             </div>
+
             }
         </div>}
         </div>)

@@ -358,20 +358,22 @@ async function start() {
 
                     const final = await Match.findOne({tournament: tournament._id, stateTour: "1/1" })
                     place1 = final.winner
-                    if(final.participants[0]!=final.winner){
+                    if(final.participants[0]===final.winner){
                         place2=final.participants[1]
                     }else{
                         place2=final.participants[0]
                     }
                     console.log(place1, place2)
                     const semiFinal1 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place1 })
-                    if(semiFinal1.participants[0]!=semiFinal1.winner){
+                    console.log(semiFinal1.winner)
+                    if(semiFinal1.participants[0]===semiFinal1.winner){
                         place3=semiFinal1.participants[1]
                     }else{
                         place3=semiFinal1.participants[0]
                     }
                     const semiFinal2 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place2 })
-                    if(semiFinal2.participants[0]!=semiFinal2.winner){
+                    console.log(semiFinal2.winner)
+                    if(semiFinal2.participants[0]===semiFinal2.winner){
                         place4=semiFinal2.participants[1]
                     }else{
                         place4=semiFinal2.participants[0]

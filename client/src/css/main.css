@@ -1879,10 +1879,25 @@ flex-grow: 1;
     height: 36px;
 }
 
-.winners-block{
+.winners-block-none{
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-gap: 1rem;
+}
+
+.winners-block{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+}
+
+.winners-grid-1{
+    grid-area: 1/1/2/3;
+}
+
+.winners-grid-2{
+    grid-area: 2/1/3/3;
 }
 
 .winners-place{
@@ -1906,6 +1921,15 @@ flex-grow: 1;
     font-size: 24px;
 }
 
+.winners-content-34{
+    display: grid;
+    align-items: center;
+
+    color: #615060;
+    font-weight: 700;
+    font-size: 22px;
+}
+
 .winners-player-zero{
     font-size: 25px;
     display: grid;
@@ -1914,7 +1938,18 @@ flex-grow: 1;
     font-weight: 800;
     width: 100%;
     justify-content: center;
+}
 
+.winners-player-34{
+
+    display: grid;
+    align-items: center;
+    color: #615060;
+    font-weight: 800;
+    font-size: 32px;
+    width: 100%;
+    justify-content: center;
+    text-decoration: none
 }
 
 .winners-player{
@@ -1940,9 +1975,7 @@ flex-grow: 1;
 
 .place34{
     display: grid;
-    grid-template-columns: 1fr 1fr;
     width: 100%;
-
 }
 
 .center{
@@ -1960,7 +1993,8 @@ flex-grow: 1;
 }
 
 .font-size-40{
-    font-size: 44px !important;
+    font-size: 37px !important;
+    padding-bottom: 10px;
 }
 
 .chat-button input{
@@ -2043,4 +2077,29 @@ flex-grow: 1;
 
 .send-win-btn{
     margin-top: 55px;
+}
+
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #827081;
+    border-color: #827081 transparent #827081 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

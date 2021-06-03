@@ -238,7 +238,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                             {tournament.description}
                         </div>
                         {tournament.stateTour!="COMPLETION"?
-                        <div className="winners-block">
+                        <div className="winners-block-none">
                             <div className="card-bubble winners-place">
                                 <div className="cup-img"><img src={GoldCup}/></div>
                                 <div className="winners-content">{tournament.prize/2} RC</div>
@@ -257,20 +257,25 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                             </div>
                         </div>:
                             <div className="winners-block">
-                                <div className="card-bubble winners-place">
+                                <div className="card-bubble winners-place winners-grid-1">
                                     <div className="cup-img"><img src={GoldCup}/></div>
                                     <div className="winners-content">{tournament.prize/2} RC</div>
                                     <Link to={`/lol/profile/${tournament.place1._id}`} className="winners-player"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place1.image?tournament.place1.image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place1.nickname}</Link>
                                 </div>
-                                <div className="card-bubble winners-place">
+                                <div className="card-bubble winners-place winners-grid-2">
                                     <div className="cup-img"><img src={SilverCup}/></div>
                                     <div className="winners-content">{tournament.prize/2/2} RC</div>
                                     <Link to={`/lol/profile/${tournament.place2._id}`} className="winners-player"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place1.image?tournament.place2.image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place2.nickname}</Link>
                                 </div>
                                 <div className="card-bubble winners-place">
                                     <div className="cup-img"><img src={BronzeCup}/></div>
-                                    <div className="winners-content">{tournament.prize/2/2/2/2} RC</div>
-                                    <div className="winners-player place34"><Link to={`/lol/profile/${tournament.place34[0]._id}`} className="place34-content center"><img style={{width: "50px", borderRadius:"50%"}} src={tournament.place34[0].image?tournament.place2.image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place34[0].nickname}</Link><Link to={`/lol/profile/${tournament.place34[1]._id}`} className="center place34-content"><img style={{width: "50px", borderRadius:"50%"}} src={tournament.place1.image?tournament.place34[1].image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place34[1].nickname}</Link></div>
+                                    <div className="winners-content-34">{tournament.prize/2/2/2/2} RC</div>
+                                    <div className="winners-player-34"><Link to={`/lol/profile/${tournament.place34[0]._id}`} className="place34-content center"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place34[0].image?tournament.place34[0].image:""}/></Link></div>
+                                </div>
+                                <div className="card-bubble winners-place">
+                                    <div className="cup-img"><img src={BronzeCup}/></div>
+                                    <div className="winners-content-34">{tournament.prize/2/2/2/2} RC</div>
+                                    <div className="winners-player-34"><Link to={`/lol/profile/${tournament.place34[1]._id}`} className="center place34-content"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place34[1].image?tournament.place34[1].image:""}/></Link></div>
                                 </div>
                             </div>
                         }

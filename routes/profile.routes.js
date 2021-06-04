@@ -13,9 +13,10 @@ router.get(
     auth,
     async (req, res) => {
         try {
+            const game = req.headers.game
 
 
-            const tournaments = await Tournament.find({participants: req.user.userId})
+            const tournaments = await Tournament.find({participants: req.user.userId, game: game})
 
 
 

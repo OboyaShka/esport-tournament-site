@@ -12,7 +12,19 @@ const User = new Schema({
     }],
     summonersName: {type: String},
     redCoin:{type: Number},
-    blueCoin:{type: Number}
+    blueCoin:{type: Number},
+    stat_lol_tournaments_played:{type: Number},
+    stat_lol_tournaments_wins:{type: Number},
+    stat_lol_tournaments_prizer:{type: Number},
+    stat_lol_tournaments_rating:{type: Number},
+    stat_lol_total_RC:{type: Number},
+    stat_lol_total_BC:{type: Number},
+    stat_dota2_tournaments_played:{type: Number},
+    stat_dota2_tournaments_wins:{type: Number},
+    stat_dota2_tournaments_prizer:{type: Number},
+    stat_dota2_tournaments_rating:{type: Number},
+    stat_dota2_total_RC:{type: Number},
+    stat_dota2_total_BC:{type: Number},
 })
 
 module.exports = model('User', User)

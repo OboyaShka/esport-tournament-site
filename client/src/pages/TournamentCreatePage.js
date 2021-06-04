@@ -126,8 +126,9 @@ export const TournamentsCreatePage = () => {
     }
 
     const options = [
-        {value: 'League of Legends', label: 'League of Legends'},
-        {value: 'Dota 2', label: 'Dota 2'},
+        {value: 'lol', label: 'League of Legends'},
+        {value: 'dota2', label: 'Dota 2'},
+        {value: 'cs', label: 'CS:GO'},
     ]
 
     const optionsType = [

@@ -32,7 +32,7 @@ const Notification = props => {
                 type: "REMOVE_NOTIFICATION",
                 id: props.id
             })
-        }, 400)
+        }, 4000)
     };
 
     React.useEffect(() => {

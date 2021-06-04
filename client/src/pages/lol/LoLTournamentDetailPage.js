@@ -15,6 +15,8 @@ import Arror from "../../img/left_arrow_button.svg";
 import GoldCup from "../../img/tournament_img/cup_gold.svg"
 import SilverCup from "../../img/tournament_img/cup_silver.svg"
 import BronzeCup from "../../img/tournament_img/cup_bronze.svg"
+import {GameContext} from "../../context/GameContext";
+import {useNotification} from "../../hooks/notificationProvider.hook";
 
 export const LoLTournamentDetailPage = (callback, inputs) => {
     const [tournament, setTournament] = useState(null)
@@ -30,6 +32,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     const [timerMinutes, setTimerMinutes] = useState('00')
     const [timerSeconds, setTimerSeconds] = useState('00')
     const [stage, setStage] = useState(null)
+    const {game, setGame} = useContext(GameContext)
+    const gameContext = useContext(GameContext)
+    const dispatch = useNotification();
 
     let interval = useRef()
 
@@ -129,8 +134,13 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     }, [])
 
     const errorHandler = async () => {
-        history.push("lol/profile")
-        message('Заполните имя призывателя')
+
+        dispatch({
+            type: "error",
+            message: "Введите игровой никнейм",
+        })
+        history.replace(`/lol/profile-edit`)
+
     }
 
     const fetchUser = useCallback(async () => {
@@ -213,7 +223,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
 
     return (
         <div>
-            {tournament  &&
+            {tournament &&
             <div>
                 <div className="profile-header my-profile-title">
                     <a className="back-button" onClick={e => {
@@ -238,45 +248,61 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                             <div>Описание</div>
                             {tournament.description}
                         </div>
-                        {tournament.stateTour!="COMPLETION"?
-                        <div className="winners-block-none">
-                            <div className="card-bubble winners-place">
-                                <div className="cup-img"><img src={GoldCup}/></div>
-                                <div className="winners-content">{tournament.prize/2} RC</div>
-                                <div className="winners-player-zero">Ожидание призёра</div>
+                        {tournament.stateTour != "COMPLETION" ?
+                            <div className="winners-block-none">
+                                <div className="card-bubble winners-place">
+                                    <div className="cup-img"><img src={GoldCup}/></div>
+                                    <div className="winners-content">{tournament.prize / 2} RC</div>
+                                    <div className="winners-player-zero">Ожидание призёра</div>
 
-                            </div>
-                            <div className="card-bubble winners-place">
-                                <div className="cup-img"><img src={SilverCup}/></div>
-                                <div className="winners-content">{tournament.prize/2/2} RC</div>
-                                <div className="winners-player-zero">Ожидание призёра</div>
-                            </div>
-                            <div className="card-bubble winners-place">
-                                <div className="cup-img"><img src={BronzeCup}/></div>
-                                <div className="winners-content">{tournament.prize/2/2/2/2} RC</div>
-                                <div className="winners-player-zero">Ожидание призёра</div>
-                            </div>
-                        </div>:
+                                </div>
+                                <div className="card-bubble winners-place">
+                                    <div className="cup-img"><img src={SilverCup}/></div>
+                                    <div className="winners-content">{tournament.prize / 2 / 2} RC</div>
+                                    <div className="winners-player-zero">Ожидание призёра</div>
+                                </div>
+                                <div className="card-bubble winners-place">
+                                    <div className="cup-img"><img src={BronzeCup}/></div>
+                                    <div className="winners-content">{tournament.prize / 2 / 2 / 2 / 2} RC</div>
+                                    <div className="winners-player-zero">Ожидание призёра</div>
+                                </div>
+                            </div> :
                             <div className="winners-block">
                                 <div className="card-bubble winners-place winners-grid-1">
                                     <div className="cup-img"><img src={GoldCup}/></div>
-                                    <div className="winners-content">{tournament.prize/2} RC</div>
-                                    <Link to={`/lol/profile/${tournament.place1._id}`} className="winners-player"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place1.image?tournament.place1.image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place1.nickname}</Link>
+                                    <div className="winners-content">{tournament.prize / 2} RC</div>
+                                    <Link to={`/lol/profile/${tournament.place1._id}`} className="winners-player"><img
+                                        style={{width: "60px", borderRadius: "50%"}}
+                                        src={tournament.place1.image ? tournament.place1.image : ""}/>{tournament.stateTour != "COMPLETION" ? "Ожидание призёра" : tournament.place1.nickname}
+                                    </Link>
                                 </div>
                                 <div className="card-bubble winners-place winners-grid-2">
                                     <div className="cup-img"><img src={SilverCup}/></div>
-                                    <div className="winners-content">{tournament.prize/2/2} RC</div>
-                                    <Link to={`/lol/profile/${tournament.place2._id}`} className="winners-player"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place1.image?tournament.place2.image:""}/>{tournament.stateTour!="COMPLETION"?"Ожидание призёра":tournament.place2.nickname}</Link>
+                                    <div className="winners-content">{tournament.prize / 2 / 2} RC</div>
+                                    <Link to={`/lol/profile/${tournament.place2._id}`} className="winners-player"><img
+                                        style={{width: "60px", borderRadius: "50%"}}
+                                        src={tournament.place1.image ? tournament.place2.image : ""}/>{tournament.stateTour != "COMPLETION" ? "Ожидание призёра" : tournament.place2.nickname}
+                                    </Link>
                                 </div>
                                 <div className="card-bubble winners-place">
                                     <div className="cup-img"><img src={BronzeCup}/></div>
-                                    <div className="winners-content-34">{tournament.prize/2/2/2/2} RC</div>
-                                    <div className="winners-player-34"><Link to={`/lol/profile/${tournament.place34[0]._id}`} className="place34-content center"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place34[0].image?tournament.place34[0].image:""}/></Link></div>
+                                    <div className="winners-content-34">{tournament.prize / 2 / 2 / 2 / 2} RC</div>
+                                    <div className="winners-player-34"><Link
+                                        to={`/lol/profile/${tournament.place34[0]._id}`}
+                                        className="place34-content center"><img
+                                        style={{width: "60px", borderRadius: "50%"}}
+                                        src={tournament.place34[0].image ? tournament.place34[0].image : ""}/></Link>
+                                    </div>
                                 </div>
                                 <div className="card-bubble winners-place">
                                     <div className="cup-img"><img src={BronzeCup}/></div>
-                                    <div className="winners-content-34">{tournament.prize/2/2/2/2} RC</div>
-                                    <div className="winners-player-34"><Link to={`/lol/profile/${tournament.place34[1]._id}`} className="center place34-content"><img style={{width: "60px", borderRadius:"50%"}} src={tournament.place34[1].image?tournament.place34[1].image:""}/></Link></div>
+                                    <div className="winners-content-34">{tournament.prize / 2 / 2 / 2 / 2} RC</div>
+                                    <div className="winners-player-34"><Link
+                                        to={`/lol/profile/${tournament.place34[1]._id}`}
+                                        className="center place34-content"><img
+                                        style={{width: "60px", borderRadius: "50%"}}
+                                        src={tournament.place34[1].image ? tournament.place34[1].image : ""}/></Link>
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -286,7 +312,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                             {(auth.token ? (!tournament.participants.includes(auth.userId) ?
                                 <button className="tournament-confirm-button info-bubble"
                                         disabled={tournament.stateTour != "WAITING"}
-                                        onClick={user.summonersName != null ? addingHandler : errorHandler}>
+                                        onClick={user && user.summonersName && user.summonersName != null ? addingHandler : errorHandler}>
                                     <div>Зарегистрироваться</div>
                                 </button> :
                                 <button className="tournament-register-button info-bubble" onClick={cancelHandler}
@@ -294,8 +320,9 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                     <div>Отменить участие</div>
                                 </button>)
                                 : (<Link style={{outline: "none", textDecoration: "none"}}
-                                    className="tournament-register-button info-bubble" to='/authentication'>
-                                    <div>Записаться на турнир</div></Link>))}
+                                         className="tournament-register-button info-bubble" to='/authentication'>
+                                    <div>Записаться на турнир</div>
+                                </Link>))}
                             {!tournament.candidates.includes(auth.userId) ?
                                 <button className="tournament-confirm-button info-bubble"
                                         disabled={tournament.stateTour != "CONFIRMATION"} onClick={acceptHandler}>
@@ -310,19 +337,19 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                         <div className="tournament-state card-bubble">
 
                             <div className="tournament-state-info info-bubble">
-                                <div  className={stage==="Подтверждение"?"font-size-40":""}>{stage}</div>
+                                <div className={stage === "Подтверждение" ? "font-size-40" : ""}>{stage}</div>
                                 <img src={BigLine}/>
                                 <p>Состояние турнира</p>
                             </div>
                             <div className="tournament-state-info info-bubble">
-                                {tournament.stateTour==="COMPLETION"?<div>Завершён</div>:
-                                    timerDays!="00"&& timerHours!="00"&& timerMinutes!="00"&& timerSeconds!="00"?
-                                    <div className="tournament-timer">
-                                    <p>{timerDays}д</p>
-                                    <p>{timerHours}ч</p>
-                                    <p>{timerMinutes}м</p>
-                                    <p>{timerSeconds}с</p>
-                                </div>:<div className="timer-zero"></div>}
+                                {tournament.stateTour === "COMPLETION" ? <div>Завершён</div> :
+                                    timerDays != "00" && timerHours != "00" && timerMinutes != "00" && timerSeconds != "00" ?
+                                        <div className="tournament-timer">
+                                            <p>{timerDays}д</p>
+                                            <p>{timerHours}ч</p>
+                                            <p>{timerMinutes}м</p>
+                                            <p>{timerSeconds}с</p>
+                                        </div> : <div className="timer-zero"></div>}
                                 <img src={BigLine}/>
                                 <p>Следующий этап начнётся через</p>
                             </div>
@@ -347,7 +374,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                 <p>Участников</p>
                             </div>}
                             <div className="tournament-state-info info-bubble">
-                                <div>{tournament.typeTour==="Daily"?"1x1": tournament.typeTour==="Premium"?"5x5 RTC":tournament.typeTour==="Elite"?"5x5 RTC":""}</div>
+                                <div>{tournament.typeTour === "Daily" ? "1x1" : tournament.typeTour === "Premium" ? "5x5 RTC" : tournament.typeTour === "Elite" ? "5x5 RTC" : ""}</div>
                                 <img src={Line}/>
                                 <p>Формат</p>
                             </div>
@@ -362,12 +389,16 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                 <p>Дата</p>
                             </div>
                             <div className="tournament-state-info info-bubble">
-                                <div className={tournament.typeTour!="Daily"?"stat-tour-font-size":""} style={{fontSize: "34px", marginTop: "40px"}}>{tournament.typeTour==="Daily"?"Бесплатно": tournament.typeTour==="Premium"? `${tournament.payment} RC`:tournament.typeTour==="Elite"?`${tournament.payment} BC`:""}</div>
+                                <div className={tournament.typeTour != "Daily" ? "stat-tour-font-size" : ""} style={{
+                                    fontSize: "34px",
+                                    marginTop: "40px"
+                                }}>{tournament.typeTour === "Daily" ? "Бесплатно" : tournament.typeTour === "Premium" ? `${tournament.payment} RC` : tournament.typeTour === "Elite" ? `${tournament.payment} BC` : ""}</div>
                                 <img src={Line}/>
                                 <p>Взнос</p>
                             </div>
                             <div className="tournament-state-info info-bubble">
-                                <div className="stat-tour-font-size">{tournament.typeTour==="Daily"?`${tournament.prize} RC`: tournament.typeTour==="Premium"? `${tournament.prize} BC`:tournament.typeTour==="Elite"?`${tournament.prize} BC`:""}</div>
+                                <div
+                                    className="stat-tour-font-size">{tournament.typeTour === "Daily" ? `${tournament.prize} RC` : tournament.typeTour === "Premium" ? `${tournament.prize} BC` : tournament.typeTour === "Elite" ? `${tournament.prize} BC` : ""}</div>
                                 <img src={Line}/>
                                 <p>Призовые</p>
                             </div>

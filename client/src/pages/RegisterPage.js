@@ -21,6 +21,14 @@ export const RegisterPage = () => {
     //     window.M.updateTextFields()
     // }, [])
 
+    useEffect(() => {
+        if (error != false) {
+            dispatch({
+                type: "error",
+                message: error,
+            })
+        }
+    }, [error, clearError])
 
     const changeHandler = event => {
         setForm({...form, [event.target.name]: event.target.value})
@@ -29,6 +37,12 @@ export const RegisterPage = () => {
     const registerHandler = async () => {
         try {
             const data = await request('/api/auth/register', 'POST', {...form})
+
+            dispatch({
+                type: "SUCCESS",
+                message: data.message,
+            })
+
             history.push('authentication')
         } catch (e) {
             console.log(error)
@@ -54,7 +68,7 @@ export const RegisterPage = () => {
         <div className="auth-content">
             <div className="register-bubble">
                 <div className="auth-title">Регистрация</div>
-                <div className="tournaments-search">
+                <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
                            placeholder="Никнейм"
                            id="nickname"
@@ -65,7 +79,7 @@ export const RegisterPage = () => {
                            onChange={changeHandler}
                     />
                 </div>
-                <div className="tournaments-search">
+                <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
                            placeholder="Почта"
                            id="email"
@@ -76,7 +90,7 @@ export const RegisterPage = () => {
                            onChange={changeHandler}
                     />
                 </div>
-                <div className="tournaments-search">
+                <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
                            placeholder="Пароль"
                            id="password"

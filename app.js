@@ -363,39 +363,88 @@ async function start() {
                     }else{
                         place2=final.participants[0]
                     }
-                    console.log(place1, place2)
+
                     const semiFinal1 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place1 })
-                    console.log(semiFinal1.winner)
+
                     if(semiFinal1.participants[0]===semiFinal1.winner){
                         place3=semiFinal1.participants[1]
                     }else{
                         place3=semiFinal1.participants[0]
                     }
                     const semiFinal2 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place2 })
-                    console.log(semiFinal2.winner)
+
                     if(semiFinal2.participants[0]===semiFinal2.winner){
                         place4=semiFinal2.participants[1]
                     }else{
                         place4=semiFinal2.participants[0]
                     }
-                    console.log(place1, place2, place3, place4)
+
                     const place1Obj = await User.findOne({_id: place1})
                     const place2Obj = await User.findOne({_id: place2})
                     const place3Obj = await User.findOne({_id: place3})
                     const place4Obj = await User.findOne({_id: place4})
+
+                    const place1ObjFix = {
+                        id: place1Obj._id,
+                        image: place1Obj.image,
+                        nickname: place1Obj.nickname,
+                        summonersName: place1Obj.summonersName
+                    }
+                    const place2ObjFix = {
+                        id: place2Obj._id,
+                        image: place2Obj.image,
+                        nickname: place2Obj.nickname,
+                        summonersName: place2Obj.summonersName
+                    }
+                    const place3ObjFix = {
+                        id: place3Obj._id,
+                        image: place3Obj.image,
+                        nickname: place3Obj.nickname,
+                        summonersName: place3Obj.summonersName
+                    }
+                    const place4ObjFix = {
+                        id: place4Obj._id,
+                        image: place4Obj.image,
+                        nickname: place4Obj.nickname,
+                        summonersName: place4Obj.summonersName
+                    }
 
                     const tournamentFinish = await Tournament.updateOne({_id: tournament._id},
                         {
                             $set: {
                                 stateTour: "COMPLETION",
                                 nextStateTour: "FINISH",
-                                place1: place1Obj,
-                                place2: place2Obj,
-                                place34: [place3Obj,place4Obj]
+                                place1: place1ObjFix,
+                                place2: place2ObjFix,
+                                place34: [place3ObjFix,place4ObjFix]
                             }
                         }
                     )
                     io.emit('TOURNAMENTS/NEWSTATE', tournamentFinish.stateTour)
+
+                    const tournaments_played = `stat_${tournament.game}_tournaments_played`
+                    const tournaments_wins = `stat_${tournament.game}_tournaments_wins`
+                    const tournaments_prizer = `stat_${tournament.game}_tournaments_prizer`
+                    const tournaments_rating = `stat_${tournament.game}_tournaments_rating`
+                    const total_RC = `stat_${tournament.game}_total_RC`
+                    const total_BC = `stat_${tournament.game}_total_BC`
+
+                    tournament.participants.map( async (gamer, i) =>{
+
+                        const player = await User.updateOne({_id: gamer._id},{
+                            $inc: { "stat_${tournament.game}_tournaments_played": 1 }
+                        })
+
+                    })
+
+
+
+
+
+
+
+
+
                     console.log("Завершение отработало")
                     break
                 case "CANCELLATION":

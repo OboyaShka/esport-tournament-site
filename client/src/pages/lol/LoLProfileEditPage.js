@@ -5,6 +5,7 @@ import {Loader} from "../../components/Loader";
 import FileUpload from "../../components/FileUpload";
 import {useMessage} from "../../hooks/message.hook";
 import {useHistory} from "react-router-dom";
+import {GameContext} from "../../context/GameContext";
 
 export const LoLProfileEditPage = () => {
     const history = useHistory()
@@ -16,6 +17,8 @@ export const LoLProfileEditPage = () => {
     const [form, setForm] = useState({
         image: null, summonersName: null
     })
+    const {game, setGame} = useContext(GameContext)
+    const gameContext = useContext(GameContext)
 
     const changeHandler = event => {
         setForm({...form, summonersName: event.target.value})
@@ -23,20 +26,21 @@ export const LoLProfileEditPage = () => {
 
 
     const fetchUser = useCallback(async () => {
-        try{
+        try {
             const fetched = await request('/api/user/info', 'GET', null, {
-                Authorization: `Bearer ${auth.token}`} )
+                Authorization: `Bearer ${auth.token}`
+            })
             form.image = fetched.image
             form.summonersName = fetched.summonersName
             setUser(fetched)
-        }catch (e) {
+        } catch (e) {
 
         }
-    },[request])
+    }, [request])
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchUser()
-    },[fetchUser])
+    }, [fetchUser])
 
     const editHandler = useCallback(async () => {
         try {
@@ -46,49 +50,60 @@ export const LoLProfileEditPage = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             message(data.message)
-            console.log(auth.userAvatar)
+
 
             auth.userAvatar = form.image
 
-            console.log(auth.userAvatar)
+
 
             fetchUser()
+
+            history.push(`/${game}/profile`)
+
         } catch (e) {
         }
     }, [auth.token, request, {...form}])
 
 
-    if(loading){
+    if (loading) {
         return <Loader/>
     }
 
 
-
     return (
-        <div>
-            <h1>{user.nickname}</h1>
-            <div><img style={{width: "10%"}} src={user.image}/></div>
-            <div className="input-field">
-                <input
-                    id="summonersName"
-                    name="summonersName"
-                    type="text"
-                    disabled={loading}
-                    onChange={changeHandler}
-                    defaultValue={user.summonersName}
-                    //value={user.summonersName}
-                />
-                <label htmlFor="password">Введите имя призывателя</label>
+        <div className="auth-content">
+            <div className="edit-bubble">
+                <div className="profile-edit-header">
+
+                    <h3 className="nickname-card">{user.nickname}</h3>
+                    <div><img style={{width: "15%", borderRadius: "50%"}} src={user.image}/></div>
+                </div>
+
+                <div className="edit-upload-center">
+                    <div className="edit-upload">
+                        <FileUpload form={form} setForm={setForm}/>
+                    </div>
+                </div>
+                <div className="tournaments-search auth-padding edit-padding">
+                    <input style={{width: "360px"}}
+                           placeholder="Никнейм игрового аккаунта"
+                           id="summonersName"
+                           name="summonersName"
+                           type="text"
+                           disabled={loading}
+                           onChange={changeHandler}
+                           defaultValue={user.summonersName}
+                        //value={user.summonersName}
+                    />
+                </div>
+                <div className="center">
+                    <button
+                        className="button-register-confirm"
+                        onClick={editHandler}
+                    >Сохранить
+                    </button>
+                </div>
             </div>
-
-            <FileUpload form={form} setForm={setForm}/>
-            <div>Почта: {user.email}</div>
-            <button
-                className="btn yellow darken-4"
-                onClick={editHandler}
-            >Сохранить
-            </button>
         </div>
-
     )
 }

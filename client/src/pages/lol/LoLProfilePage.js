@@ -19,6 +19,7 @@ import Participants from "../../img/nav_img/profile_icon.svg"
 import BlueCoinStat from "../../img/profile_img/bluecoin_stat.svg";
 import RedCoinStat from "../../img/profile_img/redcoin_stat.svg";
 import moment from "moment";
+import {GameContext} from "../../context/GameContext";
 
 export const LoLProfilePage = () => {
     const history = useHistory()
@@ -31,6 +32,8 @@ export const LoLProfilePage = () => {
     const [form, setForm] = useState({
         image: null, summonersName: null
     })
+    const {game, setGame} = useContext(GameContext)
+    const gameContext = useContext(GameContext)
 
     const changeHandler = event => {
         setForm({...form, summonersName: event.target.value})
@@ -39,7 +42,8 @@ export const LoLProfilePage = () => {
     const fetchMyTournaments = useCallback(async () => {
         try {
             const fetch = await request('/api/profile/tournaments', 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
+                Authorization: `Bearer ${auth.token}`,
+                game: game
             })
             setMytournaments(fetch)
         } catch (e) {
@@ -186,7 +190,7 @@ export const LoLProfilePage = () => {
             <div className="my-profile-title-games">Мои турниры</div>
             {!loading && mytournaments && <div className="my-profile-games">
                 {!mytournaments.length ?
-                    (<p>Турниров на данный момент нет</p>) :
+                    (<p className="bracket-match-text">У вас нет регистрации на турниры</p>) :
                     mytournaments.map((item, index) => {
                         return (
                             <Link className="tournament-card" key={index} to={`/lol/tournaments/${item._id}`}>

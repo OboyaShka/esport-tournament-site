@@ -70,7 +70,7 @@ export const LoLTournamentParticipants = () => {
                             <Link to={`/lol/profile/${participant._id}`}  className="participants-card">
                                 <div className="participants-card-img">
                                     <img src={participant.image}
-                                         style={{maxWidth: "100%", borderRadius: "25px 0 0 25px"}}/>
+                                         style={{width: "100%", borderRadius: "25px 0 0 25px"}}/>
                                 </div>
                                 <div className="participants-card-info">
                                     <div className="participants-card-nickname">{participant.nickname}</div>

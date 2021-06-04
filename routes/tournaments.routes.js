@@ -194,7 +194,8 @@ router.put(
 // /api/tournaments
 router.get('/', async (req, res) => {
     try {
-        const tournaments = await Tournament.find()
+        const game = req.headers.game
+        const tournaments = await Tournament.find({game: game})
         res.json(tournaments)
     } catch (e) {
         res.status(500).json({message: e})

@@ -68,14 +68,16 @@ export const NewsCard = ({newsId}) => {
 
     if(news){
         return (
-            <div>
+            <div className="auth-content">
                 {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить Новость</button>}
                 {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать Новость</button>}
-                <h1>{news.title}</h1>
-                <p>Топик: {news.topic}</p>
-                <img style={{width: "80%"}} src={news.image}/>
-                <p>Описание: {news.content}</p>
-                <p>Дата публикации: {moment(news.date).format("DD/MM/YY HH:mm")}</p>
+                <div className="news-bubble">
+                <h3  className="auth-title">{news.title}</h3>
+                <p  className="news-topic">{news.topic}</p>
+                <img style={{width: "100%"}} src={news.image}/>
+                <p className="text-news">{news.content}</p>
+                <p className="text-news news-date-text">{moment(news.date).format("DD/MM/YY HH:mm")}</p>
+            </div>
             </div>
         )
 

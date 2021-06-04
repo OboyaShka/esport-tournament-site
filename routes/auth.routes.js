@@ -33,15 +33,13 @@ router.post(
             const candidateName = await User.findOne({nickname})
             const candidate = await User.findOne({email})
 
-            if ( candidate ) {
+            if (candidate) {
                 return res.status(400).json({message: 'Такой e-mail уже зарегестрирован'})
             }
 
-            if ( candidateName ) {
+            if (candidateName) {
                 return res.status(400).json({message: 'Пользователь с таким именем уже существует'})
             }
-
-
 
 
             const userRole = await Role.findOne({value: "USER"})
@@ -50,10 +48,22 @@ router.post(
                 nickname,
                 email,
                 password: hashedPassword,
-                image:null,
+                image: "/default_icon.svg",
                 roles: [userRole.value],
                 tournaments: [],
-                summonersName:null
+                summonersName: null,
+                stat_lol_tournaments_played: 0,
+                stat_lol_tournaments_wins: 0,
+                stat_lol_tournaments_prizer: 0,
+                stat_lol_tournaments_rating: 0,
+                stat_lol_total_RC: 0,
+                stat_lol_total_BC: 0,
+                stat_dota2_tournaments_played: 0,
+                stat_dota2_tournaments_wins: 0,
+                stat_dota2_tournaments_prizer: 0,
+                stat_dota2_tournaments_rating: 0,
+                stat_dota2_total_RC: 0,
+                stat_dota2_total_BC: 0,
             })
 
             await user.save()
@@ -82,27 +92,34 @@ router.post(
                 })
             }
 
+
             const {email, password} = req.body
 
             const user = await User.findOne({email})
 
-            if (!user){
+            if (!user) {
                 return res.status(400).json({message: 'Пользователь не найден'})
             }
 
             const isMatch = await bcrypt.compare(password, user.password)
 
             if (!isMatch) {
-                return res.status(400).json({ message: 'Неверный пароль, попробуйте снова'})
+                return res.status(400).json({message: 'Неверный пароль, попробуйте снова'})
             }
 
             const token = jwt.sign(
-                { userId: user.id, userRoles: user.roles},
+                {userId: user.id, userRoles: user.roles},
                 config.get('jwtSecret'),
                 {expiresIn: '24h'}
             )
 
-            res.json({token, userId: user.id, userRoles: user.roles, userNickname: user.nickname, userAvatar: user.image})
+            res.json({
+                token,
+                userId: user.id,
+                userRoles: user.roles,
+                userNickname: user.nickname,
+                userAvatar: user.image
+            })
 
         } catch (e) {
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})

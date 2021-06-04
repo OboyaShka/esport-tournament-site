@@ -15,6 +15,7 @@ import TrendIcon from "../../img/profile_img/trend_icon.svg";
 import moment from "moment";
 import Participants from "../../img/nav_img/profile_icon.svg";
 import Arror from "../../img/left_arrow_button.svg";
+import {GameContext} from "../../context/GameContext";
 
 export const LoLProfileDetailPage = () => {
     const profileId = useParams().id
@@ -23,6 +24,8 @@ export const LoLProfileDetailPage = () => {
     const [mytournaments, setMytournaments] = useState()
     const auth = useContext(AuthContext)
     const history = useHistory()
+    const {game, setGame} = useContext(GameContext)
+    const gameContext = useContext(GameContext)
 
     //Подтягиваем информацию о профиле
     const getProfile = useCallback(async () => {
@@ -41,7 +44,8 @@ export const LoLProfileDetailPage = () => {
     const fetchMyTournaments = useCallback(async () => {
         try {
             const fetch = await request('/api/profile/tournaments', 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
+                Authorization: `Bearer ${auth.token}`,
+                game: game
             })
             setMytournaments(fetch)
         } catch (e) {

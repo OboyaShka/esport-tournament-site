@@ -15,11 +15,17 @@ export const LoLTournamentsPage = () => {
     const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
     const roles = auth.userRoles
+    const {game, setGame} = useContext(GameContext)
     const gameContext = useContext(GameContext)
 
     const fetchTournaments = useCallback(async () => {
         try {
-            const fetched = await request('/api/tournaments', 'GET', null)
+            const fetched = await request('/api/tournaments', 'GET', null,
+                {
+                    game: game
+                }
+                )
+
             setTournament(fetched)
         } catch (e) {
 

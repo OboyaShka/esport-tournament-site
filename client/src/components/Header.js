@@ -43,9 +43,9 @@ export const Header = () => {
                             <var className="bluecoin">0 BC
                                 <img src={Blue}/></var>
                         </div>}
-                        {auth.isAuthenticated && <div className="bell">
-                            <img src={Bell}/>
-                        </div>}
+                        {/*{auth.isAuthenticated && <div className="bell">*/}
+                        {/*    <img src={Bell}/>*/}
+                        {/*</div>}*/}
                         {auth.isAuthenticated && <div className="barricade">
                             <img src={Line}/>
                         </div>}

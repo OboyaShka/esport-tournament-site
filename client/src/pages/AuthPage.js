@@ -19,14 +19,14 @@ export const AuthPage = () => {
     const {game, setGame} = useContext(GameContext)
     const gameContext = useContext(GameContext)
 
-    // useEffect(() => {
-    //     if (error != false) {
-    //         dispatch({
-    //             type: "error",
-    //             message: error,
-    //         })
-    //     }
-    // }, [error, clearError])
+    useEffect(() => {
+        if (error != false) {
+            dispatch({
+                type: "error",
+                message: error,
+            })
+        }
+    }, [error, clearError])
 
     useEffect(() => {
 
@@ -45,9 +45,9 @@ export const AuthPage = () => {
         try {
             const data = await request('/api/auth/login', 'POST', {...form})
             auth.login(data.token, data.userId, data.userRoles, data.userNickname, data.userAvatar)
-
+            gameContext.setOption("profile")
             if (data.token) {
-                history.push(`/${game}/tournaments`)
+                history.push(`/${game}/profile`)
             }
         } catch (e) {
             if (error != false) {
@@ -72,7 +72,7 @@ export const AuthPage = () => {
         <div className="auth-content">
             <div className="auth-bubble">
                 <div className="auth-title">Авторизация</div>
-                <div className="tournaments-search">
+                <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
                            placeholder="Почта"
                            id="email"
@@ -84,7 +84,7 @@ export const AuthPage = () => {
                     />
                 </div>
 
-                <div className="tournaments-search">
+                <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
                            placeholder="Пароль"
                            id="password"

@@ -92,10 +92,13 @@ router.post(
                 })
             }
 
-
             const {email, password} = req.body
 
             const user = await User.findOne({email})
+            const users = await User.find()
+
+            console.log(email,password)
+            //console.log(users)
 
             if (!user) {
                 return res.status(400).json({message: 'Пользователь не найден'})

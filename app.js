@@ -356,27 +356,35 @@ async function start() {
                     let place3
                     let place4
 
-                    const final = await Match.findOne({tournament: tournament._id, stateTour: "1/1" })
+                    const final = await Match.findOne({tournament: tournament._id, stateTour: "1/1"})
                     place1 = final.winner
-                    if(final.participants[0]===final.winner){
-                        place2=final.participants[1]
-                    }else{
-                        place2=final.participants[0]
+                    if (final.participants[0] === final.winner) {
+                        place2 = final.participants[1]
+                    } else {
+                        place2 = final.participants[0]
                     }
 
-                    const semiFinal1 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place1 })
+                    const semiFinal1 = await Match.findOne({
+                        tournament: tournament._id,
+                        stateTour: "1/2",
+                        winner: place1
+                    })
 
-                    if(semiFinal1.participants[0]===semiFinal1.winner){
-                        place3=semiFinal1.participants[1]
-                    }else{
-                        place3=semiFinal1.participants[0]
+                    if (semiFinal1.participants[0] === semiFinal1.winner) {
+                        place3 = semiFinal1.participants[1]
+                    } else {
+                        place3 = semiFinal1.participants[0]
                     }
-                    const semiFinal2 = await Match.findOne({tournament: tournament._id, stateTour: "1/2", winner: place2 })
+                    const semiFinal2 = await Match.findOne({
+                        tournament: tournament._id,
+                        stateTour: "1/2",
+                        winner: place2
+                    })
 
-                    if(semiFinal2.participants[0]===semiFinal2.winner){
-                        place4=semiFinal2.participants[1]
-                    }else{
-                        place4=semiFinal2.participants[0]
+                    if (semiFinal2.participants[0] === semiFinal2.winner) {
+                        place4 = semiFinal2.participants[1]
+                    } else {
+                        place4 = semiFinal2.participants[0]
                     }
 
                     const place1Obj = await User.findOne({_id: place1})
@@ -416,33 +424,262 @@ async function start() {
                                 nextStateTour: "FINISH",
                                 place1: place1ObjFix,
                                 place2: place2ObjFix,
-                                place34: [place3ObjFix,place4ObjFix]
+                                place34: [place3ObjFix, place4ObjFix]
                             }
                         }
                     )
                     io.emit('TOURNAMENTS/NEWSTATE', tournamentFinish.stateTour)
 
-                    const tournaments_played = `stat_${tournament.game}_tournaments_played`
-                    const tournaments_wins = `stat_${tournament.game}_tournaments_wins`
-                    const tournaments_prizer = `stat_${tournament.game}_tournaments_prizer`
-                    const tournaments_rating = `stat_${tournament.game}_tournaments_rating`
-                    const total_RC = `stat_${tournament.game}_total_RC`
-                    const total_BC = `stat_${tournament.game}_total_BC`
+                    switch(tournament.game){
+                        case "lol":
+                            tournament.participants.map(async (gamer, i) => {
+                                const player = await User.updateOne({_id: gamer._id}, {
+                                    $inc: {stat_lol_tournaments_played: 1}
+                                })
 
-                    tournament.participants.map( async (gamer, i) =>{
+                                switch (tournament.typeTour) {
+                                    case "Daily":
+                                        const win1 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2,
+                                                stat_lol_total_RC: (tournament.prize) / 2,
+                                                stat_lol_tournaments_wins: 1,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 100
+                                            }
+                                        })
 
-                        const player = await User.updateOne({_id: gamer._id},{
-                            $inc: { "stat_${tournament.game}_tournaments_played": 1 }
-                        })
+                                        const win2 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2,
+                                                stat_lol_total_RC: (tournament.prize) / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 50
+                                            }
+                                        })
 
-                    })
+                                        const win3 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_RC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 25
+                                            }
+                                        })
 
+                                        const win4 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_RC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 25
+                                            }
+                                        })
+                                        break
+                                    case "Premium":
+                                        const win21 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2,
+                                                stat_lol_tournaments_wins: 1,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 500
+                                            }
+                                        })
 
+                                        const win22 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 250
+                                            }
+                                        })
 
+                                        const win23 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 125
+                                            }
+                                        })
 
+                                        const win24 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 125
+                                            }
+                                        })
+                                        break
+                                    case "Elite":
+                                        const win31 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2,
+                                                stat_lol_tournaments_wins: 1,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 5000
+                                            }
+                                        })
 
+                                        const win32 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 2500
+                                            }
+                                        })
 
+                                        const win33 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 1000
+                                            }
+                                        })
 
+                                        const win34 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_lol_tournaments_prizer: 1,
+                                                stat_lol_tournaments_rating: 1000
+                                            }
+                                        })
+                                        break
+                                }
+                            })
+                            break
+                        case "dota2":
+                            tournament.participants.map(async (gamer, i) => {
+                                const player = await User.updateOne({_id: gamer._id}, {
+                                    $inc: {stat_dota2_tournaments_played: 1}
+                                })
+
+                                switch (tournament.typeTour) {
+                                    case "Daily":
+                                        const win1 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2,
+                                                stat_dota2_total_RC: (tournament.prize) / 2,
+                                                stat_dota2_tournaments_wins: 1,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 100
+                                            }
+                                        })
+
+                                        const win2 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2,
+                                                stat_dota2_total_RC: (tournament.prize) / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 50
+                                            }
+                                        })
+
+                                        const win3 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_RC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 25
+                                            }
+                                        })
+
+                                        const win4 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                redCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_RC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 25
+                                            }
+                                        })
+                                        break
+                                    case "Premium":
+                                        const win21 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2,
+                                                stat_dota2_tournaments_wins: 1,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 500
+                                            }
+                                        })
+
+                                        const win22 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 250
+                                            }
+                                        })
+
+                                        const win23 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 125
+                                            }
+                                        })
+
+                                        const win24 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 125
+                                            }
+                                        })
+                                        break
+                                    case "Elite":
+                                        const win31 = await User.updateOne({_id: place1}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2,
+                                                stat_dota2_tournaments_wins: 1,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 5000
+                                            }
+                                        })
+
+                                        const win32 = await User.updateOne({_id: place2}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 2500
+                                            }
+                                        })
+
+                                        const win33 = await User.updateOne({_id: place3}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 1000
+                                            }
+                                        })
+
+                                        const win34 = await User.updateOne({_id: place4}, {
+                                            $inc: {
+                                                blueCoin: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_total_BC: (tournament.prize) / 2 / 2 / 2 / 2,
+                                                stat_dota2_tournaments_prizer: 1,
+                                                stat_dota2_tournaments_rating: 1000
+                                            }
+                                        })
+                                        break
+                                }
+                            })
+                            break
+                    }
 
 
                     console.log("Завершение отработало")

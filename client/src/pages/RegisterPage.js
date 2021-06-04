@@ -36,6 +36,9 @@ export const RegisterPage = () => {
 
     const registerHandler = async () => {
         try {
+            form.email = form.email.toLowerCase()
+
+
             const data = await request('/api/auth/register', 'POST', {...form})
 
             dispatch({

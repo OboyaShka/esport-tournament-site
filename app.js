@@ -12,7 +12,7 @@ const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
 const schedule = require('node-schedule');
-
+const path = require('path')
 
 app.use(express.json({extended: true}))
 app.use(fileUpload())
@@ -24,6 +24,14 @@ app.use('/api/tournaments', require('./routes/tournaments.routes'))
 app.use('/api/participants', require('./routes/participants.routes'))
 app.use('/api/news', require('./routes/news.routes'))
 app.use('/api/profile', require('./routes/profile.routes'))
+
+if (process.env.NODE_ENV === 'production'){
+    app.use('/',  express.static(path.join(__dirname,'client', 'build')))
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+}
 
 const PORT = config.get('port') || 5000
 const GHOST = config.get('ghost')

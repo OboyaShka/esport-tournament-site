@@ -52,6 +52,9 @@ router.post(
                 roles: [userRole.value],
                 tournaments: [],
                 summonersName: null,
+                steamID: null,
+                redCoin: 0,
+                blueCoin: 0,
                 stat_lol_tournaments_played: 0,
                 stat_lol_tournaments_wins: 0,
                 stat_lol_tournaments_prizer: 0,
@@ -64,6 +67,12 @@ router.post(
                 stat_dota2_tournaments_rating: 0,
                 stat_dota2_total_RC: 0,
                 stat_dota2_total_BC: 0,
+                stat_csgo_tournaments_played:0,
+                stat_csgo_tournaments_wins:0,
+                stat_csgo_tournaments_prizer:0,
+                stat_csgo_tournaments_rating:0,
+                stat_csgo_total_RC:0,
+                stat_csgo_total_BC:0,
             })
 
             await user.save()
@@ -95,10 +104,6 @@ router.post(
             const {email, password} = req.body
 
             const user = await User.findOne({email})
-            const users = await User.find()
-
-            console.log(email,password)
-            //console.log(users)
 
             if (!user) {
                 return res.status(400).json({message: 'Пользователь не найден'})
@@ -121,7 +126,9 @@ router.post(
                 userId: user.id,
                 userRoles: user.roles,
                 userNickname: user.nickname,
-                userAvatar: user.image
+                userAvatar: user.image,
+                redCoin: user.redCoin,
+                blueCoin: user.blueCoin
             })
 
         } catch (e) {

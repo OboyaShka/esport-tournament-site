@@ -34,15 +34,15 @@ export const LoLNewsPage = () => {
     return (
         <div className="tournaments-container">
             <div className="tournaments-title">Турниры</div>
-            <div className="tournaments-filter">
-                <div className="tournaments-search">
-                    <input name="s" placeholder="Название новости..." type="search"/>
-                    <button type="submit">
-                        <img src={SearchIcon}/></button>
-                </div>
-                <div></div>
-                <div></div>
-            </div>
+            {/*<div className="tournaments-filter">*/}
+            {/*    <div className="tournaments-search">*/}
+            {/*        <input name="s" placeholder="Название новости..." type="search"/>*/}
+            {/*        <button type="submit">*/}
+            {/*            <img src={SearchIcon}/></button>*/}
+            {/*    </div>*/}
+            {/*    <div></div>*/}
+            {/*    <div></div>*/}
+            {/*</div>*/}
             {/*<div>*/}
             {/*    {roles && roles.includes('ADMIN') && <Link className="waves-effect waves-light btn-large" to='/new/create'>Создать Новость</Link>}*/}
             {/*</div>*/}

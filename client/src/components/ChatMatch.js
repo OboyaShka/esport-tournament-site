@@ -18,7 +18,7 @@ export const ChatMatch = (matchId) => {
             return () => socket.off('TOURNAMENT/GET-MESSAGES')
         } catch (e) {
         }
-    }, [])
+    }, [matchId])
 
     useEffect(() => {
         getMessages()
@@ -40,7 +40,7 @@ export const ChatMatch = (matchId) => {
         })
 
         return () => socket.off('TOURNAMENT/GET-MESSAGES:RES')
-    }, [])
+    }, [getMessages])
 
 
     const saveMessage = (event) => {
@@ -50,7 +50,7 @@ export const ChatMatch = (matchId) => {
 
     const sendMessage = useCallback(    async () => {
         try {
-            if (message != []) {
+            if (message !== []) {
                 socket.emit('TOURNAMENT/MESSAGE', matchId, message, auth.userId, auth.userNickname)
                 setMessage("")
             }
@@ -60,7 +60,7 @@ export const ChatMatch = (matchId) => {
         } catch (e) {
         }
 
-    }, [message])
+    }, [matchId, message, auth.userId, auth.userNickname])
 
     const pressEnter = (e) => {
         if (e.key === "Enter") {
@@ -74,7 +74,7 @@ export const ChatMatch = (matchId) => {
         <div>
             <div className="chat-match">
                 <div className="chat-content">
-                    {messages && messages != [] && messages.map((msg, index) => {
+                    {messages && messages !== [] && messages.map((msg, index) => {
                         return (
                             <div key={index} className={auth.userId === msg.user ? "chat-message" : "chat-message-my"}>
                                 <p className={auth.userId === msg.user ? "chat-message-bubble" : "chat-message-bubble-my"}>{msg.content}</p>

@@ -9,18 +9,17 @@ import {Loader} from "./components/Loader";
 import {Header} from "./components/Header";
 import {Footer} from "./components/Footer";
 import {GameNavbar} from "./components/GameNavbar";
-import {LoLPage} from "./pages/lol/LoLPage";
-import {AuthPage} from "./pages/AuthPage";
 import {MainPage} from "./pages/MainPage";
 import {NotificationProvider} from "../src/hooks/notificationProvider.hook"
 
 function App() {
-    const {token, login, logout, userId, userRoles, userNickname, userAvatar, ready} = useAuth()
+    const {token, login, cashInfo, avatarInfo, logout, userId, userRoles, userNickname, userAvatar, redCoin, blueCoin, ready} = useAuth()
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
     const [game, setGame] = useState("lol")
     const [option, setOption] = useState("tournaments")
     const [tournamentNav, setTournamentNav] = useState()
+
 
     if (!ready) {
         return <Loader/>;
@@ -30,12 +29,16 @@ function App() {
         <AuthContext.Provider value={{
             token,
             login,
+            cashInfo,
+            avatarInfo,
             logout,
             userId,
             userRoles,
             userNickname,
             userAvatar,
-            isAuthenticated
+            redCoin,
+            blueCoin,
+            isAuthenticated,
         }}>
             <GameContext.Provider value={{
                 game, setGame, option, setOption, tournamentNav, setTournamentNav

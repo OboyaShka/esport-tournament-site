@@ -14,6 +14,7 @@ export const LoLTournamentParticipants = () => {
     const [participants, setParticipants] = useState([])
     const [tournament, setTournament] = useState(null)
     const {loading, request} = useHttp()
+    const [search, setSearch] = useState("")
 
     //Подтягиваем информацию о турнире
     const getTournament = useCallback(async () => {
@@ -32,9 +33,9 @@ export const LoLTournamentParticipants = () => {
     }, [getTournament])
 
 
-    const getParticipants = useCallback(async () => {
+    const getParticipants = useCallback(async (search) => {
         try {
-            socket.emit('TOURNAMENT/PARTICIPANTS', tournamentId)
+            socket.emit('TOURNAMENT/PARTICIPANTS', tournamentId, search)
 
             socket.on('TOURNAMENT/PARTICIPANTS:RES', async (participants) => {
                 setParticipants(participants);
@@ -51,7 +52,9 @@ export const LoLTournamentParticipants = () => {
         getParticipants()
     }, [getParticipants])
 
-
+    const inputSearch = e =>{
+        getParticipants(e.target.value)
+    }
 
     return (
         <div>
@@ -60,14 +63,14 @@ export const LoLTournamentParticipants = () => {
 
             <div className="participants-content">
                 <div className="tournaments-search">
-                    <input name="s" placeholder="Никнейм игрока..." type="search"/>
+                    <input onChange={e => inputSearch(e)} name="s" placeholder="Никнейм игрока..." type="search"/>
                     <button type="submit">
                         <img src={SearchIcon}/></button>
                 </div>
                 <div className="participants-cards">
                     {participants && participants.map((participant) => {
                         return (
-                            <Link to={`/lol/profile/${participant._id}`}  className="participants-card">
+                            <Link to={`/lol/profile/${participant._id}`} className="participants-card">
                                 <div className="participants-card-img">
                                     <img src={participant.image}
                                          style={{width: "100%", borderRadius: "25px 0 0 25px"}}/>

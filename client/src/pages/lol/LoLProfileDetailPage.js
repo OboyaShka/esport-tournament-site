@@ -16,6 +16,8 @@ import moment from "moment";
 import Participants from "../../img/nav_img/profile_icon.svg";
 import Arror from "../../img/left_arrow_button.svg";
 import {GameContext} from "../../context/GameContext";
+import RedCoinStat from "../../img/profile_img/redcoin_stat.svg";
+import BlueCoinStat from "../../img/profile_img/bluecoin_stat.svg";
 
 export const LoLProfileDetailPage = () => {
     const profileId = useParams().id
@@ -65,11 +67,11 @@ export const LoLProfileDetailPage = () => {
         <div>
             {profile && <div className="my-profile-container">
                 <div  className="profile-header my-profile-title">
-                    <button className="back-button" onClick={e => {
+                    <a className="back-button" onClick={e => {
                         backButton()
                     }}>
                         <img src={Arror}/>
-                    </button>
+                    </a>
                     <h2>Профиль {profile.nickname}</h2>
                 </div>
                 <div className="my-profile-card">
@@ -101,7 +103,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={TournamentIcon}/>
                                 <img src={LineIcon}/>
-                                <var>0</var>
+                                <var className="stat-var-block">{profile.stat_lol_tournaments_played}</var>
                             </div>
                         </div>
                         <p>Турниров сыграно</p>
@@ -111,7 +113,7 @@ export const LoLProfileDetailPage = () => {
                             <div className="card-container">
                                 <img className="line-statistics" src={CupIcon}/>
                                 <img src={LineIcon}/>
-                                <var>0</var>
+                                <var className="stat-var-block">{profile.stat_lol_tournaments_wins}</var>
                             </div>
                         </div>
                         <p>Побед в турнирах</p>
@@ -119,48 +121,43 @@ export const LoLProfileDetailPage = () => {
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">
-                                <img className="line-statistics" src={CupIcon}/>
+                                <img className="line-statistics" src={RedCoinStat}/>
                                 <img src={LineIcon}/>
-                                <var>0</var>
+                                <var className="stat-font-size">{profile.stat_lol_total_RC}</var>
                             </div>
                         </div>
-                        <p>Побед в турнирах</p>
+                        <p>Заработано RedCoin</p>
                     </div>
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={CupIcon}/>
-                                <img src={LineIcon}/>
-                                <var>0</var>
-                            </div>
-                        </div>
-                        <p>Побед в турнирах</p>
-                    </div>
-                    {/*<div className="open-statistics">*/}
-                    {/*    <div className="statistics-card-more">*/}
-                    {/*        <img src={MoreIcon}/>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">
                                 <img className="line-statistics" src={PedestalIcon}/>
                                 <img src={LineIcon}/>
-                                <var>0</var>
+                                <var className="stat-var-block">{profile.stat_lol_tournaments_prizer}</var>
                             </div>
                         </div>
                         <p>Призовых мест</p>
                     </div>
+
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">
                                 <img className="line-statistics" src={TrendIcon}/>
                                 <img src={LineIcon}/>
-                                <var>0</var>
+                                <var className="stat-font-size">{profile.stat_lol_tournaments_rating}</var>
                             </div>
                         </div>
                         <p>Рейтинг на сайте</p>
+                    </div>
+                    <div className="statistics-card-area">
+                        <div className="statistics-card">
+                            <div className="card-container">
+                                <img className="line-statistics" src={BlueCoinStat}/>
+                                <img src={LineIcon}/>
+                                <var className="stat-font-size">{profile.stat_lol_total_BC}</var>
+                            </div>
+                        </div>
+                        <p>Заработано BlueCoin</p>
                     </div>
                 </div>
                 <div className="my-profile-title-games">Турниры</div>

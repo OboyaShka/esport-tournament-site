@@ -16,6 +16,8 @@ export const RegisterPage = () => {
         nickname: '', email: '', password: ''
     })
     const dispatch = useNotification();
+    const emailField = document.getElementById('email')
+    const passwordField = document.getElementById('password')
 
     // useEffect(() => {
     //     window.M.updateTextFields()
@@ -58,6 +60,22 @@ export const RegisterPage = () => {
         }
     }
 
+    const pressNextFormPassword = (e) => {
+        if (e.key === "Enter") {
+            e.SuppressKeyPress = true;
+            passwordField.focus()
+
+        }
+    }
+
+    const pressNextFormEmail = (e) => {
+        if (e.key === "Enter") {
+            e.SuppressKeyPress = true;
+            emailField.focus()
+
+        }
+    }
+
     const cancelHandler = async (event) => {
         history.push('authentication')
     }
@@ -66,6 +84,13 @@ export const RegisterPage = () => {
         return <Loader/>
     }
 
+    const pressEnter = (e) => {
+        if (e.key === "Enter") {
+            e.SuppressKeyPress = true;
+            registerHandler()
+
+        }
+    }
 
     return (
         <div className="auth-content">
@@ -73,6 +98,7 @@ export const RegisterPage = () => {
                 <div className="auth-title">Регистрация</div>
                 <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
+                           autoFocus
                            placeholder="Никнейм"
                            id="nickname"
                            name="nickname"
@@ -80,6 +106,9 @@ export const RegisterPage = () => {
                            className="login-input"
                            value={form.nickname}
                            onChange={changeHandler}
+                           onKeyDown={e => {
+                               pressNextFormEmail(e)
+                           }}
                     />
                 </div>
                 <div className="tournaments-search auth-padding">
@@ -91,6 +120,9 @@ export const RegisterPage = () => {
                            className="login-input"
                            value={form.email}
                            onChange={changeHandler}
+                           onKeyDown={e => {
+                               pressNextFormPassword(e)
+                           }}
                     />
                 </div>
                 <div className="tournaments-search auth-padding">
@@ -103,6 +135,9 @@ export const RegisterPage = () => {
                            disabled={loading}
                            value={form.password}
                            onChange={changeHandler}
+                           onKeyDown={e => {
+                               pressEnter(e)
+                           }}
                     />
                 </div>
 

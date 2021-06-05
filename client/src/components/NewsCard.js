@@ -6,6 +6,7 @@ import {Loader} from "./Loader";
 import {useMessage} from "../hooks/message.hook";
 import {ParticipantsTable} from "./ParticipantsTable";
 import moment from 'moment'
+import Arror from "../img/left_arrow_button.svg";
 
 export const NewsCard = ({newsId}) => {
     const {loading, request} = useHttp()
@@ -64,11 +65,21 @@ export const NewsCard = ({newsId}) => {
         getNews()
     },[getNews])
 
-
+    const backButton = () => {
+        history.go(-1)
+    }
 
     if(news){
         return (
             <div className="auth-content">
+                <div  className="profile-header my-profile-title">
+                    <a className="back-button" onClick={e => {
+                        backButton()
+                    }}>
+                        <img src={Arror}/>
+                    </a>
+
+                </div>
                 {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={deleteHandler}>Удалить Новость</button>}
                 {roles && roles.includes('ADMIN') &&<button className="waves-effect waves-light btn-large" onClick={editHandler}>Редактировать Новость</button>}
                 <div className="news-bubble">

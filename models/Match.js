@@ -6,6 +6,7 @@ const Match = new Schema({
     stateTour: {type: String, required:true},
     participants: [{type: Types.ObjectId, ref: 'User'}],
     winner: {type: Types.ObjectId, ref: 'User'},
+    loser: {type: Types.ObjectId, ref: 'User'},
     screen: {type: String},
     startDate: {type: Date},
     prevMatches: [{type: Types.ObjectId, ref: 'Match'}],

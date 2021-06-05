@@ -41,7 +41,7 @@ router.put(
     auth,
     async (req, res) => {
         try {
-            const {image, summonersName} = req.body
+            const {image, summonersName, steamID} = req.body
 
             if(image != null) {
                 const user = await User.updateOne({_id: req.user.userId},
@@ -58,6 +58,16 @@ router.put(
                     {
                         $set: {
                             summonersName: summonersName
+                        }
+                    }
+                )
+            }
+
+            if(steamID != null) {
+                const user = await User.updateOne({_id: req.user.userId},
+                    {
+                        $set: {
+                            steamID: steamID
                         }
                     }
                 )

@@ -11,6 +11,7 @@ const User = new Schema({
         status: {type: String, ref: 'StateUser'}
     }],
     summonersName: {type: String},
+    steamID: {type: String},
     redCoin:{type: Number},
     blueCoin:{type: Number},
     stat_lol_tournaments_played:{type: Number},
@@ -25,6 +26,12 @@ const User = new Schema({
     stat_dota2_tournaments_rating:{type: Number},
     stat_dota2_total_RC:{type: Number},
     stat_dota2_total_BC:{type: Number},
+    stat_csgo_tournaments_played:{type: Number},
+    stat_csgo_tournaments_wins:{type: Number},
+    stat_csgo_tournaments_prizer:{type: Number},
+    stat_csgo_tournaments_rating:{type: Number},
+    stat_csgo_total_RC:{type: Number},
+    stat_csgo_total_BC:{type: Number},
 })
 
 module.exports = model('User', User)

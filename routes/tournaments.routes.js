@@ -132,7 +132,7 @@ router.put(
             const {tournamentId, option} = req.body
             {
                 const tournamentParticipants = await Tournament.findOne({_id: tournamentId})
-                switch(option){
+                switch (option) {
                     case "add":
                         if (tournamentParticipants.participants.includes(req.user.userId)) {
                             return res.status(400).json({message: 'Пользователь уже зарегистрирован'})
@@ -146,7 +146,7 @@ router.put(
 
                         const userTournament = await User.updateOne(
                             {_id: req.user.userId},
-                            {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"} }}
+                            {$push: {tournaments: {tournamentId: tournamentId, status: "REGISTERED"}}}
                         )
 
                         res.status(201).json({message: 'Пользователь добавлен в турнир'})
@@ -192,11 +192,29 @@ router.put(
 
 
 // /api/tournaments
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const game = req.headers.game
-        const tournaments = await Tournament.find({game: game})
-        res.json(tournaments)
+        const game = req.body.game
+        const type = req.body.type
+        const search = req.body.search
+        const searchTour = []
+
+        if (type === "all" && search === "") {
+            const tournaments = await Tournament.find({game: game})
+            res.json(tournaments.sort((a, b) => a.date < b.date ? 1 : -1))
+        } else {
+            if(type === "all"){
+                const tournaments2 = await Tournament.find({title: {$regex: search}, game: game})
+
+                res.json(tournaments2)
+            }else{
+                const tournaments2 = await Tournament.find({title: {$regex: search}, game: game, typeTour: type})
+
+                res.json(tournaments2)
+            }
+
+        }
+
     } catch (e) {
         res.status(500).json({message: e})
     }

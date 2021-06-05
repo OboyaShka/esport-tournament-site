@@ -1,13 +1,14 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
-import {useHttp} from "../../hooks/http.hook";
-import {AuthContext} from "../../context/AuthContext";
-import {Loader} from "../../components/Loader";
-import FileUpload from "../../components/FileUpload";
-import {useMessage} from "../../hooks/message.hook";
+import {useHttp} from "./../hooks/http.hook";
+import {AuthContext} from "./../context/AuthContext";
+import {Loader} from "./../components/Loader";
+import FileUpload from "./../components/FileUpload";
+import {useMessage} from "./../hooks/message.hook";
 import {useHistory} from "react-router-dom";
-import {GameContext} from "../../context/GameContext";
+import {GameContext} from "./../context/GameContext";
+import Arror from "./../img/left_arrow_button.svg";
 
-export const LoLProfileEditPage = () => {
+export const ProfileEditPage = () => {
     const history = useHistory()
     const [user, setUser] = useState([])
     const {loading, request} = useHttp()
@@ -21,7 +22,7 @@ export const LoLProfileEditPage = () => {
     const gameContext = useContext(GameContext)
 
     const changeHandler = event => {
-        setForm({...form, summonersName: event.target.value})
+        setForm({...form, summonersName: event.target.value, steamID: event.target.value})
     }
 
 
@@ -49,14 +50,10 @@ export const LoLProfileEditPage = () => {
             const data = await request('/api/user/edit', 'PUT', {...form}, {
                 Authorization: `Bearer ${auth.token}`
             })
-            message(data.message)
 
-
-            auth.userAvatar = form.image
-
-
-
-            fetchUser()
+            auth.avatarInfo(form.image)
+            //
+            // fetchUser()
 
             history.push(`/${game}/profile`)
 
@@ -68,10 +65,21 @@ export const LoLProfileEditPage = () => {
     if (loading) {
         return <Loader/>
     }
+    const backButton = () => {
+        history.go(-1)
+    }
 
 
     return (
         <div className="auth-content">
+            <div  className="profile-header my-profile-title">
+                <a className="back-button" onClick={e => {
+                    backButton()
+                }}>
+                    <img src={Arror}/>
+                </a>
+                <h2 style={{paddingLeft:"45px",marginLeft: "50px"}}>Редактирование</h2>
+            </div>
             <div className="edit-bubble">
                 <div className="profile-edit-header">
 
@@ -86,7 +94,6 @@ export const LoLProfileEditPage = () => {
                 </div>
                 <div className="tournaments-search auth-padding edit-padding">
                     <input style={{width: "360px"}}
-                           placeholder="Никнейм игрового аккаунта"
                            id="summonersName"
                            name="summonersName"
                            type="text"
@@ -95,6 +102,19 @@ export const LoLProfileEditPage = () => {
                            defaultValue={user.summonersName}
                         //value={user.summonersName}
                     />
+                    <label>Имя призывателя</label>
+                </div>
+                <div className="tournaments-search auth-padding edit-padding">
+                    <input style={{width: "360px"}}
+                           id="steamID"
+                           name="steamID"
+                           type="text"
+                           disabled={loading}
+                           onChange={changeHandler}
+                           defaultValue={user.steamID}
+                        //value={user.summonersName}
+                    />
+                    <label>Steam ID</label>
                 </div>
                 <div className="center">
                     <button

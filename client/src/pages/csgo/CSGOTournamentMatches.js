@@ -6,7 +6,7 @@ import {Link, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 import Select from "react-select";
 
-export const LoLTournamentMatches = () => {
+export const CSGOTournamentMatches = () => {
     const auth = useContext(AuthContext)
     const [matches, setMatches] = useState([])
     const tournamentId = useParams().id
@@ -95,11 +95,11 @@ export const LoLTournamentMatches = () => {
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
             <div className="matches">
-                <div className="matches-filters">
-                    <div><Select className="matches-filters-selector select-type" placeholder="Поиск по игроку..." options={optionsType}/></div>
-                    <div><Select className="matches-filters-selector select-type" placeholder="Этап матча..." options={optionsType}/></div>
-                    <div><Select className=" matches-filters-selector select-type" placeholder="Состояние матча..." options={optionsFormat}/></div>
-                </div>
+                {/*<div className="matches-filters">*/}
+                {/*    <div><Select className="matches-filters-selector select-type" placeholder="Поиск по игроку..." options={optionsType}/></div>*/}
+                {/*    <div><Select className="matches-filters-selector select-type" placeholder="Этап матча..." options={optionsType}/></div>*/}
+                {/*    <div><Select className=" matches-filters-selector select-type" placeholder="Состояние матча..." options={optionsFormat}/></div>*/}
+                {/*</div>*/}
                 <div className="matches-content">
                     {matches != [] && matches.map((match, index) => {
                         return (
@@ -125,7 +125,7 @@ export const LoLTournamentMatches = () => {
                                                     <div className="info-card-profile">
                                                         <div>
                                                             <h3 className="nickname-card">{match.participants[0].nickname}</h3>
-                                                            <p className="summonersname-card">{match.participants[0].summonersName}</p>
+                                                            <p className="summonersname-card">{match.participants[0].steamID}</p>
                                                         </div>
                                                     </div> :
                                                     (!match.winner ?
@@ -168,7 +168,7 @@ export const LoLTournamentMatches = () => {
                                                     <div className="info-card-profile">
                                                         <div>
                                                             <h3 className="nickname-card">{match.participants[1].nickname}</h3>
-                                                            <p className="summonersname-card">{match.participants[1].summonersName}</p>
+                                                            <p className="summonersname-card">{match.participants[1].steamID}</p>
                                                         </div>
                                                     </div> :
                                                     (!match.winner ?

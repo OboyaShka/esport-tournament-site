@@ -139,7 +139,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
             type: "error",
             message: "Введите игровой никнейм",
         })
-        history.replace(`/lol/profile-edit`)
+        history.replace(`/${game}/profile-edit`)
 
     }
 
@@ -218,7 +218,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
     }, [auth.token, request])
 
     const backButton = () => {
-        history.go(-1)
+        history.replace(`/${game}/tournaments`)
     }
 
     return (
@@ -323,7 +323,8 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                          className="tournament-register-button info-bubble" to='/authentication'>
                                     <div>Записаться на турнир</div>
                                 </Link>))}
-                            {!tournament.candidates.includes(auth.userId) ?
+                            {auth.token ?
+                            !tournament.candidates.includes(auth.userId)?
                                 <button className="tournament-confirm-button info-bubble"
                                         disabled={tournament.stateTour != "CONFIRMATION"} onClick={acceptHandler}>
                                     <div>Подтвердить участие</div>
@@ -331,6 +332,10 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
                                 <button className="tournament-confirm-button info-bubble"
                                         disabled onClick={acceptHandler}>
                                     <div>Участие подтверждено</div>
+                                </button>
+                                :<button className="tournament-confirm-button info-bubble"
+                                         disabled>
+                                    <div>Подтвердить участие</div>
                                 </button>
                             }
                         </div>

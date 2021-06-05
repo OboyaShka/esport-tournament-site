@@ -20,11 +20,11 @@ export const TournamentNav = ( ) => {
 
     return(
         <nav className="tournament-nav">
-            <NavLink onClick={e=>{optionHandler("tournament")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/lol/tournaments/${tournamentId}`}>О турнире <img hidden={gameContext.tournamentNav != "tournament"} src={Line}/></NavLink>
-            <NavLink onClick={e=>{optionHandler("rules")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/lol/tournaments/${tournamentId}/rules`}>Правила <img hidden={gameContext.tournamentNav != "rules"} src={Line}/></NavLink>
-            <NavLink onClick={e=>{optionHandler("participants")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/lol/tournaments/${tournamentId}/participants`}>Участники <img hidden={gameContext.tournamentNav != "participants"} src={Line}/></NavLink>
-            <NavLink onClick={e=>{optionHandler("bracket")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/lol/tournaments/${tournamentId}/bracket`}> Сетка <img hidden={gameContext.tournamentNav != "bracket"} src={Line}/></NavLink>
-            <NavLink onClick={e=>{optionHandler("matches")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/lol/tournaments/${tournamentId}/matches`}> Матчи <img hidden={gameContext.tournamentNav != "matches"} src={Line}/></NavLink>
+            <NavLink onClick={e=>{optionHandler("tournament")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/${gameContext.game}/tournaments/${tournamentId}`}>О турнире <img hidden={gameContext.tournamentNav != "tournament"} src={Line}/></NavLink>
+            <NavLink onClick={e=>{optionHandler("rules")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/${gameContext.game}/tournaments/${tournamentId}/rules`}>Правила <img hidden={gameContext.tournamentNav != "rules"} src={Line}/></NavLink>
+            <NavLink onClick={e=>{optionHandler("participants")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/${gameContext.game}/tournaments/${tournamentId}/participants`}>Участники <img hidden={gameContext.tournamentNav != "participants"} src={Line}/></NavLink>
+            <NavLink onClick={e=>{optionHandler("bracket")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/${gameContext.game}/tournaments/${tournamentId}/bracket`}> Сетка <img hidden={gameContext.tournamentNav != "bracket"} src={Line}/></NavLink>
+            <NavLink onClick={e=>{optionHandler("matches")}}style={{outline: "none"}} className="tournaments_nav-link" to={`/${gameContext.game}/tournaments/${tournamentId}/matches`}> Матчи <img hidden={gameContext.tournamentNav != "matches"} src={Line}/></NavLink>
         </nav>
     )
 

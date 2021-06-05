@@ -640,7 +640,7 @@ b{
 .tournaments-filter{
     margin-top: 2rem;
     display: inline-flex;
-    justify-content: space-around;
+
 
     margin-right: 3rem;
 }
@@ -1863,7 +1863,7 @@ flex-grow: 1;
 }
 
 .stat-font-size{
-    font-size: 50px !important;
+    font-size: 40px !important;
     width: 8rem;
 }
 
@@ -1877,6 +1877,7 @@ flex-grow: 1;
 
 .select-type{
     width: 15rem;
+    padding-left: 50px;
     border-radius: 25px !important;
 }
 
@@ -2262,10 +2263,10 @@ flex-grow: 1;
 }
 
 .edit-bubble{
-    margin-top: 15vh;
+    margin-top: 10vh;
     position:fixed;
     width: 542px;
-    height: 480px;
+    height: 600px;
     text-align: center;
     background: #D9D7F1;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -2456,9 +2457,18 @@ flex-grow: 1;
 }
 
 .edit-padding{
-    padding-bottom: 20px;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+.edit-padding label{
+    font-weight: 500;
+    color: #615060;
+    padding-top: 5px;
+}
 
 
 .edit-upload-center{

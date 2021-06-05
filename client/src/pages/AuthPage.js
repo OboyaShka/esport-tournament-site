@@ -18,6 +18,7 @@ export const AuthPage = () => {
     })
     const {game, setGame} = useContext(GameContext)
     const gameContext = useContext(GameContext)
+    const passwordField = document.getElementById('password')
 
     useEffect(() => {
         if (error != false) {
@@ -44,7 +45,7 @@ export const AuthPage = () => {
     const loginHandler = async (event) => {
         try {
             const data = await request('/api/auth/login', 'POST', {...form})
-            auth.login(data.token, data.userId, data.userRoles, data.userNickname, data.userAvatar)
+            auth.login(data.token, data.userId, data.userRoles, data.userNickname, data.userAvatar, data.redCoin, data.blueCoin)
             gameContext.setOption("profile")
             if (data.token) {
                 history.push(`/${game}/profile`)
@@ -56,6 +57,22 @@ export const AuthPage = () => {
                     message: error,
                 })
             }
+        }
+    }
+
+    const pressNextForm = (e) => {
+        if (e.key === "Enter") {
+            e.SuppressKeyPress = true;
+            passwordField.focus()
+
+        }
+    }
+
+    const pressEnter = (e) => {
+        if (e.key === "Enter") {
+            e.SuppressKeyPress = true;
+            loginHandler()
+
         }
     }
 
@@ -74,6 +91,7 @@ export const AuthPage = () => {
                 <div className="auth-title">Авторизация</div>
                 <div className="tournaments-search auth-padding">
                     <input style={{width: "360px"}}
+                           autoFocus
                            placeholder="Почта"
                            id="email"
                            name="email"
@@ -81,6 +99,9 @@ export const AuthPage = () => {
                            className="login-input"
                            value={form.email}
                            onChange={changeHandler}
+                           onKeyDown={e => {
+                               pressNextForm(e)
+                           }}
                     />
                 </div>
 
@@ -94,14 +115,17 @@ export const AuthPage = () => {
                            disabled={loading}
                            value={form.password}
                            onChange={changeHandler}
+                           onKeyDown={e => {
+                               pressEnter(e)
+                           }}
                     />
                 </div>
 
                 <div className="card-action">
                     <button
                         disabled={form.password===""||form.email===""}
-                        className="button-login"
                         onClick={loginHandler}
+                        className="button-login"
                     >Войти
                     </button>
                     <button

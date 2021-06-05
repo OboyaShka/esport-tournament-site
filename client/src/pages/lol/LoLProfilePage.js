@@ -20,6 +20,7 @@ import BlueCoinStat from "../../img/profile_img/bluecoin_stat.svg";
 import RedCoinStat from "../../img/profile_img/redcoin_stat.svg";
 import moment from "moment";
 import {GameContext} from "../../context/GameContext";
+import socket from "../../socket";
 
 export const LoLProfilePage = () => {
     const history = useHistory()
@@ -84,6 +85,15 @@ export const LoLProfilePage = () => {
         }
     }, [auth.token, request, {...form}])
 
+
+    useEffect(() => {
+        socket.on('CASH/UPDATE-STAT', (state) => {
+            fetchUser()
+        })
+
+        return () => socket.off('CASH/UPDATE-STAT')
+    }, [])
+
     //
     // if (loading) {
     //     return <Loader/>
@@ -92,7 +102,7 @@ export const LoLProfilePage = () => {
 
     return (
         <div className="my-profile-container">
-            <h2 className="my-profile-title">Мой аккаунт</h2>
+            <h2 className="my-profile-title">Мой аккаунт League of Legends</h2>
             <div className="my-profile-card">
                 <div className="info-card">
 
@@ -111,10 +121,10 @@ export const LoLProfilePage = () => {
                     {/*</div>*/}
                     <div className="info-card-main">
                         <div>Почта: {user.email}</div>
-                        <div>Вывод средств: Банковская карта</div>
-                        <div>Discord: NICKNAME#3463</div>
+                        {/*<div>Вывод средств: Банковская карта</div>*/}
+                        {/*<div>Discord: NICKNAME#3463</div>*/}
                     </div>
-                    <Link to='/lol/profile-edit' className="card-edit"><img src={Edit}/></Link>
+                    <Link to='/profile-edit' className="card-edit"><img src={Edit}/></Link>
                 </div>
 
 
@@ -125,7 +135,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={TournamentIcon}/>
                             <img src={LineIcon}/>
-                            <var className="stat-var-block">12</var>
+                            <var className="stat-var-block">{user.stat_lol_tournaments_played}</var>
                         </div>
                     </div>
                     <p>Турниров сыграно</p>
@@ -135,7 +145,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={CupIcon}/>
                             <img src={LineIcon}/>
-                            <var className="stat-var-block">5</var>
+                            <var className="stat-var-block">{user.stat_lol_tournaments_wins}</var>
                         </div>
                     </div>
                     <p>Побед в турнирах</p>
@@ -145,7 +155,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={RedCoinStat}/>
                             <img src={LineIcon}/>
-                            <var className="stat-font-size">2300</var>
+                            <var className="stat-font-size">{user.stat_lol_total_RC}</var>
                         </div>
                     </div>
                     <p>Заработано RedCoin</p>
@@ -155,23 +165,18 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={PedestalIcon}/>
                             <img src={LineIcon}/>
-                            <var className="stat-var-block">7</var>
+                            <var className="stat-var-block">{user.stat_lol_tournaments_prizer}</var>
                         </div>
                     </div>
                     <p>Призовых мест</p>
                 </div>
-                {/*<div className="open-statistics">*/}
-                {/*    <div className="statistics-card-more">*/}
-                {/*        <img src={MoreIcon}/>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
                             <img className="line-statistics" src={TrendIcon}/>
                             <img src={LineIcon}/>
-                            <var className="stat-var-block">1</var>
+                            <var className="stat-font-size">{user.stat_lol_tournaments_rating}</var>
                         </div>
                     </div>
                     <p>Рейтинг на сайте</p>
@@ -181,7 +186,7 @@ export const LoLProfilePage = () => {
                         <div className="card-container">
                             <img className="line-statistics" src={BlueCoinStat}/>
                             <img src={LineIcon}/>
-                            <var className="stat-font-size">1100</var>
+                            <var className="stat-font-size">{user.stat_lol_total_BC}</var>
                         </div>
                     </div>
                     <p>Заработано BlueCoin</p>
@@ -190,7 +195,7 @@ export const LoLProfilePage = () => {
             <div className="my-profile-title-games">Мои турниры</div>
             {!loading && mytournaments && <div className="my-profile-games">
                 {!mytournaments.length ?
-                    (<p className="bracket-match-text">У вас нет регистрации на турниры</p>) :
+                    (<p className="bracket-match-text">Вы не заявлены на турниры по League of Legends</p>) :
                     mytournaments.map((item, index) => {
                         return (
                             <Link className="tournament-card" key={index} to={`/lol/tournaments/${item._id}`}>

@@ -32,10 +32,10 @@ export const LoLTournamentMatches = () => {
             console.log(1)
             socket.emit('TOURNAMENT/MATCHES', tournamentId)
 
-            socket.on('TOURNAMENT/MATCHES:RES', async (matches) => {
-
-                setMatches(matches);
-
+            socket.on('TOURNAMENT/MATCHES:RES', async (matches, tournamentIdKey) => {
+                if(tournamentId === tournamentIdKey){
+                    setMatches(matches)
+                }
 
             })
 

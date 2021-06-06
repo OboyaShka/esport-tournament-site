@@ -31,11 +31,12 @@ export const Dota2TournamentMatches = () => {
         try {
             socket.emit('TOURNAMENT/MATCHES', tournamentId)
 
-            socket.on('TOURNAMENT/MATCHES:RES', async (matches) => {
-                 setMatches(matches);
+            socket.on('TOURNAMENT/MATCHES:RES', async (matches, tournamentIdKey) => {
+                if(tournamentId === tournamentIdKey){
+                    setMatches(matches)
+                }
 
             })
-
 
             return () => socket.off('TOURNAMENT/MATCHES:RES')
         } catch (e) {

@@ -940,7 +940,7 @@ async function start() {
                             ))
                                 .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
                                 .then((matchesArr) => matchesArr.reverse())
-                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
+                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr, tournamentId))
 
                         }
                     } else {

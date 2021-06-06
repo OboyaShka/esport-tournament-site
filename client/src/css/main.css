@@ -493,13 +493,13 @@ padding-right: 104px;
     display:grid;
     width: 22.5vw;
     /*width: 28rem;*/
-    height: 21vw;
+    height: 20vw;
 
     background: #ffffff;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
-    grid-template-columns: 0.8fr 1.2fr;
-    grid-template-rows:16rem -6vw;
+    grid-template-columns: 1fr 1.1fr;
+    grid-template-rows:14rem -6vw;
     text-decoration:none;
 }
 
@@ -578,7 +578,7 @@ padding-right: 104px;
 
 .image-card h5{
     color: #E3D0D8;
-    font-size:24px;
+    font-size:26px;
     font-weight: 600;
     position: absolute;
     padding-top: 10vw;
@@ -587,7 +587,7 @@ padding-right: 104px;
 
 .card-left{
     color: #827081;
-    font-size:18px;
+    font-size:1.1vw !important;
     font-weight: 400;
     padding-left: 1rem;
     display: flex;
@@ -602,7 +602,7 @@ b{
 
 .card-right{
     color: #827081;
-    font-size:18px;
+    font-size:1.1vw !important;
     font-weight: 400;
 
 }
@@ -612,11 +612,11 @@ b{
 }
 
 .card-date{
-    padding-top:20px;
+    padding-top:30px;
 }
 
 .card-participants{
-    padding-top:20px;
+    padding-top:30px;
     padding-right:20px;
     text-align: right;
 }

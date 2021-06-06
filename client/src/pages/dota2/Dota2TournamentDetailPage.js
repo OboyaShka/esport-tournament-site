@@ -218,7 +218,7 @@ export const Dota2TournamentDetailPage = (callback, inputs) => {
     }, [auth.token, request])
 
     const backButton = () => {
-        history.replace(`/${game}/tournaments`)
+        history.replace(`/tournaments`)
     }
 
     return (

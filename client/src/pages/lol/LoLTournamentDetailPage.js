@@ -139,7 +139,7 @@ export const LoLTournamentDetailPage = (callback, inputs) => {
             type: "error",
             message: "Введите игровой никнейм",
         })
-        history.replace(`/${game}/profile-edit`)
+        history.replace(`/profile-edit`)
 
     }
 

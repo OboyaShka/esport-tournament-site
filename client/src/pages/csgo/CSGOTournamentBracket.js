@@ -131,8 +131,9 @@ export const CSGOTournamentBracket = () => {
             <TournamentNav></TournamentNav>
             {matches && matches != [] && tournament != [] && matches1 && matches2 && matches4 && matches8 &&
             <div className="bracket-content">
-
-                { tournament.participants.length === 8 &&
+                {tournament.stateTour === "WAITING" || tournament.stateTour === "CONFIRMATION" ?
+                    <div className="tour-not-ready">Ожидание начала турнира</div>
+                    : tournament.participants.length === 8 &&
                 <div className="bracket-main-4">
 
                     <div className="bracket-final-4">

@@ -16,7 +16,7 @@ export const LoLTournamentMatches = () => {
     const getTournament = useCallback(async () => {
         try {
             const fetched = await request(`/api/tournaments/${tournamentId}`, 'GET', null)
-                setTournament(fetched)
+            setTournament(fetched)
 
         } catch (e) {
 
@@ -29,15 +29,18 @@ export const LoLTournamentMatches = () => {
 
     const getMatches = useCallback(async () => {
         try {
+            console.log(1)
             socket.emit('TOURNAMENT/MATCHES', tournamentId)
 
             socket.on('TOURNAMENT/MATCHES:RES', async (matches) => {
-                 setMatches(matches);
+
+                setMatches(matches);
+
 
             })
 
 
-            return () => socket.off('TOURNAMENT/MATCHES:RES')
+            return () => socket.off('TOURNAMENT/MATCHES')
         } catch (e) {
         }
     }, [])
@@ -77,16 +80,16 @@ export const LoLTournamentMatches = () => {
         return () => socket.off('TOURNAMENT/MATCH-WINNER:RES')
     }, [])
 
-    const optionsType =[
-        { value: 'Daily', label: 'Daily' },
-        { value: 'Premium', label: 'Premium' },
-        { value: 'Elite', label: 'Elite' }
+    const optionsType = [
+        {value: 'Daily', label: 'Daily'},
+        {value: 'Premium', label: 'Premium'},
+        {value: 'Elite', label: 'Elite'}
     ]
 
-    const optionsFormat =[
-        { value: '1x1', label: '1x1' },
-        { value: '5x5', label: '5x5' },
-        { value: '5x5 RTC', label: '5x5 RTC' }
+    const optionsFormat = [
+        {value: '1x1', label: '1x1'},
+        {value: '5x5', label: '5x5'},
+        {value: '5x5 RTC', label: '5x5 RTC'}
     ]
 
     return (
@@ -94,19 +97,24 @@ export const LoLTournamentMatches = () => {
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
+            {tournament &&
             <div className="matches">
                 {/*<div className="matches-filters">*/}
                 {/*    <div><Select className="matches-filters-selector select-type" placeholder="Поиск по игроку..." options={optionsType}/></div>*/}
                 {/*    <div><Select className="matches-filters-selector select-type" placeholder="Этап матча..." options={optionsType}/></div>*/}
                 {/*    <div><Select className=" matches-filters-selector select-type" placeholder="Состояние матча..." options={optionsFormat}/></div>*/}
                 {/*</div>*/}
+                {tournament.stateTour === "WAITING" || tournament.stateTour === "CONFIRMATION" ?
+                    <div className="tour-not-ready-matches">Ожидание начала турнира</div>
+                    :
                 <div className="matches-content">
                     {matches != [] && matches.map((match, index) => {
                         return (
                             !!match && !!tournament && match.stateTour && tournament.stateTour &&
                             <Link className="match-link" key={index}
                                   to={`/lol/tournaments/${tournamentId}/matches/${match._id}`}>
-                                <div className={match.participants[0]!=null && match.participants[1]!=null && (match.participants[0]._id===(auth.userId)||match.participants[1]._id===(auth.userId))?"match-status-my":"match-status"}>
+                                <div
+                                    className={match.participants[0] != null && match.participants[1] != null && (match.participants[0]._id === (auth.userId) || match.participants[1]._id === (auth.userId)) ? "match-status-my" : "match-status"}>
                                     <div className="match-indicator-l"
                                          style={{background: match.winner ? (match.participants[0] === null ? "#fe7968" : (match.winner === match.participants[0]._id ? "#a5c6b1" : "#fe7968")) : ""}}>
                                         <div className="match-card-l">
@@ -114,7 +122,7 @@ export const LoLTournamentMatches = () => {
                                                 {match.participants[0] && ((match.participants[0] === null) ?
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
-                                                                 src={auth.userAvatar}/>
+                                                             src={auth.userAvatar}/>
                                                     </div> :
                                                     <div className="match-gamer">
                                                         <img style={{maxWidth: "100%", borderRadius: "50%"}}
@@ -207,9 +215,9 @@ export const LoLTournamentMatches = () => {
                     })
 
                     }
-                </div>
+                </div>}
 
-            </div>
+            </div>}
         </div>)
 
 }

@@ -139,7 +139,7 @@ export const CSGOTournamentDetailPage = (callback, inputs) => {
             type: "error",
             message: "Введите Steam ID",
         })
-        history.replace(`/${game}/profile-edit`)
+        history.replace(`/profile-edit`)
 
     }
 

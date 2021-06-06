@@ -78,7 +78,7 @@ export const Dota2TournamentParticipants = () => {
                                 <div className="participants-card-info">
                                     <div className="participants-card-nickname">{participant.nickname}</div>
                                     <div className="participants-card-summonersname">{participant.summonersName}</div>
-                                    <div className="participants-card-elo">Рейтинг: 0</div>
+                                    <div className="participants-card-elo">Рейтинг:{participant.stat_dota2_tournaments_rating}</div>
                                 </div>
                                 <div className="participants-card-statistic"><var>0</var> <img style={{maxWidth: "50%"}}
                                                                                                src={GoldCup}/></div>

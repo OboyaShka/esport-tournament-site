@@ -2490,3 +2490,20 @@ flex-grow: 1;
     padding-top: 10px;
     color: #827081;
 }
+
+.tour-not-ready{
+    color: #998598;
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 15%;
+}
+
+.tour-not-ready-matches{
+    color: #998598;
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 15%;
+    padding-left: 33%;
+}

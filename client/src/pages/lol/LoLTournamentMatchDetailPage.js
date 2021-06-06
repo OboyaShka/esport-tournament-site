@@ -21,6 +21,9 @@ export const LoLTournamentMatchDetailPage = () => {
     const [match, setMatch] = useState([])
     const [form, setForm] = useState({image: ''})
     const [modalActive, setModalActive] = useState(false)
+    const thisToken = new Date
+
+
 
     const getTournament = useCallback(async () => {
         try {
@@ -42,6 +45,7 @@ export const LoLTournamentMatchDetailPage = () => {
         try {
             socket.emit('TOURNAMENT/MATCH-SCREEN', matchId, form.image)
 
+            return () => socket.off('TOURNAMENT/MATCH-SCREEN')
         } catch (e) {
         }
     }, [form.image != ''])
@@ -58,8 +62,11 @@ export const LoLTournamentMatchDetailPage = () => {
 
 
     useEffect(() => {
-        socket.on('TOURNAMENT/MATCH:RES', async (match) => {
-            setMatch(match)
+        socket.on('TOURNAMENT/MATCH:RES', async (matchIdKey, match) => {
+            if(matchIdKey===matchId){
+                setMatch(match)
+            }
+
 
         })
 

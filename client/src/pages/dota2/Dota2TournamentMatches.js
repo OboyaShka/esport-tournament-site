@@ -94,12 +94,16 @@ export const Dota2TournamentMatches = () => {
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament && <h2 className="my-profile-title">{tournament.title}</h2>}
             <TournamentNav></TournamentNav>
+            {tournament &&
             <div className="matches">
                 {/*<div className="matches-filters">*/}
                 {/*    <div><Select className="matches-filters-selector select-type" placeholder="Поиск по игроку..." options={optionsType}/></div>*/}
                 {/*    <div><Select className="matches-filters-selector select-type" placeholder="Этап матча..." options={optionsType}/></div>*/}
                 {/*    <div><Select className=" matches-filters-selector select-type" placeholder="Состояние матча..." options={optionsFormat}/></div>*/}
                 {/*</div>*/}
+            {tournament.stateTour === "WAITING" || tournament.stateTour === "CONFIRMATION" ?
+                <div className="tour-not-ready-matches">Ожидание начала турнира</div>
+                :
                 <div className="matches-content">
                     {matches != [] && matches.map((match, index) => {
                         return (
@@ -207,9 +211,9 @@ export const Dota2TournamentMatches = () => {
                     })
 
                     }
-                </div>
+                </div>}
 
-            </div>
+            </div>}
         </div>)
 
 }

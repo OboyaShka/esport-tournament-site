@@ -154,16 +154,6 @@ export const Dota2ProfilePage = () => {
                 <div className="statistics-card-area">
                     <div className="statistics-card">
                         <div className="card-container">
-                            <img className="line-statistics" src={RedCoinStat}/>
-                            <img src={LineIcon}/>
-                            <var className="stat-font-size">{user.stat_dota2_total_RC}</var>
-                        </div>
-                    </div>
-                    <p>Заработано RedCoin</p>
-                </div>
-                <div className="statistics-card-area">
-                    <div className="statistics-card">
-                        <div className="card-container">
                             <img className="line-statistics" src={PedestalIcon}/>
                             <img src={LineIcon}/>
                             <var className="stat-var-block">{user.stat_dota2_tournaments_prizer}</var>
@@ -171,6 +161,7 @@ export const Dota2ProfilePage = () => {
                     </div>
                     <p>Призовых мест</p>
                 </div>
+
 
                 <div className="statistics-card-area">
                     <div className="statistics-card">
@@ -181,6 +172,16 @@ export const Dota2ProfilePage = () => {
                         </div>
                     </div>
                     <p>Рейтинг на сайте</p>
+                </div>
+                <div className="statistics-card-area">
+                    <div className="statistics-card">
+                        <div className="card-container">
+                            <img className="line-statistics" src={RedCoinStat}/>
+                            <img src={LineIcon}/>
+                            <var className="stat-font-size">{user.stat_dota2_total_RC}</var>
+                        </div>
+                    </div>
+                    <p>Заработано RedCoin</p>
                 </div>
                 <div className="statistics-card-area">
                     <div className="statistics-card">

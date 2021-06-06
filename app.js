@@ -105,6 +105,7 @@ async function start() {
             //Миксовка участников
             const participantRandom = mixArr(tournament.participants)
 
+
             //Добавление пустых мест при недоборе
             let p = -1
             while (participantRandom.length < participantsNumber) {
@@ -208,7 +209,7 @@ async function start() {
                     break
                 case "PREPARATION":
 
-                    const tournamentConfirm = await Tournament.updateOne({_id: item._id},
+                    const tournamentConfirm = await Tournament.updateOne({_id: tournament._id},
                         {
                             $set: {
                                 participants: tournament.candidates
@@ -259,7 +260,8 @@ async function start() {
                         const matchWinner = await Match.updateOne({_id: item._id},
                             {
                                 $set: {
-                                    winner: item.participants[1]
+                                    winner: item.participants[1],
+                                    loser: item.participants[0]
                                 }
                             })
 
@@ -837,8 +839,8 @@ async function start() {
 
 
             socket.on('TOURNAMENT/MATCHES', async (tournamentId) => {
-                const tournament = await Tournament.findOne({_id: tournamentId})
                 try {
+                    const tournament = await Tournament.findOne({_id: tournamentId})
 
                     let matchesArr = []
                     if (tournament.matches && tournament.matches != null) {
@@ -860,6 +862,7 @@ async function start() {
                                 return match
                             }
                         ))
+                            .then((matchesArr) => matchesArr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
                             .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
                             .then((matchesArr) => matchesArr.reverse())
                             .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
@@ -885,7 +888,7 @@ async function start() {
                             match.participants[1] = gamer2
                         }
 
-                        io.emit('TOURNAMENT/MATCH:RES', match)
+                        io.emit('TOURNAMENT/MATCH:RES', matchId, match)
                     } catch (e) {
                         console.log("TOURNAMENT/MATCH")
                     }

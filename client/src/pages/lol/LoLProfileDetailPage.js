@@ -118,16 +118,7 @@ export const LoLProfileDetailPage = () => {
                         </div>
                         <p>Побед в турнирах</p>
                     </div>
-                    <div className="statistics-card-area">
-                        <div className="statistics-card">
-                            <div className="card-container">
-                                <img className="line-statistics" src={RedCoinStat}/>
-                                <img src={LineIcon}/>
-                                <var className="stat-font-size">{profile.stat_lol_total_RC}</var>
-                            </div>
-                        </div>
-                        <p>Заработано RedCoin</p>
-                    </div>
+
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">
@@ -138,7 +129,6 @@ export const LoLProfileDetailPage = () => {
                         </div>
                         <p>Призовых мест</p>
                     </div>
-
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">
@@ -149,6 +139,17 @@ export const LoLProfileDetailPage = () => {
                         </div>
                         <p>Рейтинг на сайте</p>
                     </div>
+                    <div className="statistics-card-area">
+                        <div className="statistics-card">
+                            <div className="card-container">
+                                <img className="line-statistics" src={RedCoinStat}/>
+                                <img src={LineIcon}/>
+                                <var className="stat-font-size">{profile.stat_lol_total_RC}</var>
+                            </div>
+                        </div>
+                        <p>Заработано RedCoin</p>
+                    </div>
+
                     <div className="statistics-card-area">
                         <div className="statistics-card">
                             <div className="card-container">

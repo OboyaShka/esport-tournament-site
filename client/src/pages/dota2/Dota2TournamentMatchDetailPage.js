@@ -49,7 +49,7 @@ export const Dota2TournamentMatchDetailPage = () => {
     const getMatches = useCallback(async () => {
         try {
 
-            socket.emit('TOURNAMENT/MATCH', matchId)
+            socket.emit('TOURNAMENT/MATCH', matchId, tournamentId)
 
             return () => socket.off('TOURNAMENT/MATCH')
         } catch (e) {
@@ -58,8 +58,10 @@ export const Dota2TournamentMatchDetailPage = () => {
 
 
     useEffect(() => {
-        socket.on('TOURNAMENT/MATCH:RES', async (match) => {
-            setMatch(match)
+        socket.on('TOURNAMENT/MATCH:RES', async (matchIdKey, match) => {
+            if(matchIdKey===matchId){
+                setMatch(match)
+            }
 
         })
 

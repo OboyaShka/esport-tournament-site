@@ -53,7 +53,7 @@ export const LoLTournamentBracket = () => {
                     }
                 })
 
-                setMatches1(Matches1Arr)
+                setMatches1(Matches1Arr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
 
                 let Matches2Arr = []
 
@@ -63,7 +63,7 @@ export const LoLTournamentBracket = () => {
                     }
                 })
 
-                setMatches2(Matches2Arr)
+                setMatches2(Matches2Arr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
 
                 let Matches4Arr = []
 
@@ -73,7 +73,7 @@ export const LoLTournamentBracket = () => {
                     }
                 })
 
-                setMatches4(Matches4Arr)
+                setMatches4(Matches4Arr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
 
                 let Matches8Arr = []
 
@@ -83,7 +83,7 @@ export const LoLTournamentBracket = () => {
                     }
                 })
 
-                setMatches8(Matches8Arr)
+                setMatches8(Matches8Arr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
 
             })
 

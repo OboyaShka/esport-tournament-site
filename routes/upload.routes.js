@@ -3,7 +3,7 @@ const router = Router()
 const auth = require('../middleware/auth.middleware')
 const multer = require('multer')
 const moment = require('moment')
-
+const path = require('path')
 
 router.post(
     '/',
@@ -30,7 +30,7 @@ router.post(
             }
 
             if (process.env.NODE_ENV === 'production') {
-                file.mv(`esport-tournament-site/client/public/uploads/${nameFile}`, e => {
+                file.mv(path.resolve(__dirname, '../client', 'build', 'uploads'), e => {
                     if (e) {
                         return res.status(500).json({message: e})
                     }

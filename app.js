@@ -862,7 +862,6 @@ async function start() {
                                 return match
                             }
                         ))
-                            .then((matchesArr) => matchesArr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
                             .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
                             .then((matchesArr) => matchesArr.reverse())
                             .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))

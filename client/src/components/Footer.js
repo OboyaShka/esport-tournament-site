@@ -23,7 +23,7 @@ export const Footer = () => {
                         Политика приватности
                     </a>
                     <a className="footer-item">
-                        Сотруднечество
+                        Сотрудничество
                     </a>
                     <a className="footer-item">
                         Помощь

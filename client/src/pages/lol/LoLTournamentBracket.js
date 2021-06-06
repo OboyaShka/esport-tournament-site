@@ -42,7 +42,8 @@ export const LoLTournamentBracket = () => {
         try {
             socket.emit('TOURNAMENT/MATCHES', tournamentId)
 
-            socket.on('TOURNAMENT/MATCHES:RES', async (matches) => {
+            socket.on('TOURNAMENT/MATCHES:RES', async (matches, tournamentIdKey) => {
+                if(tournamentId === tournamentIdKey){
                 setMatches(matches);
 
                 let Matches1Arr = []
@@ -84,7 +85,7 @@ export const LoLTournamentBracket = () => {
                 })
 
                 setMatches8(Matches8Arr.sort((a, b) => a.matchNumber > b.matchNumber ? 1 : -1))
-
+                }
             })
 
 

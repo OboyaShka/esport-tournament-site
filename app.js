@@ -13,6 +13,7 @@ const jwt = require('jsonwebtoken')
 const moment = require('moment')
 const schedule = require('node-schedule');
 const path = require('path')
+const Team = require('./models/Team')
 
 app.use(express.json({extended: true}))
 app.use(fileUpload())
@@ -25,8 +26,8 @@ app.use('/api/participants', require('./routes/participants.routes'))
 app.use('/api/news', require('./routes/news.routes'))
 app.use('/api/profile', require('./routes/profile.routes'))
 
-if (process.env.NODE_ENV === 'production'){
-    app.use('/',  express.static(path.join(__dirname,'client', 'build')))
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static(path.join(__dirname, 'client', 'build')))
 
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
@@ -218,32 +219,95 @@ async function start() {
 
                     let nextStage
 
+
+                    if (tournament.typeTour === "Elite" || tournament.typeTour === "Premium") {
+                        //const participantsRandom = mixArr(tournament.participants)
+                        let teamIDs = []
+                        let teamNumber = 1
+                        const participantsRandom = mixArr([
+                            "6060ce36b897e33664a09048", "6060cf827ac3af23740c459f",
+                            "6060cfa57ac3af23740c45a1", "60718d3b50e033068c619f98",
+                            "60718dd150e033068c619f9a", "60718dd950e033068c619f9b",
+                            "60718de250e033068c619f9c", "60718dec50e033068c619f9d",
+                            "60720cbdc9df03298461b5c9", "60997a65c61bea02000a4476",
+                            "60ba3a117a5fe60e585cf72b", "60ba3aa1cbe45e56ec7d121b",
+                            "60ba3b378f7b6e0e006ba196", "60ba400c811b87393cd5467b",
+                            "60ba9564524baa54980981e0", "60bc2479959bd5056665f51c",
+                            "60bc90ca959bd5056665f51d", "60bcb700121e33bc8cdcbe4a",
+                            "60bcf7a7854fbc0650e9e676", "60bcf7b6854fbc0650e9e677",
+                            "60bcf7c6854fbc0650e9e678", "60bcf7d0854fbc0650e9e679",
+                            "60bcf7e0854fbc0650e9e67a", "60bcf7ed854fbc0650e9e67b",
+                            "60bcf801854fbc0650e9e67c", "60bcf810854fbc0650e9e67d",
+                            "60bcf817854fbc0650e9e67e", "60bcf81f854fbc0650e9e67f",
+                            "60bcf829854fbc0650e9e680", "60bcf832854fbc0650e9e681",
+                            "60bcf841854fbc0650e9e682", "60bcf84f854fbc0650e9e683",
+                            "60bcf859854fbc0650e9e684", "60bcf863854fbc0650e9e685",
+                            "60bcf86c854fbc0650e9e686", "60bcf873854fbc0650e9e687",
+                            "60bcf87b854fbc0650e9e688", "60bcf887854fbc0650e9e689",
+                            "60bcf893854fbc0650e9e68a", "60bcf8a5854fbc0650e9e68b"
+                        ])
+
+                        for (let i = 0; i < participantsRandom.length; i = i + 5) {
+                            const team = new Team({
+                                nickname: `Команда ${teamNumber}`,
+                                image: "/default_icon.svg",
+                                players: [
+                                    participantsRandom[i],
+                                    participantsRandom[i + 1],
+                                    participantsRandom[i + 2],
+                                    participantsRandom[i + 3],
+                                    participantsRandom[i + 4],
+                                ],
+                                tournament: tournament._id,
+                                summonersName: null,
+                                steamID: null,
+                            })
+
+                            await team.save()
+
+                            teamIDs.push(team._id)
+
+                            teamNumber++
+                        }
+
+                        const tournamentTeam = await Tournament.updateOne({_id: tournament._id},
+                            {
+                                $set: {
+                                    participants: teamIDs
+                                }
+                            })
+                    }
+
+                    const tournamentFixed = await Tournament.findOne({_id: item._id})
+
+                    console.log(tournamentFixed.participants)
+
                     switch (true) {
-                        case tournament.participants.length < 8:
+                        case tournamentFixed.participants.length < 8:
                             nextStage = "CANCELLATION"
                             console.log("Слишком мало людей")
                             break;
-                        case tournament.participants.length === 8:
-                            await createBracket(tournament, 4)
+                        case tournamentFixed.participants.length === 8:
+                            await createBracket(tournamentFixed, 4)
 
                             nextStage = "1/4"
                             console.log("Сетка для топ 4")
                             break;
-                        case 8 < tournament.participants.length <= 16:
+                        case 8 < tournamentFixed.participants.length <= 16:
 
-                            await createBracket(tournament, 8)
+                            await createBracket(tournamentFixed, 8)
 
                             nextStage = "1/8"
                             console.log("Сетка для топ 8")
                             break;
-                        case 17 <= tournament.participants.length <= 32:
+                        case 17 <= tournamentFixed.participants.length <= 32:
 
-                            await createBracket(tournament, 16)
+                            await createBracket(tournamentFixed, 16)
                             nextStage = "1/16"
                             console.log("Сетка для топ 16")
                             break;
-                        case 33 <= tournament.participants.length <= 64:
-                            await createBracket(tournament, 32)
+                        case 33 <= tournamentFixed.participants.length <= 64:
+                            await createBracket(tournamentFixed, 32)
 
                             nextStage = "1/32"
                             console.log("Сетка для топ 32")
@@ -252,7 +316,7 @@ async function start() {
 
                     const matchesWithGhost = await Match.find({
                         participants: {$in: GHOST},
-                        tournament: tournament._id,
+                        tournament: tournamentFixed._id,
                     },)
 
                     matchesWithGhost.map(async (item) => {
@@ -307,12 +371,12 @@ async function start() {
 
                     })
 
-                    const tournamentP = await Tournament.updateOne({_id: tournament._id},
+                    const tournamentP = await Tournament.updateOne({_id: tournamentFixed._id},
                         {
                             $set: {
                                 stateTour: "PREPARATION",
                                 nextStateTour: nextStage,
-                                nextStateDate: moment(tournament.nextStateDate).add(1, 'minutes').toDate().setSeconds(0, 0),
+                                nextStateDate: moment(tournamentFixed.nextStateDate).add(1, 'minutes').toDate().setSeconds(0, 0),
                             }
                         }
                     )
@@ -387,12 +451,22 @@ async function start() {
 
                     place4 = semiFinal2.loser
 
+                    let place1Obj
+                    let place2Obj
+                    let place3Obj
+                    let place4Obj
 
-                    const place1Obj = await User.findOne({_id: place1})
-                    const place2Obj = await User.findOne({_id: place2})
-                    const place3Obj = await User.findOne({_id: place3})
-                    const place4Obj = await User.findOne({_id: place4})
-
+                    if(tournament.typeTour === "Daily") {
+                        place1Obj = await User.findOne({_id: place1})
+                        place2Obj = await User.findOne({_id: place2})
+                        place3Obj = await User.findOne({_id: place3})
+                        place4Obj = await User.findOne({_id: place4})
+                    }else{
+                        place1Obj = await Team.findOne({_id: place1})
+                        place2Obj = await Team.findOne({_id: place2})
+                        place3Obj = await Team.findOne({_id: place3})
+                        place4Obj = await Team.findOne({_id: place4})
+                    }
 
                     const place1ObjFix = {
                         _id: place1Obj._id,
@@ -483,82 +557,82 @@ async function start() {
                                         }
                                     })
                                     break
-                                case "Premium":
-                                    const win21 = await User.updateOne({_id: place1}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize1,
-                                            stat_lol_total_BC: tournamentPrize1,
-                                            stat_lol_tournaments_wins: 1,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 500
-                                        }
-                                    })
-
-                                    const win22 = await User.updateOne({_id: place2}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize2,
-                                            stat_lol_total_BC: tournamentPrize2,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 250
-                                        }
-                                    })
-
-                                    const win23 = await User.updateOne({_id: place3}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize34,
-                                            stat_lol_total_BC: tournamentPrize34,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 125
-                                        }
-                                    })
-
-                                    const win24 = await User.updateOne({_id: place4}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize34,
-                                            stat_lol_total_BC: tournamentPrize34,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 125
-                                        }
-                                    })
-                                    break
-                                case "Elite":
-                                    const win31 = await User.updateOne({_id: place1}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize1,
-                                            stat_lol_total_BC: tournamentPrize1,
-                                            stat_lol_tournaments_wins: 1,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 5000
-                                        }
-                                    })
-
-                                    const win32 = await User.updateOne({_id: place2}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize2,
-                                            stat_lol_total_BC: tournamentPrize2,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 2500
-                                        }
-                                    })
-
-                                    const win33 = await User.updateOne({_id: place3}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize34,
-                                            stat_lol_total_BC: tournamentPrize34,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 1000
-                                        }
-                                    })
-
-                                    const win34 = await User.updateOne({_id: place4}, {
-                                        $inc: {
-                                            blueCoin: tournamentPrize34,
-                                            stat_lol_total_BC: tournamentPrize34,
-                                            stat_lol_tournaments_prizer: 1,
-                                            stat_lol_tournaments_rating: 1000
-                                        }
-                                    })
-                                    break
+                                // case "Premium":
+                                //     const win21 = await User.updateOne({_id: place1}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize1,
+                                //             stat_lol_total_BC: tournamentPrize1,
+                                //             stat_lol_tournaments_wins: 1,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 500
+                                //         }
+                                //     })
+                                //
+                                //     const win22 = await User.updateOne({_id: place2}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize2,
+                                //             stat_lol_total_BC: tournamentPrize2,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 250
+                                //         }
+                                //     })
+                                //
+                                //     const win23 = await User.updateOne({_id: place3}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize34,
+                                //             stat_lol_total_BC: tournamentPrize34,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 125
+                                //         }
+                                //     })
+                                //
+                                //     const win24 = await User.updateOne({_id: place4}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize34,
+                                //             stat_lol_total_BC: tournamentPrize34,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 125
+                                //         }
+                                //     })
+                                //     break
+                                // case "Elite":
+                                //     const win31 = await User.updateOne({_id: place1}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize1,
+                                //             stat_lol_total_BC: tournamentPrize1,
+                                //             stat_lol_tournaments_wins: 1,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 5000
+                                //         }
+                                //     })
+                                //
+                                //     const win32 = await User.updateOne({_id: place2}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize2,
+                                //             stat_lol_total_BC: tournamentPrize2,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 2500
+                                //         }
+                                //     })
+                                //
+                                //     const win33 = await User.updateOne({_id: place3}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize34,
+                                //             stat_lol_total_BC: tournamentPrize34,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 1000
+                                //         }
+                                //     })
+                                //
+                                //     const win34 = await User.updateOne({_id: place4}, {
+                                //         $inc: {
+                                //             blueCoin: tournamentPrize34,
+                                //             stat_lol_total_BC: tournamentPrize34,
+                                //             stat_lol_tournaments_prizer: 1,
+                                //             stat_lol_tournaments_rating: 1000
+                                //         }
+                                //     })
+                                //     break
                                 default:
                                     console.log('Что-то пошло не так')
                                     break
@@ -843,53 +917,102 @@ async function start() {
                     const tournament = await Tournament.findOne({_id: tournamentId})
 
                     let matchesArr = []
-                    if (tournament.matches && tournament.matches != null) {
 
-                        Promise.all(tournament.matches.map(async (matchId) => {
+                    if (tournament.typeTour === 'Daily') {
+                        if (tournament.matches && tournament.matches != null) {
 
-                                const match = await Match.findOne({_id: matchId})
+                            Promise.all(tournament.matches.map(async (matchId) => {
 
-                                if (match && match.participants[0] != null && match.participants[0]) {
-                                    const gamer1 = await User.findOne({_id: match.participants[0]})
-                                    match.participants[0] = gamer1
+                                    const match = await Match.findOne({_id: matchId})
+
+                                    if (match && match.participants[0] != null && match.participants[0]) {
+                                        const gamer1 = await User.findOne({_id: match.participants[0]})
+                                        match.participants[0] = gamer1
+                                    }
+
+                                    if (match && match.participants[1] != null && match.participants[1]) {
+                                        const gamer2 = await User.findOne({_id: match.participants[1]})
+                                        match.participants[1] = gamer2
+                                    }
+
+                                    return match
                                 }
+                            ))
+                                .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
+                                .then((matchesArr) => matchesArr.reverse())
+                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
 
-                                if (match && match.participants[1] != null && match.participants[1]) {
-                                    const gamer2 = await User.findOne({_id: match.participants[1]})
-                                    match.participants[1] = gamer2
+                        }
+                    } else {
+                        if (tournament.matches && tournament.matches != null) {
+
+                            Promise.all(tournament.matches.map(async (matchId) => {
+
+                                    const match = await Match.findOne({_id: matchId})
+
+                                    if (match && match.participants[0] != null && match.participants[0]) {
+                                        const gamer1 = await Team.findOne({_id: match.participants[0]})
+                                        match.participants[0] = gamer1
+                                    }
+
+                                    if (match && match.participants[1] != null && match.participants[1]) {
+                                        const gamer2 = await Team.findOne({_id: match.participants[1]})
+                                        match.participants[1] = gamer2
+                                    }
+                                    return match
                                 }
+                            ))
+                                .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
+                                .then((matchesArr) => matchesArr.reverse())
+                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
 
-                                return match
-                            }
-                        ))
-                            .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
-                            .then((matchesArr) => matchesArr.reverse())
-                            .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
-
+                        }
                     }
+
+
                 } catch (e) {
                     console.log("TOURNAMENT/MATCHES")
                 }
             })
 
-            socket.on('TOURNAMENT/MATCH', async (matchId) => {
+            socket.on('TOURNAMENT/MATCH', async (matchId, tournamentId) => {
                     try {
+                        const tournament = await Tournament.findOne({_id: tournamentId})
 
-                        const match = await Match.findOne({_id: matchId})
+                        let matchResult
 
-                        if (match && match.participants[0] != null && match.participants[0]) {
-                            const gamer1 = await User.findOne({_id: match.participants[0]})
-                            match.participants[0] = gamer1
+                        if (tournament.typeTour === 'Daily') {
+                            const match = await Match.findOne({_id: matchId})
+
+                            if (match && match.participants[0] != null && match.participants[0]) {
+                                const gamer1 = await User.findOne({_id: match.participants[0]})
+                                match.participants[0] = gamer1
+                            }
+
+                            if (match && match.participants[1] != null && match.participants[1]) {
+                                const gamer2 = await User.findOne({_id: match.participants[1]})
+                                match.participants[1] = gamer2
+                            }
+
+                            matchResult = match
+                        }else {
+                            const match2 = await Match.findOne({_id: matchId})
+
+                            if (match2 && match2.participants[0] != null && match2.participants[0]) {
+                                const gamer1 = await Team.findOne({_id: match2.participants[0]})
+                                match2.participants[0] = gamer1
+                            }
+
+                            if (match2 && match2.participants[1] != null && match2.participants[1]) {
+                                const gamer2 = await Team.findOne({_id: match2.participants[1]})
+                                match2.participants[1] = gamer2
+                            }
+
+                            matchResult = match2
                         }
-
-                        if (match && match.participants[1] != null && match.participants[1]) {
-                            const gamer2 = await User.findOne({_id: match.participants[1]})
-                            match.participants[1] = gamer2
-                        }
-
-                        io.emit('TOURNAMENT/MATCH:RES', matchId, match)
+                        io.emit('TOURNAMENT/MATCH:RES', matchId, matchResult)
                     } catch (e) {
-                        console.log("TOURNAMENT/MATCH")
+                        console.log(e)
                     }
 
                 }
@@ -1137,7 +1260,7 @@ async function start() {
                                     return participant
                                 }
                             ))
-                                .then((participantsArr) => participantsArr.filter(item => item!=null))
+                                .then((participantsArr) => participantsArr.filter(item => item != null))
                                 .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
 
                         }

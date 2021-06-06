@@ -30,7 +30,7 @@ router.post(
             }
 
             if (process.env.NODE_ENV === 'production') {
-                file.mv(path.resolve(__dirname, '../client', 'build', 'uploads'), e => {
+                file.mv(path.resolve(__dirname, '../client', 'build', 'uploads', nameFile), e => {
                     if (e) {
                         return res.status(500).json({message: e})
                     }

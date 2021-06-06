@@ -105,6 +105,15 @@ router.post(
 
             const user = await User.findOne({email})
 
+            // const users = await User.find()
+            //
+            // Promise.all(users.map(async (us) => {
+            //
+            //         return `"${us._id}"`
+            //     }
+            // ))
+            //     .then((usersID) => console.log(usersID))
+
             if (!user) {
                 return res.status(400).json({message: 'Пользователь не найден'})
             }

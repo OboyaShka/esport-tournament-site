@@ -53,7 +53,7 @@ export const LoLTournamentMatchDetailPage = () => {
     const getMatches = useCallback(async () => {
         try {
 
-            socket.emit('TOURNAMENT/MATCH', matchId)
+            socket.emit('TOURNAMENT/MATCH', matchId, tournamentId)
 
             return () => socket.off('TOURNAMENT/MATCH')
         } catch (e) {
@@ -137,7 +137,7 @@ export const LoLTournamentMatchDetailPage = () => {
 
     return (
         <div>
-
+            {console.log(match)}
             {!tournament && <h2 className="my-profile-title">Турнир</h2>}
             {tournament &&
             <div className="match-header">

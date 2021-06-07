@@ -21,6 +21,7 @@ import {LoLTournamentParticipants} from "./pages/lol/LoLTournamentParticipants";
 import {LoLTournamentBracket} from "./pages/lol/LoLTournamentBracket";
 import {LoLTournamentMatches} from "./pages/lol/LoLTournamentMatches";
 import {LoLTournamentMatchDetailPage} from "./pages/lol/LoLTournamentMatchDetailPage";
+import {LoLTournamentTeams} from "./pages/lol/LoLTournamentTeams";
 
 import {Dota2TournamentsPage} from "./pages/dota2/Dota2TournamentsPage";
 import {Dota2Page} from "./pages/dota2/Dota2Page";
@@ -68,6 +69,9 @@ export const useRoutes = (isAuthenticated)=> {
                 </Route>
                 <Route path="/lol/tournaments/:id/participants" exact>
                     <LoLTournamentParticipants/>
+                </Route>
+                <Route path="/lol/tournaments/:id/:idm" exact>
+                    <LoLTournamentTeams/>
                 </Route>
                 <Route path="/lol/tournaments/:id/bracket" exact>
                     <LoLTournamentBracket/>
@@ -222,6 +226,9 @@ export const useRoutes = (isAuthenticated)=> {
             </Route>
             <Route path="/lol/profile/:id" exact>
                 <LoLProfileDetailPage />
+            </Route>
+            <Route path="/lol/tournaments/:id/:idm" exact>
+                <LoLTournamentTeams/>
             </Route>
 
             <Route path="/lol/news" exact>

@@ -456,12 +456,12 @@ async function start() {
                     let place3Obj
                     let place4Obj
 
-                    if(tournament.typeTour === "Daily") {
+                    if (tournament.typeTour === "Daily") {
                         place1Obj = await User.findOne({_id: place1})
                         place2Obj = await User.findOne({_id: place2})
                         place3Obj = await User.findOne({_id: place3})
                         place4Obj = await User.findOne({_id: place4})
-                    }else{
+                    } else {
                         place1Obj = await Team.findOne({_id: place1})
                         place2Obj = await Team.findOne({_id: place2})
                         place3Obj = await Team.findOne({_id: place3})
@@ -964,7 +964,7 @@ async function start() {
                             ))
                                 .then((matchesArr) => matchesArr.sort((a, b) => a.stateTour > b.stateTour ? 1 : -1))
                                 .then((matchesArr) => matchesArr.reverse())
-                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr))
+                                .then((matchesArr) => io.emit('TOURNAMENT/MATCHES:RES', matchesArr, tournamentId))
 
                         }
                     }
@@ -995,7 +995,7 @@ async function start() {
                             }
 
                             matchResult = match
-                        }else {
+                        } else {
                             const match2 = await Match.findOne({_id: matchId})
 
                             if (match2 && match2.participants[0] != null && match2.participants[0]) {
@@ -1230,40 +1230,95 @@ async function start() {
                 }
             )
 
+            socket.on('TOURNAMENT/TEAM', async (tournamentId, teamId) => {
+                    try {
+                        const tournament = await Tournament.findOne({_id: tournamentId})
+
+                        Promise.all(tournament.participants.map(async (participant) => {
+                            const user = await Team.findOne({_id: participant._id})
+
+                            return user
+                        }))
+                            .then((team) => io.emit('TOURNAMENT/TEAM:RES', team))
+
+
+                    } catch (e) {
+                        console.log("TOURNAMENT/TEAM")
+                    }
+                }
+            )
+
             socket.on('TOURNAMENT/PARTICIPANTS', async (tournamentId, search) => {
                     try {
                         console.log(search)
-                        if (search === "" || search === null) {
-                            const tournament = await Tournament.findOne({_id: tournamentId})
+                        const tournament = await Tournament.findOne({_id: tournamentId})
+                        if (tournament.typeTour === "Daily") {
+                            if (search === "" || search === null) {
 
-                            // console.log(tournament)
 
-                            Promise.all(tournament.participants.map(async (participantId) => {
+                                // console.log(tournament)
 
-                                    const participant = await User.findOne({_id: participantId})
-                                    return participant
-                                }
-                            ))
-                                .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+                                Promise.all(tournament.participants.map(async (participantId) => {
+
+                                        const participant = await User.findOne({_id: participantId})
+                                        return participant
+                                    }
+                                ))
+                                    .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+                            } else {
+
+                                const tournament = await Tournament.findOne({_id: tournamentId})
+
+                                // console.log(tournament)
+
+                                Promise.all(tournament.participants.map(async (participantId) => {
+
+                                        const participant = await User.findOne({
+                                            _id: participantId,
+                                            nickname: {$regex: search}
+                                        })
+                                        return participant
+                                    }
+                                ))
+                                    .then((participantsArr) => participantsArr.filter(item => item != null))
+                                    .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+
+                            }
                         } else {
+                            if (search === "" || search === null) {
 
-                            const tournament = await Tournament.findOne({_id: tournamentId})
 
-                            // console.log(tournament)
+                                // console.log(tournament)
 
-                            Promise.all(tournament.participants.map(async (participantId) => {
+                                Promise.all(tournament.participants.map(async (participantId) => {
 
-                                    const participant = await User.findOne({
-                                        _id: participantId,
-                                        nickname: {$regex: search}
-                                    })
-                                    return participant
-                                }
-                            ))
-                                .then((participantsArr) => participantsArr.filter(item => item != null))
-                                .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+                                        const participant = await Team.findOne({_id: participantId})
+                                        return participant
+                                    }
+                                ))
+                                    .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+                            } else {
 
+                                const tournament = await Tournament.findOne({_id: tournamentId})
+
+                                // console.log(tournament)
+
+                                Promise.all(tournament.participants.map(async (participantId) => {
+
+                                        const participant = await Team.findOne({
+                                            _id: participantId,
+                                            nickname: {$regex: search}
+                                        })
+                                        return participant
+                                    }
+                                ))
+                                    .then((participantsArr) => participantsArr.filter(item => item != null))
+                                    .then((participantsArr) => io.emit('TOURNAMENT/PARTICIPANTS:RES', participantsArr))
+
+                            }
                         }
+
+
                     } catch (e) {
                         console.log("TOURNAMENT/PARTICIPANTS")
                     }

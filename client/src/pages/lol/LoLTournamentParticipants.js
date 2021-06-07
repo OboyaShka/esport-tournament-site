@@ -38,6 +38,7 @@ export const LoLTournamentParticipants = () => {
             socket.emit('TOURNAMENT/PARTICIPANTS', tournamentId, search)
 
             socket.on('TOURNAMENT/PARTICIPANTS:RES', async (participants) => {
+                console.log(participants)
                 setParticipants(participants);
 
             })
@@ -70,7 +71,9 @@ export const LoLTournamentParticipants = () => {
                 <div className="participants-cards">
                     {participants && participants.map((participant) => {
                         return (
-                            <Link to={`/lol/profile/${participant._id}`} className="participants-card">
+
+                            <Link to={tournament.typeTour==="Daily"?`/lol/profile/${participant._id}`:`/lol/tournaments/${tournamentId}/:idm`} className="participants-card">
+
                                 <div className="participants-card-img">
                                     <img src={participant.image}
                                          style={{width: "100%", borderRadius: "25px 0 0 25px"}}/>
@@ -78,7 +81,8 @@ export const LoLTournamentParticipants = () => {
                                 <div className="participants-card-info">
                                     <div className="participants-card-nickname">{participant.nickname}</div>
                                     <div className="participants-card-summonersname">{participant.summonersName}</div>
-                                    <div className="participants-card-elo">Рейтинг: {participant.stat_lol_tournaments_rating}</div>
+                                    {tournament.type==="Daily"?
+                                    <div className="participants-card-elo">Рейтинг: {participant.stat_lol_tournaments_rating}</div>:""}
                                 </div>
                                 <div className="participants-card-statistic"><var>0</var> <img style={{maxWidth: "50%"}}
                                                                                                src={GoldCup}/></div>

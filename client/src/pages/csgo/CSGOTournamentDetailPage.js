@@ -395,8 +395,7 @@ export const CSGOTournamentDetailPage = (callback, inputs) => {
                             </div>
                             <div className="tournament-state-info info-bubble">
                                 <div className={tournament.typeTour != "Daily" ? "stat-tour-font-size" : ""} style={{
-                                    fontSize: "34px",
-                                    marginTop: "40px"
+
                                 }}>{tournament.typeTour === "Daily" ? "Бесплатно" : tournament.typeTour === "Premium" ? `${tournament.payment} RC` : tournament.typeTour === "Elite" ? `${tournament.payment} BC` : ""}</div>
                                 <img src={Line}/>
                                 <p>Взнос</p>
